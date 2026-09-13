@@ -1,87 +1,35 @@
-export interface Profile {
-  id: string;
+export type CategoryId =
+  | "burial-plots"
+  | "columbaria"
+  | "funeral-services"
+  | "pedestal-tablets"
+  | "sheng-ji"
+  | "pet-memorial";
+export interface Category {
+  id: CategoryId;
   name: string;
-  title: string;
-  bio: string;
-  avatarUrl: string;
-  phone: string;
-  whatsapp: string;
-  email: string;
-  serviceAreas: string;
-  businessHours: string;
-  philosophy: string;
-}
-
-export interface ServiceProvider {
-  id: string;
-  name: string;
-  slug: string;
+  english: string;
   description: string;
-  logoUrl?: string;
-  coverImageUrl?: string;
-  isActive: boolean;
-  sortOrder: number;
+  filters: string[];
 }
-
-export interface ServiceCategory {
-  id: string;
-  name: string;
+export interface Product {
   slug: string;
-  sortOrder: number;
-}
-
-export interface Package {
-  id: string;
-  providerId: string;
-  categoryId: string;
+  categoryId: CategoryId;
   name: string;
-  slug: string;
-  shortDescription: string;
+  english: string;
   description: string;
-  price: number;
-  originalPrice?: number;
-  priceDisplayType: 'exact' | 'starting_at' | 'contact_us' | 'hidden';
-  coverImageUrl: string;
-  status: 'draft' | 'published' | 'hidden';
-  sortOrder: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PackageFeature {
-  id: string;
-  packageId: string;
-  text: string;
-  sortOrder: number;
-}
-
-export interface PackageImage {
-  id: string;
-  packageId: string;
-  imageUrl: string;
-  sortOrder: number;
-}
-
-export interface Service {
-  id: string;
-  providerId: string;
-  categoryId: string;
-  name: string;
-  slug: string;
-  shortDescription: string;
-  description: string;
-  coverImageUrl: string;
-  status: 'draft' | 'published' | 'hidden';
-  sortOrder: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Inquiry {
-  id: string;
-  name: string;
-  phone: string;
-  serviceInterest: string;
-  message: string;
-  createdAt: string;
+  tags: string[];
+  sourceUrl: string;
+  zone?: string;
+  area?: string;
+  direction?: string;
+  price?: number;
+  preNeedPrice?: number;
+  asNeedPrice?: number;
+  depositPercent?: number;
+  installmentMonths?: number;
+  duration?: string;
+  venue?: string;
+  features?: string[];
+  groups?: { title: string; text: string }[];
 }

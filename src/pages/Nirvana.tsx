@@ -1,114 +1,99 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import { getPackages, mockFeatures, mockProfile } from '../lib/api';
-import type { Package } from '../types';
-
+import { Link } from "react-router-dom";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { categories, products } from "../data/catalog";
+import {
+  PageHero,
+  SectionHeading,
+  Placeholder,
+  ContactCTA,
+} from "../components/ui";
 export default function Nirvana() {
-  const [packages, setPackages] = useState<Package[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function load() {
-      const data = await getPackages('nirvana');
-      setPackages(data);
-      setLoading(false);
-    }
-    load();
-  }, []);
-
-  const formatPrice = (pkg: Package) => {
-    if (pkg.priceDisplayType === 'hidden') return null;
-    if (pkg.priceDisplayType === 'contact_us') return '欢迎咨询';
-    const formatted = new Intl.NumberFormat('en-MY', { style: 'currency', currency: 'MYR' }).format(pkg.price).replace('MYR', 'RM');
-    if (pkg.priceDisplayType === 'starting_at') return `${formatted} 起`;
-    return formatted;
-  };
-
   return (
-    <div className="bg-[#F9FBF8] min-h-screen">
-      {/* Header */}
-      <div className="bg-[#164F3A] py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-6">富贵山庄配套与服务</h1>
-          <p className="text-lg text-[#DCE6D7] leading-relaxed font-light">
-            让客户快速了解富贵山庄有哪些产品、服务、配套、价格和选择。我们提供多样化的生前规划与殡葬服务，尊重不同宗教与文化需求。
-          </p>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Filters/Categories could go here */}
-        <div className="flex flex-wrap gap-4 mb-12 justify-center">
-          {['全部', '生前规划', '墓园', '骨灰位', '佛教配套', '基督教配套', '宠物纪念'].map((cat, idx) => (
-            <button 
-              key={idx} 
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${idx === 0 ? 'bg-[#164F3A] text-white' : 'bg-white text-gray-600 border border-[#DCE6D7] hover:border-[#164F3A] hover:text-[#164F3A]'}`}
+    <>
+      <PageHero
+        eyebrow="NIRVANA MEMORIAL PARK · KUCHING"
+        title="古晋富贵山庄"
+        text="从提前规划到即时需求，协助您了解不同选择。先找到您想了解的类别，再一起看看适合的安排。"
+        imageLabel="园区环境主图预留"
+      >
+        <a className="text-link" href="#categories">
+          探索六大类别 <ArrowRight size={17} />
+        </a>
+      </PageHero>
+      <section id="categories" className="container section">
+        <SectionHeading
+          eyebrow="PLANNING OPTIONS"
+          title="您想了解哪一类？"
+          text="按需要浏览，不必一次了解所有产品。"
+        />
+        <div className="grid-three categories-grid">
+          {categories.map((category, i) => (
+            <Link
+              key={category.id}
+              to={`/nirvana/${category.id}`}
+              className="card category-card"
             >
-              {cat}
-            </button>
+              <Placeholder label={`${category.name}图片预留`} />
+              <div className="card-body">
+                <div className="card-meta">
+                  <span>
+                    0{i + 1} / {category.english}
+                  </span>
+                  <span>
+                    {
+                      products.filter((p) => p.categoryId === category.id)
+                        .length
+                    }{" "}
+                    项选择
+                  </span>
+                </div>
+                <h2>{category.name}</h2>
+                <p>{category.description}</p>
+                <span className="text-link">
+                  查看选择 <ArrowRight size={17} />
+                </span>
+              </div>
+            </Link>
           ))}
         </div>
-
-        {loading ? (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#164F3A]"></div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {packages.map((pkg) => (
-              <div key={pkg.id} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-[#DCE6D7] flex flex-col group hover:shadow-md transition-shadow">
-                <div className="relative h-64 overflow-hidden">
-                  <img 
-                    src={pkg.coverImageUrl} 
-                    alt={pkg.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-[#164F3A] rounded-full uppercase tracking-wider">
-                    {pkg.categoryId}
-                  </div>
+      </section>
+      <section className="soft-section">
+        <div className="container section">
+          <SectionHeading
+            eyebrow="GET TO KNOW THE PARK"
+            title="了解园区"
+            text="产品之外，也为您留好园区环境与实用资讯的位置。"
+          />
+          <div className="grid-four resources">
+            {[
+              ["园区环境", "园区整体介绍与环境照片", "about-nirvana"],
+              ["设施与服务", "设施、道路及服务资讯", "facilities-services"],
+              ["园区平面图", "分区、阁位及设施位置", "site-plan"],
+              ["位置与交通", "园区位置与到访路线", "location-map"],
+            ].map(([title, text, path]) => (
+              <article className="card" key={path}>
+                <Placeholder label={`${title}预留`} />
+                <div className="card-body">
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                  <a
+                    className="text-link"
+                    href={`https://www.nirvanakuching.com/${path}/`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    查看参考资讯 <ArrowUpRight size={15} />
+                  </a>
                 </div>
-                
-                <div className="p-8 flex flex-col flex-grow">
-                  <h3 className="text-2xl font-serif text-[#164F3A] mb-2">{pkg.name}</h3>
-                  <div className="text-xl text-[#C8A45A] font-medium mb-4">
-                    {formatPrice(pkg)}
-                  </div>
-                  <p className="text-gray-600 text-sm mb-6 flex-grow">
-                    {pkg.shortDescription}
-                  </p>
-                  
-                  <div className="space-y-2 mb-8">
-                    {(mockFeatures[pkg.id] || []).slice(0, 4).map((f) => (
-                      <div key={f.id} className="flex items-start">
-                        <CheckCircle2 className="w-4 h-4 text-[#78936D] mt-0.5 mr-2 shrink-0" />
-                        <span className="text-sm text-gray-700">{f.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-3 mt-auto">
-                    <Link 
-                      to={`/nirvana/packages/${pkg.slug}`}
-                      className="inline-flex justify-center items-center px-4 py-2.5 border border-[#164F3A] text-[#164F3A] rounded-lg text-sm font-medium hover:bg-[#f0f5ee] transition-colors"
-                    >
-                      查看详情
-                    </Link>
-                    <a
-                      href={`https://wa.me/${mockProfile.whatsapp}?text=${encodeURIComponent(`您好，我想了解「${pkg.name}」，请问可以提供更多资料吗？`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex justify-center items-center px-4 py-2.5 bg-[#164F3A] text-white rounded-lg text-sm font-medium hover:bg-[#1F6045] transition-colors"
-                    >
-                      WhatsApp 咨询
-                    </a>
-                  </div>
-                </div>
-              </div>
+              </article>
             ))}
           </div>
-        )}
-      </div>
-    </div>
+          <p className="source-note">
+            参考资讯来自 Nirvana Kuching 025 Agency。本站展示图片均为预留位置。
+          </p>
+        </div>
+      </section>
+      <ContactCTA />
+    </>
   );
 }

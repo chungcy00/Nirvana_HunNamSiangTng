@@ -1,171 +1,169 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { HeartHandshake, ShieldCheck, Heart, Users, ArrowRight } from 'lucide-react';
-import { mockProfile } from '../lib/api';
-
+import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  Heart,
+  HeartHandshake,
+  MessagesSquare,
+  Sprout,
+  MapPin,
+} from "lucide-react";
+import { advisor, principles } from "../data/site";
+import { featuredProducts } from "../data/catalog";
+import {
+  Placeholder,
+  ConsultButton,
+  SectionHeading,
+  ProductCard,
+  ContactCTA,
+} from "../components/ui";
+const icons = [MessagesSquare, Sprout, HeartHandshake, Heart];
 export default function Home() {
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?auto=format&fit=crop&q=80&w=2000" 
-            alt="自然风景" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"></div>
-        </div>
-        
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-6 leading-tight drop-shadow-md">
-            以关怀承托<br/>每一段生命旅程
-          </h1>
-          <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto font-light drop-shadow-sm">
-            尊重不同的信仰与选择，让爱与记忆继续延伸。为您和家人提供最专业、安心的身后规划服务。
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a 
-              href={`https://wa.me/${mockProfile.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 bg-[#164F3A] hover:bg-[#1F6045] text-white rounded-full font-medium transition-all shadow-lg text-lg flex items-center justify-center"
-            >
-              WhatsApp 联系我们
-            </a>
-            <Link 
-              to="/nirvana"
-              className="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/30 rounded-full font-medium transition-all text-lg"
-            >
-              了解我们的服务
-            </Link>
+    <>
+      <section className="home-hero">
+        <div className="container home-hero-grid">
+          <div className="hero-copy">
+            <p className="eyebrow">
+              <span className="gold-dash" /> A LITTLE PLANNING, A LOT OF LOVE
+            </p>
+            <p className="advisor-line">
+              {advisor.name || "顾问姓名待补充"} <span>｜ {advisor.title}</span>
+            </p>
+            <h1>
+              用心规划，
+              <br />
+              让家人多一份<span className="accent-word">安心</span>。
+            </h1>
+            <p className="hero-description">
+              协助家庭了解古晋富贵山庄与云南善堂相关服务。
+              <br className="desktop-only" />
+              从不同信仰、预算与需要出发，陪您看清每一个选择。
+            </p>
+            <div className="button-row">
+              <ConsultButton />
+              <Link className="button button-outline" to="/nirvana">
+                查看服务 <ArrowRight size={17} />
+              </Link>
+            </div>
+            <div className="hero-note">
+              <MapPin size={15} />
+              {advisor.serviceArea}
+              <span />
+              尊重信仰 · 真诚相伴
+            </div>
+          </div>
+          <div className="hero-portrait">
+            <Placeholder portrait label="顾问个人照片预留" />
+            <div className="portrait-caption">
+              <span className="caption-rule" />
+              <div>
+                让安排更清晰，让心更安定。
+                <small>HERE FOR YOU & YOUR FAMILY</small>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* Philosophy Section */}
-      <section className="py-24 bg-[#F9FBF8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-serif text-[#164F3A] mb-4">我们的服务理念</h2>
-            <div className="w-16 h-1 bg-[#C8A45A] mx-auto rounded-full"></div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            {[
-              { icon: Users, title: '专业咨询', desc: '一对一提供客观、专业的规划建议。' },
-              { icon: Heart, title: '多元选择', desc: '配合不同信仰、文化与家庭需求。' },
-              { icon: ShieldCheck, title: '安心托付', desc: '透明说明流程及相关服务，无隐藏收费。' },
-              { icon: HeartHandshake, title: '延续关怀', desc: '从规划到后续安排持续提供协助。' }
-            ].map((item, idx) => (
-              <div key={idx} className="text-center group">
-                <div className="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center shadow-[0_4px_20px_-4px_rgba(22,79,58,0.1)] mb-6 text-[#164F3A] group-hover:scale-110 group-hover:bg-[#164F3A] group-hover:text-white transition-all duration-300">
-                  <item.icon className="w-8 h-8" />
+      <section className="principles-bar">
+        <div className="container principles-grid">
+          {principles.map((item, i) => {
+            const Icon = icons[i];
+            return (
+              <div className="principle" key={item.title}>
+                <Icon strokeWidth={1.3} />
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-3">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed text-sm">{item.desc}</p>
               </div>
+            );
+          })}
+        </div>
+      </section>
+      <section className="container section">
+        <SectionHeading
+          eyebrow="HOW I CAN HELP"
+          title="我可以协助您了解"
+          text="不急着做决定，先从您关心的事情开始。"
+        />
+        <div className="grid-three">
+          {[
+            {
+              title: "富贵山庄",
+              english: "NIRVANA KUCHING",
+              text: "福地、骨灰位、殡仪服务与生前规划，清楚了解六大类产品与选择。",
+              to: "/nirvana",
+              label: "园区照片预留",
+            },
+            {
+              title: "云南善堂",
+              english: "HUN NAM SIANG TNG",
+              text: "了解殡葬咨询、流程说明与家属协助，让需要帮助的时候有方向。",
+              to: "/yunnan-siantang",
+              label: "云南善堂照片预留",
+            },
+            {
+              title: "宠物纪念",
+              english: "PET MEMORIAL",
+              text: "宠物也是家人。让陪伴过我们的生命，拥有温柔而有尊严的告别。",
+              to: "/nirvana/pet-memorial",
+              label: "宠物纪念照片预留",
+            },
+          ].map((item, i) => (
+            <Link className="card service-card" to={item.to} key={item.title}>
+              <Placeholder label={item.label} />
+              <div className="card-body">
+                <span className="service-number">0{i + 1}</span>
+                <p className="eyebrow">{item.english}</p>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+                <span className="text-link">
+                  了解更多 <ArrowRight size={17} />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section className="soft-section">
+        <div className="container section">
+          <SectionHeading
+            eyebrow="EXPLORE YOUR OPTIONS"
+            title="从这些配套开始了解"
+            text="先认识不同类型，再寻找适合家人的安排。"
+          >
+            <Link className="text-link" to="/nirvana">
+              查看全部类别 <ArrowRight size={17} />
+            </Link>
+          </SectionHeading>
+          <div className="grid-three">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.slug} product={product} />
             ))}
           </div>
         </div>
       </section>
-
-      {/* Services Showcase */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-serif text-[#164F3A] mb-4">为您提供多元化选择</h2>
-            <div className="w-16 h-1 bg-[#C8A45A] mx-auto rounded-full"></div>
-          </div>
-
-          <div className="space-y-12">
-            {/* Nirvana Card */}
-            <div className="flex flex-col md:flex-row bg-[#F9FBF8] rounded-3xl overflow-hidden shadow-sm border border-[#DCE6D7]">
-              <div className="md:w-1/2">
-                <img 
-                  src="https://images.unsplash.com/photo-1542360563-70335e2373fb?auto=format&fit=crop&q=80&w=800" 
-                  alt="富贵山庄" 
-                  className="w-full h-full object-cover min-h-[300px]"
-                />
-              </div>
-              <div className="md:w-1/2 p-10 lg:p-14 flex flex-col justify-center">
-                <h3 className="text-sm font-bold tracking-widest text-[#C8A45A] uppercase mb-2">NIRVANA</h3>
-                <h2 className="text-3xl font-serif text-[#164F3A] mb-6">富贵山庄</h2>
-                <ul className="grid grid-cols-2 gap-y-3 gap-x-4 mb-8 text-gray-700">
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 bg-[#C8A45A] rounded-full mr-2"></div> 生前规划</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 bg-[#C8A45A] rounded-full mr-2"></div> 墓园 / 骨灰位</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 bg-[#C8A45A] rounded-full mr-2"></div> 纪念空间</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 bg-[#C8A45A] rounded-full mr-2"></div> 不同宗教配套</li>
-                </ul>
-                <div>
-                  <Link 
-                    to="/nirvana"
-                    className="inline-flex items-center text-[#164F3A] font-medium hover:text-[#1F6045] group"
-                  >
-                    了解富贵山庄 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Yunnan Card */}
-            <div className="flex flex-col md:flex-row-reverse bg-[#F9FBF8] rounded-3xl overflow-hidden shadow-sm border border-[#DCE6D7]">
-              <div className="md:w-1/2">
-                <img 
-                  src="https://images.unsplash.com/photo-1499540633125-484965b60031?auto=format&fit=crop&q=80&w=800" 
-                  alt="云南善堂" 
-                  className="w-full h-full object-cover min-h-[300px]"
-                />
-              </div>
-              <div className="md:w-1/2 p-10 lg:p-14 flex flex-col justify-center">
-                <h3 className="text-sm font-bold tracking-widest text-[#C8A45A] uppercase mb-2">YUNNAN SIANTANG</h3>
-                <h2 className="text-3xl font-serif text-[#164F3A] mb-6">云南善堂</h2>
-                <ul className="grid grid-cols-2 gap-y-3 gap-x-4 mb-8 text-gray-700">
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 bg-[#C8A45A] rounded-full mr-2"></div> 殡葬咨询</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 bg-[#C8A45A] rounded-full mr-2"></div> 流程说明</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 bg-[#C8A45A] rounded-full mr-2"></div> 家属协助</li>
-                  <li className="flex items-center"><div className="w-1.5 h-1.5 bg-[#C8A45A] rounded-full mr-2"></div> 后续安排建议</li>
-                </ul>
-                <div>
-                  <Link 
-                    to="/yunnan-siantang"
-                    className="inline-flex items-center text-[#164F3A] font-medium hover:text-[#1F6045] group"
-                  >
-                    了解云南善堂 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Pet Memorial */}
-            <div className="flex flex-col md:flex-row bg-[#F9FBF8] rounded-3xl overflow-hidden shadow-sm border border-[#DCE6D7]">
-              <div className="md:w-1/2">
-                <img 
-                  src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=80&w=800" 
-                  alt="宠物纪念" 
-                  className="w-full h-full object-cover min-h-[300px]"
-                />
-              </div>
-              <div className="md:w-1/2 p-10 lg:p-14 flex flex-col justify-center">
-                <h3 className="text-sm font-bold tracking-widest text-[#C8A45A] uppercase mb-2">PET MEMORIAL</h3>
-                <h2 className="text-3xl font-serif text-[#164F3A] mb-6">宠物纪念</h2>
-                <p className="text-gray-700 mb-8 leading-relaxed">
-                  宠物也是家人。<br/>
-                  提供宠物纪念及相关规划资讯，让陪伴过我们的生命，也能够获得温柔而有尊严的告别。
-                </p>
-                <div>
-                  <Link 
-                    to="/nirvana/packages/pet-memorial-package"
-                    className="inline-flex items-center text-[#164F3A] font-medium hover:text-[#1F6045] group"
-                  >
-                    了解宠物纪念服务 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <section className="container section journey">
+        <SectionHeading
+          eyebrow="ONE STEP AT A TIME"
+          title="每一步，都可以慢慢来"
+        />
+        <ol className="steps">
+          {[
+            ["倾听您的需要", "了解家庭、信仰与预算。"],
+            ["说明不同选择", "比较产品、服务与安排。"],
+            ["一起确认细节", "厘清费用、流程与时间。"],
+            ["安排下一步", "按您的意愿继续咨询。"],
+          ].map(([title, text], i) => (
+            <li key={title}>
+              <span>0{i + 1}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </li>
+          ))}
+        </ol>
       </section>
-    </div>
+      <ContactCTA />
+    </>
   );
 }
