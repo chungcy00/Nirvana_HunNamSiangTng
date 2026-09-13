@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { Check, ArrowUpRight, Plus } from "lucide-react";
-import { categories, products, sourceCheckedAt } from "../data/catalog";
+import { Check, Plus } from "lucide-react";
+import { categories, products } from "../data/catalog";
 import {
   Breadcrumb,
   Placeholder,
@@ -92,16 +92,8 @@ export default function PackageDetail() {
                     完整项目说明 <Plus size={16} />
                   </summary>
                   <p>
-                    此处预留完整服务清单。当前先展示分类摘要，具体项目与数量请查阅参考资料并咨询确认。
+                    此处预留完整服务清单。当前先展示分类摘要，具体项目与数量请咨询确认。
                   </p>
-                  <a
-                    className="text-link"
-                    href={product.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    查看参考站完整资料 <ArrowUpRight size={16} />
-                  </a>
                 </details>
               </>
             ) : (
@@ -115,17 +107,6 @@ export default function PackageDetail() {
             <h2>咨询前，可以先想一想</h2>
             <p>
               您的信仰或仪式偏好、希望了解的安置方式、预算与时间安排，都可以作为讨论的起点。
-            </p>
-            <p className="source-note">
-              产品参考：
-              <a
-                href={product.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Nirvana Kuching 025 Agency <ArrowUpRight size={12} />
-              </a>{" "}
-              · 核对日期 {sourceCheckedAt}
             </p>
           </section>
         </div>

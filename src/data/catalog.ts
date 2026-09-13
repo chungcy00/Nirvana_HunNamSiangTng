@@ -54,8 +54,6 @@ export const products: Product[] = [
     english: "Double Cremation Packages (Zone AA)",
     description: "Zone AA · 火化后的骨灰土葬选择。",
     tags: ["双人", "火化土葬"],
-    sourceUrl:
-      "https://www.nirvanakuching.com/double-cremation-packages-zone-aa/",
     zone: "Zone AA",
     area: "6.3′ × 8.9′（约 56 平方英尺）",
     direction: "坐北朝南",
@@ -78,8 +76,6 @@ export const products: Product[] = [
     english: "Double Cremation Packages (Zone W)",
     description: "Zone W · 火化后的骨灰土葬选择。",
     tags: ["双人", "火化土葬"],
-    sourceUrl:
-      "https://www.nirvanakuching.com/double-cremation-packages-zone-w/",
     zone: "Zone W",
   },
   {
@@ -89,7 +85,6 @@ export const products: Product[] = [
     english: "Single Economy Package (Zone W)",
     description: "Zone W · 了解福地类型、位置与配套安排。",
     tags: ["单人"],
-    sourceUrl: "https://www.nirvanakuching.com/single-economy-package-zone-w/",
     zone: "Zone W",
   },
   {
@@ -99,7 +94,6 @@ export const products: Product[] = [
     english: "Double Economy Package (Zone W)",
     description: "Zone W · 了解福地类型、位置与配套安排。",
     tags: ["双人"],
-    sourceUrl: "https://www.nirvanakuching.com/double-economy-package-zone-w/",
     zone: "Zone W",
   },
   {
@@ -109,7 +103,6 @@ export const products: Product[] = [
     english: "Double Premium Package (Zone W)",
     description: "Zone W · 了解福地类型、位置与配套安排。",
     tags: ["双人"],
-    sourceUrl: "https://www.nirvanakuching.com/double-premium-package-zone-w/",
     zone: "Zone W",
   },
   {
@@ -119,7 +112,6 @@ export const products: Product[] = [
     english: "Single Lot (Zone W)",
     description: "Zone W · 了解福地类型、位置与配套安排。",
     tags: ["单人"],
-    sourceUrl: "https://www.nirvanakuching.com/single-lot-zone-w/",
     zone: "Zone W",
   },
   {
@@ -129,7 +121,6 @@ export const products: Product[] = [
     english: "Double Lot (Zone W)",
     description: "Zone W · 了解福地类型、位置与配套安排。",
     tags: ["双人"],
-    sourceUrl: "https://www.nirvanakuching.com/double-lot-zone-w/",
     zone: "Zone W",
   },
   {
@@ -139,7 +130,6 @@ export const products: Product[] = [
     english: "Family Lot (Zone W)",
     description: "Zone W · 了解福地类型、位置与配套安排。",
     tags: ["家族"],
-    sourceUrl: "https://www.nirvanakuching.com/family-lot-zone-w/",
     zone: "Zone W",
   },
   {
@@ -149,7 +139,6 @@ export const products: Product[] = [
     english: "Royal Lot (Zone T2)",
     description: "Zone T2 · 了解福地类型、位置与配套安排。",
     tags: ["家族"],
-    sourceUrl: "https://www.nirvanakuching.com/royal-lot-zone-t2/",
     zone: "Zone T2",
   },
   {
@@ -159,7 +148,6 @@ export const products: Product[] = [
     english: "Shrine 7",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
     tags: ["聚仙楼"],
-    sourceUrl: "https://www.nirvanakuching.com/shrine-7/",
   },
   {
     slug: "the-earth",
@@ -168,7 +156,6 @@ export const products: Product[] = [
     english: "The Earth",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
     tags: ["聚仙楼"],
-    sourceUrl: "https://www.nirvanakuching.com/the-earth/",
   },
   {
     slug: "the-lotus",
@@ -177,7 +164,6 @@ export const products: Product[] = [
     english: "The Lotus",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
     tags: ["聚仙楼"],
-    sourceUrl: "https://www.nirvanakuching.com/the-lotus/",
   },
   {
     slug: "the-moon",
@@ -186,7 +172,6 @@ export const products: Product[] = [
     english: "The Moon",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
     tags: ["聚仙楼"],
-    sourceUrl: "https://www.nirvanakuching.com/the-moon/",
   },
   {
     slug: "garden-of-loving-kindness-2-0",
@@ -195,7 +180,6 @@ export const products: Product[] = [
     english: "Garden of Loving Kindness 2.0",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
     tags: ["仁爱园"],
-    sourceUrl: "https://www.nirvanakuching.com/garden-of-loving-kindness-2-0/",
   },
   {
     slug: "shrine-ii-urn-compartment",
@@ -204,7 +188,6 @@ export const products: Product[] = [
     english: "Shrine II Urn Compartment",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
     tags: ["其他阁位"],
-    sourceUrl: "https://www.nirvanakuching.com/shrine-ii-urn-compartment/",
   },
   {
     slug: "shrine-iii-urn-compartment",
@@ -213,7 +196,6 @@ export const products: Product[] = [
     english: "Shrine III Urn Compartment",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
     tags: ["其他阁位"],
-    sourceUrl: "https://www.nirvanakuching.com/shrine-iii-urn-compartment/",
   },
   {
     slug: "shrine-1-pedestal-tablet",
@@ -222,7 +204,6 @@ export const products: Product[] = [
     english: "Pedestal Tablet",
     description: "富贵殿的神主灵位选择，了解位置与纪念安排。",
     tags: ["神主灵位"],
-    sourceUrl: "https://www.nirvanakuching.com/shrine-1-pedestal-tablet/",
   },
   {
     slug: "dragon-tortoise-feng-shui-sheng-ji",
@@ -231,8 +212,6 @@ export const products: Product[] = [
     english: "Dragon Tortoise Feng Shui Sheng Ji",
     description: "了解龙龟生基园的项目资料与相关安排。",
     tags: ["生基园"],
-    sourceUrl:
-      "https://www.nirvanakuching.com/dragon-tortoise-feng-shui-sheng-ji/",
   },
   {
     slug: "nv-freedom-buddhist-cremation-only",
@@ -241,8 +220,6 @@ export const products: Product[] = [
     english: "NV Freedom · Buddhist",
     description: "佛教殡仪服务选择。仅限火化。",
     tags: ["佛教"],
-    sourceUrl:
-      "https://www.nirvanakuching.com/nv-freedom-buddhist-cremation-only/",
     preNeedPrice: 10888,
     asNeedPrice: 12888,
   },
@@ -253,7 +230,6 @@ export const products: Product[] = [
     english: "NV Signature · Buddhist",
     description: "佛教殡仪服务选择。按家庭需要了解仪式与服务内容。",
     tags: ["佛教"],
-    sourceUrl: "https://www.nirvanakuching.com/nv-signature-buddhist/",
     preNeedPrice: 23888,
     asNeedPrice: 26888,
     duration: "3 天 2 夜",
@@ -294,7 +270,6 @@ export const products: Product[] = [
     english: "NV Privilege · Buddhist",
     description: "佛教殡仪服务选择。按家庭需要了解仪式与服务内容。",
     tags: ["佛教"],
-    sourceUrl: "https://www.nirvanakuching.com/nv-privilege-buddhist/",
     preNeedPrice: 35888,
     asNeedPrice: 40888,
   },
@@ -305,7 +280,6 @@ export const products: Product[] = [
     english: "NV Platinum · Buddhist",
     description: "佛教殡仪服务选择。按家庭需要了解仪式与服务内容。",
     tags: ["佛教"],
-    sourceUrl: "https://www.nirvanakuching.com/nv-platinum-buddhist/",
     preNeedPrice: 42888,
     asNeedPrice: 47888,
   },
@@ -316,8 +290,6 @@ export const products: Product[] = [
     english: "NV Freedom · Christian",
     description: "基督教殡仪服务选择。仅限火化。",
     tags: ["基督教"],
-    sourceUrl:
-      "https://www.nirvanakuching.com/nv-freedom-christian-cremation-only/",
     preNeedPrice: 9888,
     asNeedPrice: 11888,
   },
@@ -328,7 +300,6 @@ export const products: Product[] = [
     english: "NV Signature · Christian",
     description: "基督教殡仪服务选择。按家庭需要了解仪式与服务内容。",
     tags: ["基督教"],
-    sourceUrl: "https://www.nirvanakuching.com/nv-signature-christian/",
     preNeedPrice: 21888,
     asNeedPrice: 24888,
   },
@@ -339,7 +310,6 @@ export const products: Product[] = [
     english: "NV Privilege · Christian",
     description: "基督教殡仪服务选择。按家庭需要了解仪式与服务内容。",
     tags: ["基督教"],
-    sourceUrl: "https://www.nirvanakuching.com/nv-privilege-christian/",
     preNeedPrice: 33888,
     asNeedPrice: 38888,
   },
@@ -350,7 +320,6 @@ export const products: Product[] = [
     english: "NV Platinum · Christian",
     description: "基督教殡仪服务选择。按家庭需要了解仪式与服务内容。",
     tags: ["基督教"],
-    sourceUrl: "https://www.nirvanakuching.com/nv-platinum-christian/",
     preNeedPrice: 40888,
     asNeedPrice: 45888,
   },
@@ -361,7 +330,6 @@ export const products: Product[] = [
     english: "Pets Burial (Zone BB)",
     description: "为陪伴过家人的宠物，了解合适的纪念与安置选择。",
     tags: ["土葬"],
-    sourceUrl: "https://www.nirvanakuching.com/pets-burial-zone-bb/",
     zone: "Zone BB",
   },
   {
@@ -371,7 +339,6 @@ export const products: Product[] = [
     english: "Pet Urn Compartment",
     description: "为陪伴过家人的宠物，了解合适的纪念与安置选择。",
     tags: ["骨灰阁"],
-    sourceUrl: "https://www.nirvanakuching.com/pet-urn-compartment/",
   },
   {
     slug: "other-services",
@@ -380,7 +347,6 @@ export const products: Product[] = [
     english: "Other Services",
     description: "为陪伴过家人的宠物，了解合适的纪念与安置选择。",
     tags: ["其他服务"],
-    sourceUrl: "https://www.nirvanakuching.com/other-services/",
   },
 ];
 

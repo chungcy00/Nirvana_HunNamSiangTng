@@ -19,7 +19,6 @@ export interface Product {
   english: string;
   description: string;
   tags: string[];
-  sourceUrl: string;
   zone?: string;
   area?: string;
   direction?: string;

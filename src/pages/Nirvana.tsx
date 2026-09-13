@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { categories, products } from "../data/catalog";
 import {
   PageHero,
@@ -66,30 +66,23 @@ export default function Nirvana() {
           />
           <div className="grid-four resources">
             {[
-              ["园区环境", "园区整体介绍与环境照片", "about-nirvana"],
-              ["设施与服务", "设施、道路及服务资讯", "facilities-services"],
-              ["园区平面图", "分区、阁位及设施位置", "site-plan"],
-              ["位置与交通", "园区位置与到访路线", "location-map"],
-            ].map(([title, text, path]) => (
-              <article className="card" key={path}>
+              ["园区环境", "园区整体介绍与环境照片"],
+              ["设施与服务", "设施、道路及服务资讯"],
+              ["园区平面图", "分区、阁位及设施位置"],
+              ["位置与交通", "园区位置与到访路线"],
+            ].map(([title, text]) => (
+              <article className="card" key={title}>
                 <Placeholder label={`${title}预留`} />
                 <div className="card-body">
                   <h3>{title}</h3>
                   <p>{text}</p>
-                  <a
-                    className="text-link"
-                    href={`https://www.nirvanakuching.com/${path}/`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    查看参考资讯 <ArrowUpRight size={15} />
-                  </a>
+                  <p className="small muted">详细资讯待补充</p>
                 </div>
               </article>
             ))}
           </div>
           <p className="source-note">
-            参考资讯来自 Nirvana Kuching 025 Agency。本站展示图片均为预留位置。
+            园区资讯与图片均为预留位置，待资料确认后补充。
           </p>
         </div>
       </section>
