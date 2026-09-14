@@ -26,7 +26,7 @@ function Comparison({ items }: { items: Product[] }) {
         tabIndex={0}
       >
         <table>
-          <caption>殡仪配套预购与即用价格比较</caption>
+          <caption>殡仪配套生前规划价（Pre-Need）与即时需求价（As-Need）比较</caption>
           <thead>
             <tr>
               <th scope="col">比较项目</th>
@@ -40,7 +40,7 @@ function Comparison({ items }: { items: Product[] }) {
           </thead>
           <tbody>
             <tr>
-              <th scope="row">预购参考价</th>
+              <th scope="row">生前规划价（Pre-Need）</th>
               {items.map((p) => (
                 <td key={p.slug}>
                   {p.preNeedPrice ? money(p.preNeedPrice) : "待确认"}
@@ -48,7 +48,7 @@ function Comparison({ items }: { items: Product[] }) {
               ))}
             </tr>
             <tr>
-              <th scope="row">即用参考价</th>
+              <th scope="row">即时需求价（As-Need）</th>
               {items.map((p) => (
                 <td key={p.slug}>
                   {p.asNeedPrice ? money(p.asNeedPrice) : "待确认"}

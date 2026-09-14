@@ -171,7 +171,7 @@ export function ProductCard({ product }: { product: Product }) {
               : "欢迎咨询"}
           <small>
             {product.preNeedPrice
-              ? "预购参考价"
+              ? "生前规划价（Pre-Need）"
               : product.price
                 ? "参考售价"
                 : "了解价格与选择"}

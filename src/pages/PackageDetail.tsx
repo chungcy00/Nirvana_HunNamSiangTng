@@ -119,11 +119,11 @@ export default function PackageDetail() {
               {product.preNeedPrice ? (
                 <>
                   <div>
-                    <span>预购参考价</span>
+                    <span>生前规划价（Pre-Need）</span>
                     <strong>{money(product.preNeedPrice)}</strong>
                   </div>
                   <div>
-                    <span>即用参考价</span>
+                    <span>即时需求价（As-Need）</span>
                     <strong>
                       {product.asNeedPrice
                         ? money(product.asNeedPrice)
@@ -142,7 +142,7 @@ export default function PackageDetail() {
             </div>
             {(product.depositPercent || product.installmentMonths) && (
               <div className="installment">
-                <span>预购付款参考</span>
+                <span>生前规划付款参考（Pre-Need）</span>
                 <p>
                   {product.depositPercent}% 首期 · {product.installmentMonths}{" "}
                   个月分期

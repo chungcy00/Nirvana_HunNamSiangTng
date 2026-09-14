@@ -13,8 +13,8 @@ export const categories: Category[] = [
     id: "columbaria",
     name: "骨灰殿",
     english: "Columbaria",
-    description: "聚仙楼、仁爱园与各式阁位，让思念有一个温柔的寄托。",
-    filters: ["全部", "聚仙楼", "仁爱园", "其他阁位"],
+    description: "聚仙楼、仁爱园、聚雅阁与腾黄阁，让思念有一个温柔的寄托。",
+    filters: ["全部", "聚仙楼", "仁爱园", "聚雅阁", "腾黄阁"],
   },
   {
     id: "funeral-services",
@@ -187,7 +187,7 @@ export const products: Product[] = [
     name: "聚雅阁",
     english: "Shrine II Urn Compartment",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
-    tags: ["其他阁位"],
+    tags: ["聚雅阁"],
   },
   {
     slug: "shrine-iii-urn-compartment",
@@ -195,7 +195,7 @@ export const products: Product[] = [
     name: "腾黄阁",
     english: "Shrine III Urn Compartment",
     description: "了解骨灰安置空间、阁位选择与纪念安排。",
-    tags: ["其他阁位"],
+    tags: ["腾黄阁"],
   },
   {
     slug: "shrine-1-pedestal-tablet",
