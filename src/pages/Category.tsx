@@ -1,6 +1,7 @@
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Search, ArrowRight } from "lucide-react";
-import { categories, products, sourceCheckedAt } from "../data/catalog";
+import { useCatalog } from "../catalog/context";
+import { categoryPath, productPath } from "../catalog/repository";
 import {
   Breadcrumb,
   ProductCard,
@@ -9,7 +10,14 @@ import {
   money,
 } from "../components/ui";
 import type { Product } from "../types";
-function Comparison({ items }: { items: Product[] }) {
+function Comparison({
+  items,
+  providerSlug,
+}: {
+  items: Product[];
+  providerSlug: string;
+}) {
+  const catalog = useCatalog();
   return (
     <section className="comparison">
       <div className="section-heading">
@@ -26,7 +34,9 @@ function Comparison({ items }: { items: Product[] }) {
         tabIndex={0}
       >
         <table>
-          <caption>殡仪配套生前规划价（Pre-Need）与即时需求价（As-Need）比较</caption>
+          <caption>
+            殡仪配套生前规划价（Pre-Need）与即时需求价（As-Need）比较
+          </caption>
           <thead>
             <tr>
               <th scope="col">比较项目</th>
@@ -43,7 +53,7 @@ function Comparison({ items }: { items: Product[] }) {
               <th scope="row">生前规划价（Pre-Need）</th>
               {items.map((p) => (
                 <td key={p.slug}>
-                  {p.preNeedPrice ? money(p.preNeedPrice) : "待确认"}
+                  {p.preNeedPrice != null ? money(p.preNeedPrice) : "待确认"}
                 </td>
               ))}
             </tr>
@@ -51,16 +61,14 @@ function Comparison({ items }: { items: Product[] }) {
               <th scope="row">即时需求价（As-Need）</th>
               {items.map((p) => (
                 <td key={p.slug}>
-                  {p.asNeedPrice ? money(p.asNeedPrice) : "待确认"}
+                  {p.asNeedPrice != null ? money(p.asNeedPrice) : "待确认"}
                 </td>
               ))}
             </tr>
             <tr>
               <th scope="row">仪式说明</th>
               {items.map((p) => (
-                <td key={p.slug}>
-                  {p.slug.includes("freedom") ? "仅限火化" : "具体安排请咨询"}
-                </td>
+                <td key={p.slug}>{p.ritualNote || "具体安排请咨询"}</td>
               ))}
             </tr>
             <tr>
@@ -69,7 +77,7 @@ function Comparison({ items }: { items: Product[] }) {
                 <td key={p.slug}>
                   <Link
                     className="text-link"
-                    to={`/nirvana/packages/${p.slug}`}
+                    to={productPath(providerSlug, p.slug)}
                   >
                     查看详情 <ArrowRight size={14} />
                   </Link>
@@ -80,32 +88,47 @@ function Comparison({ items }: { items: Product[] }) {
         </table>
       </div>
       <p className="source-note">
-        资料核对：{sourceCheckedAt}
+        资料核对：{catalog.checkedAt}
         。价格与服务内容可能调整，请以咨询时的确认为准。
       </p>
     </section>
   );
 }
 export default function Category() {
-  const { categoryId } = useParams();
+  const { providerSlug, categorySlug } = useParams();
+  const catalog = useCatalog();
   const [params, setParams] = useSearchParams();
-  const category = categories.find((c) => c.id === categoryId);
-  if (!category)
+  const provider = catalog.getProviderBySlug(providerSlug || "");
+  const category = provider
+    ? catalog.getCategoryBySlug(provider.id, categorySlug || "")
+    : undefined;
+  if (!provider || !category)
     return (
-      <NotFound title="找不到这个产品类别" to="/nirvana" label="返回六大类别" />
+      <NotFound
+        title="找不到这个产品类别"
+        to={provider ? `/${provider.slug}` : "/"}
+        label="返回产品类别"
+      />
     );
-  const filter = category.filters.includes(params.get("filter") || "")
-    ? params.get("filter")!
-    : category.filters[0];
+  const options = catalog.getFilters(category.id);
+  const filter = catalog.resolveFilter(category.id, params.get("filter"));
   const query = params.get("q") || "";
-  const all = products.filter((p) => p.categoryId === category.id);
-  const filtered = all.filter(
-    (p) =>
-      (filter === "全部" || p.tags.includes(filter)) &&
-      `${p.name} ${p.english} ${p.zone || ""}`
-        .toLowerCase()
-        .includes(query.trim().toLowerCase()),
+  const filtered = catalog.getProducts(
+    category.id,
+    filter?.kind === "category" ? filter.id : undefined,
+    query,
   );
+  const ancestors = [];
+  let parent = category.parentId
+    ? catalog.getCategory(category.parentId)
+    : undefined;
+  while (parent) {
+    ancestors.unshift({
+      label: parent.name,
+      to: categoryPath(provider.slug, parent.slug),
+    });
+    parent = parent.parentId ? catalog.getCategory(parent.parentId) : undefined;
+  }
   const setParam = (key: string, value: string) =>
     setParams(
       (previous) => {
@@ -121,7 +144,8 @@ export default function Category() {
       <div className="container">
         <Breadcrumb
           items={[
-            { label: "富贵山庄", to: "/nirvana" },
+            { label: provider.name, to: `/${provider.slug}` },
+            ...ancestors,
             { label: category.name },
           ]}
         />
@@ -135,20 +159,18 @@ export default function Category() {
         <div className="filter-toolbar">
           <div>
             <p className="field-heading">
-              {category.id === "funeral-services"
-                ? "选择信仰 / 仪式需求"
-                : "选择类型"}
+              {category.filterLabel || "选择类型"}
             </p>
             <div className="filter-chips" role="group" aria-label="类别筛选">
-              {category.filters.map((item) => (
+              {options.map((item) => (
                 <button
                   type="button"
-                  key={item}
-                  className={filter === item ? "selected" : ""}
-                  aria-pressed={filter === item}
-                  onClick={() => setParam("filter", item)}
+                  key={item.id}
+                  className={filter?.id === item.id ? "selected" : ""}
+                  aria-pressed={filter?.id === item.id}
+                  onClick={() => setParam("filter", item.id)}
                 >
-                  {item}
+                  {item.label}
                 </button>
               ))}
             </div>
@@ -164,11 +186,13 @@ export default function Category() {
             />
           </label>
         </div>
-        {filter === "其他 / 咨询" ? (
+        {filter?.kind === "inquiry" ? (
           <div className="empty-state card">
             <h2>每个家庭，都有自己的纪念方式</h2>
-            <p>其他信仰与仪式需求，欢迎先咨询确认适合的安排。</p>
-            <ConsultButton subject="其他信仰 / 仪式需求" />
+            <p>{category.inquiryOption?.description}</p>
+            <ConsultButton
+              subject={category.inquiryOption?.subject || category.name}
+            />
           </div>
         ) : (
           <>
@@ -193,15 +217,15 @@ export default function Category() {
                 </button>
               </div>
             )}
-            {category.id === "funeral-services" && (
-              <Comparison items={all.filter((p) => p.tags.includes(filter))} />
+            {category.displayMode === "comparison" && filtered.length > 0 && (
+              <Comparison items={filtered} providerSlug={provider.slug} />
             )}
           </>
         )}
         <div className="catalog-help">
           <p>还不确定哪一种适合您？</p>
           <ConsultButton subject={category.name}>咨询这个类别</ConsultButton>
-          <Link to="/nirvana" className="text-link">
+          <Link to={`/${provider.slug}`} className="text-link">
             返回全部类别 <ArrowRight size={16} />
           </Link>
         </div>

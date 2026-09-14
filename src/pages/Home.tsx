@@ -8,7 +8,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { advisor, principles } from "../data/site";
-import { featuredProducts } from "../data/catalog";
+import { useCatalog } from "../catalog/context";
 import {
   Placeholder,
   ConsultButton,
@@ -18,6 +18,7 @@ import {
 } from "../components/ui";
 const icons = [MessagesSquare, Sprout, HeartHandshake, Heart];
 export default function Home() {
+  const featuredProducts = useCatalog().getFeaturedProducts();
   return (
     <>
       <section className="home-hero">
@@ -91,7 +92,7 @@ export default function Home() {
             {
               title: "富贵山庄",
               english: "NIRVANA KUCHING",
-              text: "福地、骨灰位、殡仪服务与生前规划，清楚了解六大类产品与选择。",
+              text: "福地、骨灰位、殡仪服务与生前规划，清楚了解各类产品与选择。",
               to: "/nirvana",
               label: "园区照片预留",
             },

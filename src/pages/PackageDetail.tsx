@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Check, Plus } from "lucide-react";
-import { categories, products } from "../data/catalog";
+import { useCatalog } from "../catalog/context";
+import { categoryPath } from "../catalog/repository";
 import {
   Breadcrumb,
   Placeholder,
@@ -11,20 +12,36 @@ import {
   money,
 } from "../components/ui";
 export default function PackageDetail() {
-  const { slug } = useParams();
-  const product = products.find((p) => p.slug === slug);
-  if (!product)
-    return <NotFound title="找不到该配套" to="/nirvana" label="返回产品类别" />;
-  const category = categories.find((c) => c.id === product.categoryId)!;
-  const related = products
-    .filter((p) => p.categoryId === product.categoryId && p.slug !== slug)
+  const { slug, providerSlug } = useParams();
+  const catalog = useCatalog();
+  const provider = catalog.getProviderBySlug(providerSlug || "");
+  const product = provider
+    ? catalog.getProductBySlug(provider.id, slug || "")
+    : undefined;
+  const category = product
+    ? catalog.getCategory(product.categoryId)
+    : undefined;
+  if (!product || !provider || !category)
+    return (
+      <NotFound
+        title="找不到该配套"
+        to={provider ? `/${provider.slug}` : "/"}
+        label="返回产品类别"
+      />
+    );
+  const related = catalog
+    .getProducts(category.id)
+    .filter((item) => item.id !== product.id)
     .slice(0, 3);
   return (
     <div className="container detail-page">
       <Breadcrumb
         items={[
-          { label: "富贵山庄", to: "/nirvana" },
-          { label: category.name, to: `/nirvana/${category.id}` },
+          { label: provider.name, to: `/${provider.slug}` },
+          {
+            label: category.name,
+            to: categoryPath(provider.slug, category.slug),
+          },
           { label: product.name },
         ]}
       />
@@ -74,7 +91,7 @@ export default function PackageDetail() {
               </ul>
             ) : product.groups ? (
               <>
-                <p className="muted">按六个阶段了解，点击展开各阶段摘要。</p>
+                <p className="muted">按服务阶段了解，点击展开各阶段摘要。</p>
                 <div className="accordion-list">
                   {product.groups.map((group, i) => (
                     <details key={group.title}>
@@ -116,16 +133,20 @@ export default function PackageDetail() {
             <h1>{product.name}</h1>
             <p className="english">{product.english}</p>
             <div className="detail-prices">
-              {product.preNeedPrice ? (
+              {product.preNeedPrice != null || product.asNeedPrice != null ? (
                 <>
                   <div>
                     <span>生前规划价（Pre-Need）</span>
-                    <strong>{money(product.preNeedPrice)}</strong>
+                    <strong>
+                      {product.preNeedPrice != null
+                        ? money(product.preNeedPrice)
+                        : "待确认"}
+                    </strong>
                   </div>
                   <div>
                     <span>即时需求价（As-Need）</span>
                     <strong>
-                      {product.asNeedPrice
+                      {product.asNeedPrice != null
                         ? money(product.asNeedPrice)
                         : "待确认"}
                     </strong>
@@ -135,17 +156,26 @@ export default function PackageDetail() {
                 <div>
                   <span>参考售价</span>
                   <strong>
-                    {product.price ? money(product.price) : "欢迎咨询"}
+                    {product.price != null ? money(product.price) : "欢迎咨询"}
                   </strong>
                 </div>
               )}
             </div>
-            {(product.depositPercent || product.installmentMonths) && (
+            {(product.depositPercent != null ||
+              product.installmentMonths != null) && (
               <div className="installment">
                 <span>生前规划付款参考（Pre-Need）</span>
                 <p>
-                  {product.depositPercent}% 首期 · {product.installmentMonths}{" "}
-                  个月分期
+                  {[
+                    product.depositPercent != null
+                      ? `${product.depositPercent}% 首期`
+                      : null,
+                    product.installmentMonths != null
+                      ? `${product.installmentMonths} 个月分期`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </p>
               </div>
             )}
@@ -153,7 +183,10 @@ export default function PackageDetail() {
               价格、规格与供应情况可能调整。实际安排与费用，请以咨询时的确认为准。
             </p>
             <ConsultButton subject={product.name}>咨询此配套</ConsultButton>
-            <Link className="text-link" to={`/nirvana/${category.id}`}>
+            <Link
+              className="text-link"
+              to={categoryPath(provider.slug, category.slug)}
+            >
               返回{category.name}选择
             </Link>
           </div>

@@ -1,4 +1,7 @@
 import { Plus } from "lucide-react";
+import { useCatalog } from "../catalog/context";
+import CatalogueSection from "../components/CatalogueSection";
+import { NotFound } from "../components/ui";
 import { assistance } from "../data/site";
 import {
   PageHero,
@@ -7,13 +10,16 @@ import {
   ContactCTA,
 } from "../components/ui";
 export default function Yunnan() {
+  const catalog = useCatalog();
+  const provider = catalog.getProviderBySlug("yunnan-siantang");
+  if (!provider) return <NotFound />;
   return (
     <>
       <PageHero
-        eyebrow="SARAWAK HUN NAM SIANG TNG"
-        title="砂拉越云南善堂"
-        text="需要帮助的时候，先把下一步了解清楚。这里为您整理云南善堂相关资讯，以及可进一步咨询的协助事项。"
-        imageLabel="云南善堂建筑照片预留"
+        eyebrow={provider.english}
+        title={provider.name}
+        text={provider.description}
+        imageLabel={provider.coverLabel}
       >
         <ConsultButton subject="云南善堂相关协助" />
       </PageHero>
@@ -84,6 +90,9 @@ export default function Yunnan() {
           </li>
         </ol>
       </section>
+      {catalog.getCatalogCategories(provider.id).length > 0 && (
+        <CatalogueSection provider={provider} />
+      )}
       <ContactCTA />
     </>
   );
