@@ -100,7 +100,7 @@ export default function Home() {
         <div className="container home-hero-shell">
           <div className="hero-image-frame" data-reveal>
             <img
-              src="/images/nirvana-yunnan-hero.png"
+              src="/images/home-hero.png"
               alt="富贵山庄与云南善堂的环境展示"
               width="1672"
               height="941"
