@@ -60,6 +60,40 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const root = page.current;
+    if (!root || !("IntersectionObserver" in window)) return;
+
+    const touchPointer = window.matchMedia("(hover: none), (pointer: coarse)");
+    const cards = Array.from(root.querySelectorAll<HTMLElement>(".portal-card"));
+    let observer: IntersectionObserver | undefined;
+
+    const observeCards = () => {
+      observer?.disconnect();
+      cards.forEach((card) => {
+        card.classList.remove("is-in-view");
+      });
+      if (!touchPointer.matches) return;
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("is-in-view", entry.isIntersecting);
+          });
+        },
+        { rootMargin: "-18% 0px -18% 0px", threshold: 0.25 },
+      );
+      cards.forEach((card) => observer?.observe(card));
+    };
+
+    observeCards();
+    touchPointer.addEventListener("change", observeCards);
+    return () => {
+      observer?.disconnect();
+      touchPointer.removeEventListener("change", observeCards);
+    };
+  }, []);
+
   return (
     <div className="home-page" ref={page}>
       <section className="home-hero">
@@ -113,8 +147,14 @@ export default function Home() {
         />
         <div className="portal-grid">
           {servicePortals.map((portal, index) => (
-            <details className="portal-card" key={portal.title} data-reveal>
-              <summary>
+            <article
+              className="portal-card"
+              key={portal.title}
+              aria-label={`${portal.title}服务`}
+              tabIndex={0}
+              data-reveal
+            >
+              <div className="portal-visual">
                 <img
                   src="/images/nirvana-yunnan-hero.png"
                   alt=""
@@ -124,9 +164,8 @@ export default function Home() {
                 <span className="portal-summary-copy">
                   <small>0{index + 1} · {portal.english}</small>
                   <strong>{portal.title}</strong>
-                  <span>轻触查看服务</span>
                 </span>
-              </summary>
+              </div>
               <div className="portal-details">
                 <p>{portal.description}</p>
                 <ul aria-label={`${portal.title}服务`}>
@@ -138,7 +177,7 @@ export default function Home() {
                   进入{portal.title} <ArrowRight size={18} aria-hidden="true" />
                 </Link>
               </div>
-            </details>
+            </article>
           ))}
         </div>
       </section>

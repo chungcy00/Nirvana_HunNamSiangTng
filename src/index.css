@@ -684,22 +684,18 @@ textarea:focus-visible,
 }
 .portal-card:hover,
 .portal-card:focus-within,
-.portal-card[open] {
+.portal-card.is-in-view {
   transform: translateY(-8px) rotateX(1.4deg);
   box-shadow: 0 30px 68px #455c4e2e;
 }
-.portal-card summary {
+.portal-card .portal-visual {
   position: absolute;
   inset: 0;
   display: block;
   min-height: 520px;
-  cursor: pointer;
   list-style: none;
 }
-.portal-card summary::-webkit-details-marker {
-  display: none;
-}
-.portal-card summary > img {
+.portal-card .portal-visual > img {
   display: block;
   width: 100%;
   height: 520px;
@@ -707,9 +703,9 @@ textarea:focus-visible,
   transform: scale(1.01);
   transition: transform 0.8s cubic-bezier(0.2, 0.75, 0.25, 1);
 }
-.portal-card:hover summary > img,
-.portal-card:focus-within summary > img,
-.portal-card[open] summary > img {
+.portal-card:hover .portal-visual > img,
+.portal-card:focus-within .portal-visual > img,
+.portal-card.is-in-view .portal-visual > img {
   transform: scale(1.065);
 }
 .portal-shade {
@@ -720,7 +716,7 @@ textarea:focus-visible,
 }
 .portal-card:hover .portal-shade,
 .portal-card:focus-within .portal-shade,
-.portal-card[open] .portal-shade {
+.portal-card.is-in-view .portal-shade {
   background: linear-gradient(180deg, #11160720 4%, #111607f2 76%);
 }
 .portal-summary-copy {
@@ -733,7 +729,7 @@ textarea:focus-visible,
 }
 .portal-card:hover .portal-summary-copy,
 .portal-card:focus-within .portal-summary-copy,
-.portal-card[open] .portal-summary-copy {
+.portal-card.is-in-view .portal-summary-copy {
   transform: translateY(-180px);
 }
 .portal-summary-copy small {
@@ -769,7 +765,7 @@ textarea:focus-visible,
 }
 .portal-card:hover .portal-details,
 .portal-card:focus-within .portal-details,
-.portal-card[open] .portal-details {
+.portal-card.is-in-view .portal-details {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
@@ -823,7 +819,7 @@ textarea:focus-visible,
 }
 .motion-enhanced .portal-card[data-reveal].is-visible:hover,
 .motion-enhanced .portal-card[data-reveal].is-visible:focus-within,
-.motion-enhanced .portal-card[data-reveal].is-visible[open] {
+.motion-enhanced .portal-card[data-reveal].is-visible.is-in-view {
   transform: translateY(-8px) rotateX(1.4deg);
 }
 .category-card:hover {
@@ -2292,8 +2288,8 @@ blockquote {
     left: 30px;
   }
   .portal-card,
-  .portal-card summary,
-  .portal-card summary > img {
+  .portal-card .portal-visual,
+  .portal-card .portal-visual > img {
     min-height: 460px;
     height: 460px;
   }
@@ -2372,8 +2368,8 @@ blockquote {
     gap: 22px;
   }
   .portal-card,
-  .portal-card summary,
-  .portal-card summary > img {
+  .portal-card .portal-visual,
+  .portal-card .portal-visual > img {
     min-height: 430px;
     height: 430px;
   }
@@ -2385,15 +2381,15 @@ blockquote {
   }
   .portal-card:hover .portal-summary-copy,
   .portal-card:focus-within .portal-summary-copy,
-  .portal-card[open] .portal-summary-copy {
+  .portal-card.is-in-view .portal-summary-copy {
     transform: translateY(-188px);
   }
   .portal-card:hover,
   .portal-card:focus-within,
-  .portal-card[open],
+  .portal-card.is-in-view,
   .motion-enhanced .portal-card[data-reveal].is-visible:hover,
   .motion-enhanced .portal-card[data-reveal].is-visible:focus-within,
-  .motion-enhanced .portal-card[data-reveal].is-visible[open] {
+  .motion-enhanced .portal-card[data-reveal].is-visible.is-in-view {
     transform: translateY(-4px);
   }
 }
@@ -2765,10 +2761,28 @@ tbody th {
   object-fit: contain;
   object-position: center;
   background: #f8f7f4;
+  filter: brightness(0.83) saturate(0.88);
 }
 
 .hero-image-frame:hover > img {
   transform: none;
+}
+
+.hero-image-shade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #f8f7f4b5 0%,
+    #f8f7f482 17%,
+    #f8f7f400 53%
+  );
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000b 18%, transparent 52%);
+  mask-image: linear-gradient(180deg, #000 0%, #000b 18%, transparent 52%);
+  pointer-events: none;
 }
 
 .home-hero-heading {
