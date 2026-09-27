@@ -156,7 +156,7 @@ export default function Home() {
             >
               <div className="portal-visual">
                 <img
-                  src="/images/nirvana-yunnan-hero.png"
+                  src="/images/home-hero.png"
                   alt=""
                   style={{ objectPosition: portal.imagePosition }}
                 />
