@@ -1,5 +1,7 @@
 :root {
-  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-family:
+    "Source Han Serif SC", "Source Han Serif CN", "Noto Serif SC",
+    "Noto Serif CJK SC", "Songti SC", "STSong", "SimSun", serif;
   color: #33493d;
   background: #fbfaf7;
   font-synthesis: none;
@@ -12,7 +14,9 @@
   --cream: #fcf7ed;
   --line: #d9ddcf;
   --muted: #65766f;
-  --serif: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+  --serif:
+    "Source Han Serif SC", "Source Han Serif CN", "Noto Serif SC",
+    "Noto Serif CJK SC", "Songti SC", "STSong", "SimSun", serif;
 }
 * {
   box-sizing: border-box;
@@ -506,13 +510,14 @@ textarea:focus-visible,
 }
 .home-hero-shell {
   position: relative;
-  padding-block: 52px 70px;
+  padding-block: 42px 64px;
 }
 .home-hero-heading {
-  position: relative;
-  z-index: 2;
-  margin-bottom: -32px;
-  padding-left: 2px;
+  position: absolute;
+  z-index: 3;
+  top: 46px;
+  right: 38px;
+  left: 38px;
 }
 .home-hero-heading .eyebrow {
   display: flex;
@@ -521,24 +526,32 @@ textarea:focus-visible,
   color: #657552;
 }
 .home-hero-heading h1 {
-  max-width: 970px;
-  font-family: inherit;
+  max-width: 1050px;
+  font-family: var(--serif);
   font-size: clamp(44px, 6.4vw, 88px);
   font-weight: 400;
-  line-height: 1.06;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
   color: #294138;
+}
+.home-hero-heading h1 > span,
+.home-hero-heading h1 > strong {
+  display: block;
 }
 .home-hero-heading h1 strong {
   color: #6c8a45;
-  font-weight: 700;
+  font-weight: 650;
 }
 .hero-subtitle {
-  margin-top: 20px;
-  color: #526158;
+  position: absolute;
+  z-index: 3;
+  bottom: 99px;
+  left: 38px;
+  color: #fffdf2;
   font-family: var(--serif);
-  font-size: clamp(17px, 1.7vw, 23px);
+  font-size: clamp(16px, 1.55vw, 21px);
   letter-spacing: 0.12em;
+  text-shadow: 0 2px 15px #111607a8;
 }
 .gold-dash {
   display: inline-block;
@@ -548,17 +561,17 @@ textarea:focus-visible,
 }
 .hero-image-frame {
   position: relative;
-  min-height: 560px;
+  min-height: 690px;
   overflow: hidden;
   border: 1px solid #6475525e;
-  border-radius: 160px 12px 12px 12px;
+  border-radius: 14px;
   box-shadow: 0 36px 75px #203c2c24;
 }
 .hero-image-frame > img {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 560px;
+  min-height: 690px;
   object-fit: cover;
   object-position: center;
   transition: transform 1.2s cubic-bezier(0.2, 0.75, 0.25, 1);
@@ -569,26 +582,23 @@ textarea:focus-visible,
 .hero-image-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 48%, #111607cc 100%);
-}
-.hero-image-labels {
-  position: absolute;
-  inset: auto 34px 32px;
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  color: #fffdf3;
-  font-family: var(--serif);
-  font-size: clamp(21px, 2.2vw, 30px);
+  background: linear-gradient(
+    180deg,
+    #fcf7ed 0%,
+    #fcf7edf7 20%,
+    #fcf7eddf 34%,
+    #fcf7ed2e 58%,
+    #1116071f 72%,
+    #111607d6 100%
+  );
 }
 .hero-image-actions {
   position: absolute;
-  left: 50%;
+  z-index: 3;
+  left: 38px;
   bottom: 28px;
   display: flex;
-  justify-content: center;
   gap: 12px;
-  transform: translateX(-50%);
 }
 .hero-image-actions .button {
   min-width: 150px;
@@ -2250,24 +2260,27 @@ blockquote {
 /* Home-specific responsive refinements are kept last to override legacy page rules. */
 @media (max-width: 960px) {
   .home-hero-shell {
-    padding-block: 42px 54px;
+    padding-block: 32px 48px;
   }
   .home-hero-heading {
-    margin-bottom: -22px;
+    top: 38px;
+    right: 30px;
+    left: 30px;
   }
   .hero-image-frame,
   .hero-image-frame > img {
-    min-height: 450px;
+    min-height: 620px;
   }
   .hero-image-frame {
-    border-radius: 110px 10px 10px 10px;
+    border-radius: 12px;
   }
-  .hero-image-labels {
-    inset-inline: 24px;
-    bottom: 26px;
+  .hero-subtitle {
+    bottom: 94px;
+    left: 30px;
   }
   .hero-image-actions {
-    bottom: 22px;
+    bottom: 25px;
+    left: 30px;
   }
   .portal-card,
   .portal-card summary,
@@ -2283,38 +2296,52 @@ blockquote {
 
 @media (max-width: 640px) {
   .home-hero-shell {
-    padding-block: 32px 42px;
+    padding-block: 20px 30px;
   }
   .home-hero-heading {
-    margin-bottom: 22px;
+    top: 30px;
+    right: 20px;
+    left: 20px;
   }
   .home-hero-heading h1 {
-    font-size: clamp(39px, 12vw, 54px);
-    line-height: 1.12;
-    letter-spacing: -0.045em;
+    font-size: clamp(32px, 10.7vw, 43px);
+    line-height: 1.13;
+    letter-spacing: -0.06em;
+  }
+  .home-hero-heading h1 > span {
+    white-space: nowrap;
   }
   .hero-subtitle {
-    margin-top: 15px;
-    font-size: 16px;
+    bottom: 105px;
+    left: 20px;
+    font-size: 14px;
   }
   .hero-image-frame {
-    min-height: 0;
-    aspect-ratio: 1672 / 941;
-    border-radius: 56px 8px 8px 8px;
+    min-height: 580px;
+    aspect-ratio: auto;
+    border-radius: 10px;
   }
   .hero-image-frame > img {
-    min-height: 0;
+    min-height: 580px;
     height: 100%;
+    object-position: center;
   }
-  .hero-image-labels {
-    display: none;
+  .hero-image-shade {
+    background: linear-gradient(
+      180deg,
+      #fcf7ed 0%,
+      #fcf7edf8 24%,
+      #fcf7edd9 39%,
+      #fcf7ed25 61%,
+      #1116072b 74%,
+      #111607df 100%
+    );
   }
   .hero-image-actions {
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
+    right: 20px;
+    bottom: 24px;
+    left: 20px;
     gap: 7px;
-    transform: none;
   }
   .hero-image-actions .button {
     flex: 1;

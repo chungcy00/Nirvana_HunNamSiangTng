@@ -64,18 +64,6 @@ export default function Home() {
     <div className="home-page" ref={page}>
       <section className="home-hero">
         <div className="container home-hero-shell">
-          <div className="home-hero-heading" data-reveal>
-            <p className="eyebrow">
-              <span className="gold-dash" /> LIFE · MEMORY · PEACE
-            </p>
-            <h1>
-              归于土，化于风，
-              <br />
-              <strong>安于心</strong>
-            </h1>
-            <p className="hero-subtitle">身后之事，皆有所依</p>
-          </div>
-
           <div className="hero-image-frame" data-reveal>
             <img
               src="/images/nirvana-yunnan-hero.png"
@@ -84,10 +72,16 @@ export default function Home() {
               height="941"
             />
             <div className="hero-image-shade" aria-hidden="true" />
-            <div className="hero-image-labels">
-              <span>富贵山庄</span>
-              <span>云南善堂</span>
+            <div className="home-hero-heading">
+              <p className="eyebrow">
+                <span className="gold-dash" /> LIFE · MEMORY · PEACE
+              </p>
+              <h1>
+                <span>归于土，化于风，</span>
+                <strong>安于心</strong>
+              </h1>
             </div>
+            <p className="hero-subtitle">身后之事，皆有所依</p>
             <div className="hero-image-actions">
               <ConsultButton />
               <a className="button button-light" href="#services">
