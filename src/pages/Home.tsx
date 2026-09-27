@@ -76,12 +76,9 @@ export default function Home() {
               <p className="eyebrow">
                 <span className="gold-dash" /> LIFE · MEMORY · PEACE
               </p>
-              <h1>
-                <span>归于土，化于风，</span>
-                <strong>安于心</strong>
-              </h1>
+              <h1>归于土，化于风，安于心</h1>
+              <p className="hero-subtitle">身后之事，皆有所依</p>
             </div>
-            <p className="hero-subtitle">身后之事，皆有所依</p>
             <div className="hero-image-actions">
               <ConsultButton />
               <a className="button button-light" href="#services">
