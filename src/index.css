@@ -2725,8 +2725,35 @@ tbody th {
   }
 }
 
-/* Final hero composition: one-line title, centered subtitle and uncropped image. */
+/* The hero frame always matches the source photo's exact aspect ratio. */
+.hero-image-frame {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  aspect-ratio: 1672 / 941;
+  background: #f8f7f4;
+}
+
+.hero-image-frame > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  object-position: center;
+  background: #f8f7f4;
+}
+
+.hero-image-frame:hover > img {
+  transform: none;
+}
+
 .home-hero-heading {
+  top: clamp(24px, 5vw, 68px);
+  right: clamp(20px, 6vw, 84px);
+  left: clamp(20px, 6vw, 84px);
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -2740,158 +2767,74 @@ tbody th {
 .home-hero-heading h1 {
   max-width: none;
   color: var(--green);
-  font-size: clamp(30px, 4.8vw, 64px);
-  line-height: 1.2;
+  font-size: clamp(29px, 4.5vw, 62px);
+  line-height: 1.18;
   letter-spacing: -0.035em;
   white-space: nowrap;
 }
 
 .home-hero-heading .hero-subtitle {
   position: static;
-  margin-top: 13px;
+  margin-top: clamp(7px, 1vw, 13px);
   color: var(--sage);
-  font-size: clamp(15px, 1.45vw, 20px);
+  font-size: clamp(14px, 1.4vw, 20px);
   letter-spacing: 0.12em;
   text-shadow: none;
 }
 
-.hero-image-frame,
-.hero-image-frame > img {
-  background: #f8f7f4;
-}
-
-.hero-image-frame > img {
-  object-fit: contain;
-  object-position: center;
-}
-
-.hero-image-frame:hover > img {
-  transform: none;
-}
-
 .hero-image-actions {
   right: auto;
+  bottom: clamp(14px, 3vw, 32px);
   left: 50%;
+  padding: 0;
+  background: transparent;
   transform: translateX(-50%);
 }
 
-@media (max-width: 960px) {
-  .hero-subtitle,
-  .hero-image-actions {
-    left: 50%;
-  }
-}
-
-@media (orientation: portrait) {
-  .hero-image-frame {
-    height: auto;
-    min-height: 0;
-    padding-top: clamp(150px, 20vw, 180px);
-    background: #f8f7f4;
-  }
-
-  .hero-image-frame > img {
-    position: relative;
-    width: 100%;
-    height: auto;
-    min-height: 0;
-    object-fit: contain;
-    object-position: center;
-  }
-
-  .hero-image-shade {
-    display: none;
-  }
-
+@media (max-width: 640px) {
   .home-hero-heading {
-    top: clamp(28px, 5vw, 42px);
-    right: 24px;
-    left: 24px;
+    top: clamp(8px, 3.5vw, 18px);
+    right: 10px;
+    left: 10px;
   }
 
   .home-hero-heading .eyebrow {
-    font-size: clamp(8px, 1.3vw, 10px);
-    letter-spacing: 0.24em;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
+    font-size: clamp(5px, 1.65vw, 8px);
+    letter-spacing: 0.2em;
+  }
+
+  .gold-dash {
+    width: 16px;
   }
 
   .home-hero-heading h1 {
-    font-size: clamp(24px, 5.5vw, 44px);
-    letter-spacing: -0.04em;
+    font-size: clamp(17px, 5.7vw, 25px);
+    letter-spacing: -0.045em;
   }
 
   .home-hero-heading .hero-subtitle {
-    margin-top: 9px;
-    font-size: clamp(13px, 2.2vw, 18px);
+    margin-top: 3px;
+    font-size: clamp(9px, 2.8vw, 12px);
   }
 
   .hero-image-actions {
-    position: static;
-    justify-content: center;
-    width: 100%;
-    padding: 14px 20px 18px;
-    background: #f8f7f4;
-    transform: none;
-  }
-}
-
-@media (max-width: 640px) and (orientation: portrait) {
-  .hero-image-frame {
-    padding-top: 132px;
-  }
-
-  .home-hero-heading {
-    top: 27px;
-    right: 16px;
-    left: 16px;
-  }
-
-  .home-hero-heading h1 {
-    font-size: clamp(21px, 6.1vw, 25px);
-  }
-
-  .home-hero-heading .hero-subtitle {
-    font-size: 13px;
-  }
-
-  .hero-image-actions {
+    bottom: 7px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    padding: 14px 16px 18px;
+    width: min(92%, 350px);
+    gap: 6px;
   }
 
   .hero-image-actions .button {
     width: 100%;
-    padding-inline: 8px;
-  }
-}
-
-@media (max-width: 960px) and (orientation: landscape) {
-  .hero-image-frame,
-  .hero-image-frame > img {
-    height: calc(100svh - 76px);
-    min-height: 0;
+    min-height: 30px;
+    padding: 4px 7px;
+    font-size: 9px;
   }
 
-  .home-hero-heading {
-    top: 24px;
-  }
-
-  .home-hero-heading .eyebrow {
-    margin-bottom: 6px;
-  }
-
-  .home-hero-heading h1 {
-    font-size: clamp(27px, 4.5vw, 38px);
-  }
-
-  .home-hero-heading .hero-subtitle {
-    margin-top: 6px;
-    font-size: 13px;
-  }
-
-  .hero-image-actions {
-    bottom: 18px;
+  .hero-image-actions .button svg {
+    width: 13px;
+    height: 13px;
   }
 }
