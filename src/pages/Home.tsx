@@ -109,8 +109,7 @@ export default function Home() {
       <section className="container section service-portals" id="services">
         <SectionHeading
           eyebrow="TWO PLACES, ONE THOUGHT"
-          title="循心而往，找到合适的安排"
-          text="将指针移到卡片上，或轻触卡片查看服务。"
+          title="循心而往，我们陪您做选择"
         />
         <div className="portal-grid">
           {servicePortals.map((portal, index) => (
@@ -146,15 +145,15 @@ export default function Home() {
 
       <section className="container section journey" data-reveal>
         <SectionHeading
-          eyebrow="ONE STEP AT A TIME"
-          title="每一步，都可以慢慢来"
+          eyebrow="STEP BY STEP, WITH CARE"
+          title="每一步，皆有安心的托付"
         />
         <ol className="steps">
           {[
-            ["倾听您的需要", "了解家庭、信仰与预算。"],
-            ["说明不同选择", "比较产品、服务与安排。"],
-            ["一起确认细节", "厘清费用、流程与时间。"],
-            ["安排下一步", "按您的意愿继续咨询。"],
+            ["倾听您的需要", "了解您的家庭、信仰与预算"],
+            ["为您细说选择", "对比各项服务、安排与差异"],
+            ["与您共商细节", "共同厘清费用、流程与时间"],
+            ["随您所愿安排", "按您的意愿，随时联系我"],
           ].map(([title, text], i) => (
             <li key={title}>
               <span>0{i + 1}</span>

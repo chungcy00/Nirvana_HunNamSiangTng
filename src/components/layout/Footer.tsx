@@ -10,9 +10,9 @@ export default function Footer() {
           <div>
             <Brand />
             <p>
-              以关怀承托每一段生命旅程。
+              以温柔相送，让归处有依
               <br />
-              尊重每一种信仰，让爱与记忆继续延伸。
+              尊重每一种信仰，让爱与记忆继续延伸
             </p>
           </div>
           <div>
@@ -35,7 +35,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-disclaimer">
-          本网站为富贵山庄与云南善堂相关服务的独立资讯与咨询框架，并非相关机构官方网站。服务资料、产品价格、规格及供应情况以咨询时确认为准。
+          本网站为富贵山庄与云南善堂相关服务的独立资讯与咨询平台，并非相关机构官方网站。各项服务资料、服务详情及供应情况，均以最终咨询确认为准。
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} 归处有依</span>

@@ -11,7 +11,7 @@ export const navigation = [
   { label: "富贵山庄", to: "/nirvana" },
   { label: "云南善堂", to: "/yunnan-siantang" },
   { label: "关于服务", to: "/about" },
-  { label: "联系我们", to: "/contact" },
+  { label: "联系代理", to: "/contact" },
 ];
 export function whatsappUrl(message: string) {
   const number = advisor.whatsapp.replace(/\D/g, "");
@@ -22,19 +22,19 @@ export function whatsappUrl(message: string) {
 export const principles = [
   {
     title: "敬重所信",
-    description: "敬畏不同的信仰、文化与习俗，理解每一份安排背后的深情。",
+    description: "敬畏不同的信仰、文化与习俗，理解每一份安排背后的深情",
   },
   {
     title: "随心而择",
-    description: "从心出发，寻找最契合的服务与安置方式。",
+    description: "从心出发，寻找最契合的服务与安置方式",
   },
   {
     title: "缓步悉知",
-    description: "缓步梳理服务与流程，让每一次选择都心中有数。",
+    description: "缓步梳理服务与流程，让每一次选择都心中有数",
   },
   {
     title: "安然定夺",
-    description: "先倾听内心的声音，再安然规划往后的安排。",
+    description: "先倾听内心的声音，再安然规划往后的安排",
   },
 ];
 export const assistance = [

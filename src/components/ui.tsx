@@ -199,12 +199,8 @@ export function ContactCTA() {
     <section className="container cta">
       <div>
         <p className="eyebrow">HERE, WITH YOU</p>
-        <h2>
-          不确定从哪里开始？
-          <br className="mobile-only" />
-          我们可以一起慢慢了解。
-        </h2>
-        <p>说说您的需要，让下一步更清晰。</p>
+        <h2>此刻，您不是一个人在做决定</h2>
+        <p>您的每一个需求，我都会为您仔细考量与安排</p>
       </div>
       <ConsultButton>开始咨询</ConsultButton>
     </section>
