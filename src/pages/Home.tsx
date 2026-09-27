@@ -1,150 +1,159 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
-  Heart,
+  CheckCircle2,
   HeartHandshake,
-  MessagesSquare,
-  Sprout,
-  MapPin,
+  Leaf,
+  ListChecks,
 } from "lucide-react";
-import { advisor, principles } from "../data/site";
-import { useCatalog } from "../catalog/context";
-import {
-  Placeholder,
-  ConsultButton,
-  SectionHeading,
-  ProductCard,
-  ContactCTA,
-} from "../components/ui";
-const icons = [MessagesSquare, Sprout, HeartHandshake, Heart];
+import { principles } from "../data/site";
+import { ConsultButton, ContactCTA, SectionHeading } from "../components/ui";
+
+const icons = [HeartHandshake, Leaf, ListChecks, CheckCircle2];
+
+const servicePortals = [
+  {
+    title: "富贵山庄",
+    english: "NIRVANA MEMORIAL PARK",
+    description: "从生前规划到即时需求，了解安葬、安置与告别服务。",
+    services: ["福地", "骨灰殿", "殡仪服务", "宠物纪念"],
+    to: "/nirvana",
+    imagePosition: "left center",
+  },
+  {
+    title: "云南善堂",
+    english: "HUN NAM SIANG TNG",
+    description: "按家庭当下的需要，了解流程、仪式与相关协助。",
+    services: ["殡葬咨询", "流程说明", "家属协助", "后续安排"],
+    to: "/yunnan-siantang",
+    imagePosition: "right center",
+  },
+];
+
 export default function Home() {
-  const featuredProducts = useCatalog().getFeaturedProducts();
+  const page = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const root = page.current;
+    if (!root) return;
+
+    const items = Array.from(root.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (!("IntersectionObserver" in window)) {
+      items.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
+    root.classList.add("motion-enhanced");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14 },
+    );
+    items.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <>
+    <div className="home-page" ref={page}>
       <section className="home-hero">
-        <div className="container home-hero-grid">
-          <div className="hero-copy">
+        <div className="container home-hero-shell">
+          <div className="home-hero-heading" data-reveal>
             <p className="eyebrow">
-              <span className="gold-dash" /> A LITTLE PLANNING, A LOT OF LOVE
-            </p>
-            <p className="advisor-line">
-              {advisor.name || "顾问姓名待补充"} <span>｜ {advisor.title}</span>
+              <span className="gold-dash" /> LIFE · MEMORY · PEACE
             </p>
             <h1>
-              用心规划，
+              归于土，化于风，
               <br />
-              让家人多一份<span className="accent-word">安心</span>。
+              <strong>安于心</strong>
             </h1>
-            <p className="hero-description">
-              协助家庭了解古晋富贵山庄与云南善堂相关服务。
-              <br className="desktop-only" />
-              从不同信仰、预算与需要出发，陪您看清每一个选择。
-            </p>
-            <div className="button-row">
-              <ConsultButton />
-              <Link className="button button-outline" to="/nirvana">
-                查看服务 <ArrowRight size={17} />
-              </Link>
-            </div>
-            <div className="hero-note">
-              <MapPin size={15} />
-              {advisor.serviceArea}
-              <span />
-              尊重信仰 · 真诚相伴
-            </div>
+            <p className="hero-subtitle">身后之事，皆有所依</p>
           </div>
-          <div className="hero-portrait">
-            <Placeholder portrait label="顾问个人照片预留" />
-            <div className="portrait-caption">
-              <span className="caption-rule" />
-              <div>
-                让安排更清晰，让心更安定。
-                <small>HERE FOR YOU & YOUR FAMILY</small>
-              </div>
+
+          <div className="hero-image-frame" data-reveal>
+            <img
+              src="/images/nirvana-yunnan-hero.png"
+              alt="富贵山庄与云南善堂的环境展示"
+              width="1672"
+              height="941"
+            />
+            <div className="hero-image-shade" aria-hidden="true" />
+            <div className="hero-image-labels">
+              <span>富贵山庄</span>
+              <span>云南善堂</span>
+            </div>
+            <div className="hero-image-actions">
+              <ConsultButton />
+              <a className="button button-light" href="#services">
+                了解服务 <ArrowRight size={17} aria-hidden="true" />
+              </a>
             </div>
           </div>
         </div>
       </section>
-      <section className="principles-bar">
+
+      <section className="principles-bar" data-reveal>
         <div className="container principles-grid">
           {principles.map((item, i) => {
             const Icon = icons[i];
             return (
-              <div className="principle" key={item.title}>
-                <Icon strokeWidth={1.3} />
+              <article className="principle" key={item.title}>
+                <Icon strokeWidth={1.35} aria-hidden="true" />
                 <div>
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
       </section>
-      <section className="container section">
+
+      <section className="container section service-portals" id="services">
         <SectionHeading
-          eyebrow="HOW I CAN HELP"
-          title="我可以协助您了解"
-          text="不急着做决定，先从您关心的事情开始。"
+          eyebrow="TWO PLACES, ONE THOUGHT"
+          title="循心而往，找到合适的安排"
+          text="将指针移到卡片上，或轻触卡片查看服务。"
         />
-        <div className="grid-three">
-          {[
-            {
-              title: "富贵山庄",
-              english: "NIRVANA KUCHING",
-              text: "福地、骨灰位、殡仪服务与生前规划，清楚了解各类产品与选择。",
-              to: "/nirvana",
-              label: "园区照片预留",
-            },
-            {
-              title: "云南善堂",
-              english: "HUN NAM SIANG TNG",
-              text: "了解殡葬咨询、流程说明与家属协助，让需要帮助的时候有方向。",
-              to: "/yunnan-siantang",
-              label: "云南善堂照片预留",
-            },
-            {
-              title: "宠物纪念",
-              english: "PET MEMORIAL",
-              text: "宠物也是家人。让陪伴过我们的生命，拥有温柔而有尊严的告别。",
-              to: "/nirvana/pet-memorial",
-              label: "宠物纪念照片预留",
-            },
-          ].map((item, i) => (
-            <Link className="card service-card" to={item.to} key={item.title}>
-              <Placeholder label={item.label} />
-              <div className="card-body">
-                <span className="service-number">0{i + 1}</span>
-                <p className="eyebrow">{item.english}</p>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <span className="text-link">
-                  了解更多 <ArrowRight size={17} />
+        <div className="portal-grid">
+          {servicePortals.map((portal, index) => (
+            <details className="portal-card" key={portal.title} data-reveal>
+              <summary>
+                <img
+                  src="/images/nirvana-yunnan-hero.png"
+                  alt=""
+                  style={{ objectPosition: portal.imagePosition }}
+                />
+                <span className="portal-shade" aria-hidden="true" />
+                <span className="portal-summary-copy">
+                  <small>0{index + 1} · {portal.english}</small>
+                  <strong>{portal.title}</strong>
+                  <span>轻触查看服务</span>
                 </span>
+              </summary>
+              <div className="portal-details">
+                <p>{portal.description}</p>
+                <ul aria-label={`${portal.title}服务`}>
+                  {portal.services.map((service) => (
+                    <li key={service}>{service}</li>
+                  ))}
+                </ul>
+                <Link className="portal-link" to={portal.to}>
+                  进入{portal.title} <ArrowRight size={18} aria-hidden="true" />
+                </Link>
               </div>
-            </Link>
+            </details>
           ))}
         </div>
       </section>
-      <section className="soft-section">
-        <div className="container section">
-          <SectionHeading
-            eyebrow="EXPLORE YOUR OPTIONS"
-            title="从这些配套开始了解"
-            text="先认识不同类型，再寻找适合家人的安排。"
-          >
-            <Link className="text-link" to="/nirvana">
-              查看全部类别 <ArrowRight size={17} />
-            </Link>
-          </SectionHeading>
-          <div className="grid-three">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.slug} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="container section journey">
+
+      <section className="container section journey" data-reveal>
         <SectionHeading
           eyebrow="ONE STEP AT A TIME"
           title="每一步，都可以慢慢来"
@@ -165,6 +174,6 @@ export default function Home() {
         </ol>
       </section>
       <ContactCTA />
-    </>
+    </div>
   );
 }

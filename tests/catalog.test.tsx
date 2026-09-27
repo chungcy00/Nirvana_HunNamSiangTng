@@ -68,7 +68,11 @@ test("all existing products and pages retain their URLs and product content", ()
     const html = render(path, data);
     assert(html.includes("<h1"), path);
     assert(!html.includes("PAGE NOT FOUND"), path);
-    assert(!html.includes("<img"), path);
+    if (path === "/") {
+      assert(html.includes("/images/nirvana-yunnan-hero.png"), path);
+    } else {
+      assert(!html.includes("<img"), path);
+    }
     assert(!html.includes("undefined"), path);
   }
   for (const product of data.products)

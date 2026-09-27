@@ -206,7 +206,7 @@ export function ContactCTA() {
         </h2>
         <p>说说您的需要，让下一步更清晰。</p>
       </div>
-      <ConsultButton>与我聊一聊</ConsultButton>
+      <ConsultButton>开始咨询</ConsultButton>
     </section>
   );
 }

@@ -1,10 +1,5 @@
-// Fill with the owner's verified information; never use the reference agency's identity.
+// Fill only with contact information verified by the site owner.
 export const advisor = {
-  name: "",
-  title: "身后规划与服务顾问",
-  agentNumber: "",
-  experience: "",
-  languages: "",
   phone: "",
   whatsapp: "",
   email: "",
@@ -15,7 +10,7 @@ export const navigation = [
   { label: "首页", to: "/" },
   { label: "富贵山庄", to: "/nirvana" },
   { label: "云南善堂", to: "/yunnan-siantang" },
-  { label: "关于我", to: "/about" },
+  { label: "关于服务", to: "/about" },
   { label: "联系我们", to: "/contact" },
 ];
 export function whatsappUrl(message: string) {
@@ -25,10 +20,22 @@ export function whatsappUrl(message: string) {
     : null;
 }
 export const principles = [
-  { title: "专业咨询", description: "把复杂的安排，解释得清楚易懂。" },
-  { title: "多元选择", description: "尊重每个家庭的信仰、文化与预算。" },
-  { title: "安心规划", description: "先了解需要，再一起考虑合适选择。" },
-  { title: "温暖陪伴", description: "从初次了解，到每一步的安排。" },
+  {
+    title: "敬重所信",
+    description: "敬畏不同的信仰、文化与习俗，理解每一份安排背后的深情。",
+  },
+  {
+    title: "随心而择",
+    description: "从心出发，寻找最契合的服务与安置方式。",
+  },
+  {
+    title: "缓步悉知",
+    description: "缓步梳理服务与流程，让每一次选择都心中有数。",
+  },
+  {
+    title: "安然定夺",
+    description: "先倾听内心的声音，再安然规划往后的安排。",
+  },
 ];
 export const assistance = [
   {

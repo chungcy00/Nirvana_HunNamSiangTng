@@ -35,7 +35,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-disclaimer">
-          本网站为个人顾问服务网站框架，并非富贵山庄或云南善堂官方网站。代理身份与服务资料待补充确认。产品价格、规格及供应情况以咨询时确认为准。
+          本网站为富贵山庄与云南善堂相关服务的独立资讯与咨询框架，并非相关机构官方网站。服务资料、产品价格、规格及供应情况以咨询时确认为准。
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} 身后规划服务</span>

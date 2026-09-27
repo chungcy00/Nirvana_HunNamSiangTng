@@ -49,7 +49,7 @@ export default function Contact() {
       <section className="container contact-layout section">
         <div className="contact-information">
           <p className="eyebrow">GET IN TOUCH</p>
-          <h2>我在这里，倾听您的需要</h2>
+          <h2>从这里，说明您的需要</h2>
           <p className="muted">选择您觉得自在的方式，开始了解。</p>
           <div className="contact-items">
             {[
@@ -102,7 +102,7 @@ export default function Contact() {
           <div className="contact-note">
             {whatsappUrl("")
               ? "咨询内容会由您在 WhatsApp 中确认后发送。"
-              : "联系资料暂未填入。当前可预览咨询内容，正式联系方式补充后即可联系顾问。"}
+              : "联系资料暂未填入。当前可预览咨询内容，正式联系方式补充后即可发送。"}
           </div>
         </div>
         <div className="card contact-form">
