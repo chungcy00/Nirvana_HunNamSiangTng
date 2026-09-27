@@ -863,7 +863,7 @@ textarea:focus-visible,
   font-size: 25px;
 }
 .cta p:not(.eyebrow) {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--muted);
   margin-top: 9px;
 }
@@ -2606,6 +2606,52 @@ tbody th {
 .site-footer .brand-logo {
   border-radius: 50%;
   background: #f8f7f4;
+  width: 44px;
+  height: 44px;
+  flex-basis: 44px;
+}
+
+@media (min-width: 961px) {
+  .desktop-nav a {
+    font-size: 16px;
+  }
+
+  .principle h3 {
+    font-size: 20px;
+  }
+
+  .principle p {
+    font-size: 15px;
+  }
+
+  .service-portals {
+    padding-bottom: 44px;
+  }
+
+  .journey {
+    padding-top: 40px;
+    padding-bottom: 44px;
+  }
+
+  .steps h3 {
+    font-size: 20px;
+  }
+
+  .steps p {
+    font-size: 16px;
+  }
+
+  .cta p:not(.eyebrow) {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-footer .brand-logo {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
 }
 
 .portal-summary-copy small,
