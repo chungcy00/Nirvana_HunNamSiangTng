@@ -5,10 +5,16 @@ import { navigation } from "../../data/site";
 import { ConsultButton } from "../ui";
 export function Brand() {
   return (
-    <Link to="/" className="brand" aria-label="身后规划服务，返回首页">
-      <span className="brand-mark">LOGO</span>
+    <Link to="/" className="brand" aria-label="归处有依，返回首页">
+      <img
+        className="brand-logo"
+        src="/images/brand-logo.png"
+        alt=""
+        width="256"
+        height="256"
+      />
       <span>
-        身后规划服务<small>LIFE · CARE · LEGACY</small>
+        归处有依<small>LIFE · MEMORY · PEACE</small>
       </span>
     </Link>
   );

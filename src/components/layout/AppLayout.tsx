@@ -11,7 +11,7 @@ export default function AppLayout() {
     document.getElementById("main-content")?.focus({ preventScroll: true });
     const page =
       navigation.find((item) => item.to === pathname)?.label || "配套与服务";
-    document.title = `${page}｜身后规划服务`;
+    document.title = `${page}｜归处有依`;
   }, [pathname]);
   return (
     <>

@@ -71,7 +71,14 @@ test("all existing products and pages retain their URLs and product content", ()
     if (path === "/") {
       assert(html.includes("/images/nirvana-yunnan-hero.png"), path);
     } else {
-      assert(!html.includes("<img"), path);
+      const imageSources = Array.from(
+        html.matchAll(/<img[^>]*src="([^"]+)"/g),
+        (match) => match[1],
+      );
+      assert(
+        imageSources.every((source) => source === "/images/brand-logo.png"),
+        path,
+      );
     }
     assert(!html.includes("undefined"), path);
   }

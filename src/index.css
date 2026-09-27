@@ -345,6 +345,13 @@ textarea:focus-visible,
   margin-top: 5px;
   color: #7b8268;
 }
+.brand-logo {
+  display: block;
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  object-fit: contain;
+}
 .brand-mark {
   display: flex;
   align-items: center;
@@ -1832,6 +1839,11 @@ blockquote {
     font-size: 7px;
     letter-spacing: 1.7px;
   }
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
   .brand-mark {
     width: 36px;
     height: 36px;
@@ -2595,6 +2607,11 @@ tbody th {
   color: #e7eadf;
 }
 
+.site-footer .brand-logo {
+  border-radius: 50%;
+  background: #f8f7f4;
+}
+
 .portal-summary-copy small,
 .portal-summary-copy > span,
 .service-number,
@@ -2836,5 +2853,46 @@ tbody th {
   .hero-image-actions .button svg {
     width: 13px;
     height: 13px;
+  }
+}
+
+@media (max-width: 640px) and (orientation: portrait) {
+  .principles-bar {
+    padding-block: 16px;
+    background: #f8f7f4;
+  }
+
+  .principles-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding-block: 0;
+  }
+
+  .principle {
+    display: block;
+    min-width: 0;
+    padding: 14px 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fbfbf8;
+    box-shadow: none;
+  }
+
+  .principle > svg {
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    color: var(--sage);
+  }
+
+  .principle h3 {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .principle p {
+    margin-top: 5px;
+    font-size: 9px;
+    line-height: 1.65;
   }
 }
