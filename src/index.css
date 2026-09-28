@@ -2712,11 +2712,10 @@ tbody th {
 .hero-image-shade {
   background: linear-gradient(
     180deg,
-    #f8f7f4 0%,
-    #f8f7f4f7 18%,
-    #f8f7f4dd 32%,
-    #f8f7f480 45%,
-    #f8f7f400 58%,
+    #f8f7f4e6 0%,
+    #f8f7f4a8 16%,
+    #f8f7f43d 30%,
+    #f8f7f400 42%,
     #1a1f2e1f 76%,
     #1a1f2ed9 100%
   );
@@ -2789,13 +2788,13 @@ tbody th {
   }
 }
 
-/* The hero frame always matches the source photo's exact aspect ratio. */
+/* A slightly shorter hero keeps the scenery higher in the first viewport. */
 .hero-image-frame {
   width: 100%;
   height: auto;
   min-height: 0;
   padding: 0;
-  aspect-ratio: 1672 / 941;
+  aspect-ratio: 1.95;
   background: #f8f7f4;
 }
 
@@ -2805,8 +2804,8 @@ tbody th {
   width: 100%;
   height: 100%;
   min-height: 0;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center 75%;
   background: #f8f7f4;
   filter: brightness(0.83) saturate(0.88);
 }
@@ -2821,19 +2820,19 @@ tbody th {
   inset: 0;
   background: linear-gradient(
     180deg,
-    #f8f7f4b5 0%,
-    #f8f7f482 17%,
-    #f8f7f400 53%
+    #f8f7f450 0%,
+    #f8f7f426 17%,
+    #f8f7f400 38%
   );
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000b 18%, transparent 52%);
-  mask-image: linear-gradient(180deg, #000 0%, #000b 18%, transparent 52%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000b 16%, transparent 38%);
+  mask-image: linear-gradient(180deg, #000 0%, #000b 16%, transparent 38%);
   pointer-events: none;
 }
 
 .home-hero-heading {
-  top: clamp(24px, 5vw, 68px);
+  top: clamp(16px, 3vw, 42px);
   right: clamp(20px, 6vw, 84px);
   left: clamp(20px, 6vw, 84px);
   display: flex;
@@ -2853,15 +2852,17 @@ tbody th {
   line-height: 1.18;
   letter-spacing: -0.035em;
   white-space: nowrap;
+  text-shadow: 0 1px 12px #f8f7f4, 0 1px 24px #f8f7f4;
 }
 
 .home-hero-heading .hero-subtitle {
   position: static;
   margin-top: clamp(7px, 1vw, 13px);
-  color: var(--sage);
+  color: #284637;
   font-size: clamp(14px, 1.4vw, 20px);
+  font-weight: 600;
   letter-spacing: 0.12em;
-  text-shadow: none;
+  text-shadow: 0 0 4px #f8f7f4, 0 1px 14px #f8f7f4;
 }
 
 .hero-image-actions {
