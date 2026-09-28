@@ -2712,10 +2712,11 @@ tbody th {
 .hero-image-shade {
   background: linear-gradient(
     180deg,
-    #f8f7f4e8 0%,
-    #f8f7f4c7 13%,
-    #f8f7f47a 27%,
-    #f8f7f41f 44%,
+    #f8f7f4 0%,
+    #f8f7f4f7 18%,
+    #f8f7f4dd 32%,
+    #f8f7f480 45%,
+    #f8f7f400 58%,
     #1a1f2e1f 76%,
     #1a1f2ed9 100%
   );

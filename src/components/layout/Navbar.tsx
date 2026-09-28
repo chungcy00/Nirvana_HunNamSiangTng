@@ -5,7 +5,7 @@ import { navigation } from "../../data/site";
 import { ConsultButton } from "../ui";
 export function Brand() {
   return (
-    <Link to="/" className="brand" aria-label="归处有依，返回首页">
+    <Link to="/" className="brand" aria-label="身后事 · 皆可托，返回首页">
       <img
         className="brand-logo"
         src="/images/brand-logo.png"
@@ -14,7 +14,7 @@ export function Brand() {
         height="256"
       />
       <span>
-        归处有依<small>LIFE · MEMORY · PEACE</small>
+        身后事 · 皆可托<small>LIFE · MEMORY · PEACE</small>
       </span>
     </Link>
   );
