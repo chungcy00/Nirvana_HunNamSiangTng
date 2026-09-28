@@ -501,82 +501,6 @@ textarea:focus-visible,
 /* Home */
 .home-page {
   overflow: clip;
-  background: #fcf9f1;
-}
-.home-hero {
-  position: relative;
-  background:
-    radial-gradient(circle at 82% 12%, #a7c17d40 0, transparent 31%),
-    linear-gradient(150deg, #fcf2d8 0%, #f7f4e9 52%, #dfe8cf 100%);
-  border-bottom: 1px solid #cbd2bd;
-}
-.home-hero:before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.16;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
-}
-.home-hero-shell {
-  position: relative;
-  padding-block: 42px 64px;
-}
-.home-hero-heading {
-  position: absolute;
-  z-index: 3;
-}
-.home-hero-heading h1 {
-  font-family: var(--serif);
-  font-weight: 400;
-}
-.hero-subtitle {
-  font-family: var(--serif);
-}
-.hero-image-frame {
-  position: relative;
-  min-height: 690px;
-  overflow: hidden;
-  border: 1px solid #6475525e;
-  border-radius: 14px;
-  box-shadow: 0 36px 75px #203c2c24;
-}
-.hero-image-frame > picture > img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 690px;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 1.2s cubic-bezier(0.2, 0.75, 0.25, 1);
-}
-.hero-image-frame:hover > picture > img {
-  transform: scale(1.025);
-}
-.hero-image-shade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    #fcf7ed 0%,
-    #fcf7edf7 20%,
-    #fcf7eddf 34%,
-    #fcf7ed2e 58%,
-    #1116071f 72%,
-    #111607d6 100%
-  );
-}
-.hero-image-actions {
-  position: absolute;
-  z-index: 3;
-  display: flex;
-  gap: 12px;
-}
-.hero-image-actions .button {
-  min-width: 150px;
-  border-radius: 999px;
-  white-space: nowrap;
-  box-shadow: 0 10px 30px #11160730;
 }
 .button-light {
   border-color: #eef3df;
@@ -596,7 +520,7 @@ textarea:focus-visible,
 }
 .principles-bar {
   border-bottom: 1px solid #d2d8c9;
-  background: #fcfaf4;
+  background: var(--cream);
 }
 .principles-grid {
   display: grid;
@@ -2296,7 +2220,7 @@ blockquote {
 body,
 .home-page {
   color: var(--foreground);
-  background: #f8f7f4;
+  background: var(--cream);
 }
 
 h1,
@@ -2336,9 +2260,8 @@ h3,
   background: var(--sage);
 }
 
-.mobile-nav,
-.principles-bar {
-  background: #f8f7f4;
+.mobile-nav {
+  background: var(--cream);
 }
 
 .mobile-nav .active,
@@ -2548,34 +2471,30 @@ tbody th {
 
 /* The image is the hero: it fills the section edge to edge below the header. */
 .home-hero {
-  background: #f8f7f4;
-  border-bottom-color: var(--line);
-}
-
-.home-hero::before {
-  display: none;
+  position: relative;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
 }
 
 .home-hero-shell.container {
+  position: relative;
   width: 100%;
   max-width: none;
   padding: 0;
 }
 
 .hero-image-frame {
-  height: calc(100svh - 88px);
-  min-height: calc(100svh - 88px);
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.hero-image-frame > picture > img {
-  height: 100%;
-  min-height: 100%;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--cream);
 }
 
 .hero-image-shade {
+  position: absolute;
+  inset: 0;
+  /* Alpha stops are specific to this photograph and preserve text contrast. */
   background: linear-gradient(
     180deg,
     #f8f7f4e6 0%,
@@ -2591,70 +2510,7 @@ tbody th {
   font-size: clamp(22px, 2.15vw, 30px);
 }
 
-@media (max-width: 960px) {
-  .home-hero-shell {
-    padding: 0;
-  }
-
-  .hero-image-frame,
-  .hero-image-frame > picture > img {
-    height: max(620px, calc(100svh - 80px));
-    min-height: max(620px, calc(100svh - 80px));
-  }
-
-  .hero-image-frame {
-    border-radius: 0;
-  }
-
-  .home-hero-heading {
-    top: 42px;
-    right: 32px;
-    left: 32px;
-  }
-
-  .hero-subtitle,
-  .hero-image-actions {
-    left: 32px;
-  }
-}
-
-@media (max-width: 640px) {
-  .home-hero-shell {
-    padding: 0;
-  }
-
-  .hero-image-frame,
-  .hero-image-frame > picture > img {
-    height: max(600px, calc(100svh - 72px));
-    min-height: max(600px, calc(100svh - 72px));
-  }
-
-  .hero-image-frame {
-    border-radius: 0;
-  }
-
-  .home-hero-heading {
-    top: 34px;
-    right: 20px;
-    left: 20px;
-  }
-
-  .hero-subtitle,
-  .hero-image-actions {
-    left: 20px;
-  }
-}
-
 /* Match each supplied composition to its device orientation. */
-.hero-image-frame {
-  width: 100%;
-  height: auto;
-  min-height: 0;
-  padding: 0;
-  aspect-ratio: 16 / 9;
-  background: #f8f7f4;
-}
-
 .hero-image-frame > picture {
   position: absolute;
   inset: 0;
@@ -2664,19 +2520,15 @@ tbody th {
 }
 
 .hero-image-frame > picture > img {
+  display: block;
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 0;
   object-fit: contain;
   object-position: center;
-  background: #f8f7f4;
+  background: var(--cream);
   filter: brightness(0.83) saturate(0.88);
-}
-
-.hero-image-frame:hover > picture > img {
-  transform: none;
 }
 
 @media (orientation: portrait) and (max-width: 1024px) {
@@ -2710,6 +2562,8 @@ tbody th {
 }
 
 .home-hero-heading {
+  position: absolute;
+  z-index: 3;
   top: clamp(16px, 3vw, 42px);
   right: clamp(20px, 6vw, 84px);
   left: clamp(20px, 6vw, 84px);
@@ -2722,30 +2576,44 @@ tbody th {
 .home-hero-heading h1 {
   max-width: none;
   color: var(--green);
+  font-family: var(--serif);
   font-size: clamp(29px, 4.5vw, 62px);
+  font-weight: 400;
   line-height: 1.18;
   letter-spacing: -0.035em;
   white-space: nowrap;
-  text-shadow: 0 1px 12px #f8f7f4, 0 1px 24px #f8f7f4;
+  text-shadow: 0 1px 12px var(--cream), 0 1px 24px var(--cream);
 }
 
 .home-hero-heading .hero-subtitle {
   position: static;
   margin-top: clamp(7px, 1vw, 13px);
   color: #284637;
+  font-family: var(--serif);
   font-size: clamp(14px, 1.4vw, 20px);
   font-weight: 600;
   letter-spacing: 0.12em;
-  text-shadow: 0 0 4px #f8f7f4, 0 1px 14px #f8f7f4;
+  text-shadow: 0 0 4px var(--cream), 0 1px 14px var(--cream);
 }
 
 .hero-image-actions {
+  position: absolute;
+  z-index: 3;
   right: auto;
   bottom: clamp(14px, 3vw, 32px);
   left: 50%;
+  display: flex;
+  gap: 12px;
   padding: 0;
   background: transparent;
   transform: translateX(-50%);
+}
+
+.hero-image-actions .button {
+  min-width: 150px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px #11160730;
 }
 
 @media (max-width: 640px) {
@@ -2790,7 +2658,6 @@ tbody th {
 @media (max-width: 640px) and (orientation: portrait) {
   .principles-bar {
     padding-block: 16px;
-    background: #f8f7f4;
   }
 
   .principles-grid {
