@@ -69,7 +69,7 @@ test("all existing products and pages retain their URLs and product content", ()
     assert(html.includes("<h1"), path);
     assert(!html.includes("PAGE NOT FOUND"), path);
     if (path === "/") {
-      assert(html.includes("/images/home-hero.png"), path);
+      assert(html.includes("/images/home-hero.webp"), path);
     } else {
       const imageSources = Array.from(
         html.matchAll(/<img[^>]*src="([^"]+)"/g),

@@ -102,18 +102,18 @@ export default function Home() {
             <picture>
               <source
                 media="(orientation: portrait) and (max-width: 1024px)"
-                srcSet="/images/home-hero-mobile.png"
+                srcSet="/images/home-hero-mobile.webp"
               />
               <source
-                media="(orientation: landscape) and (min-width: 768px) and (max-width: 1366px) and (min-height: 561px) and (pointer: coarse)"
-                srcSet="/images/home-hero-tablet.png"
+                media="(orientation: landscape) and (min-width: 768px) and (max-width: 1366px) and (min-height: 561px) and (any-pointer: coarse)"
+                srcSet="/images/home-hero-tablet.webp"
               />
               <source
                 media="(orientation: landscape) and (min-width: 768px) and (max-width: 1024px) and (min-height: 561px)"
-                srcSet="/images/home-hero-tablet.png"
+                srcSet="/images/home-hero-tablet.webp"
               />
               <img
-                src="/images/home-hero.png"
+                src="/images/home-hero.webp"
                 alt="富贵山庄与云南善堂的环境展示"
                 width="1672"
                 height="941"
@@ -122,9 +122,6 @@ export default function Home() {
             </picture>
             <div className="hero-image-shade" aria-hidden="true" />
             <div className="home-hero-heading">
-              <p className="eyebrow">
-                <span className="gold-dash" /> LIFE · MEMORY · PEACE
-              </p>
               <h1>归于土，化于风，安于心</h1>
               <p className="hero-subtitle">身后之事，皆有所依</p>
             </div>
@@ -165,14 +162,14 @@ export default function Home() {
             <article
               className="portal-card"
               key={portal.title}
-              aria-label={`${portal.title}服务`}
-              tabIndex={0}
               data-reveal
             >
               <div className="portal-visual">
                 <img
-                  src="/images/home-hero.png"
+                  src="/images/home-hero.webp"
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   style={{ objectPosition: portal.imagePosition }}
                 />
                 <span className="portal-shade" aria-hidden="true" />
