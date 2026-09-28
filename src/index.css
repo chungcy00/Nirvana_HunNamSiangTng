@@ -575,7 +575,7 @@ textarea:focus-visible,
   border-radius: 14px;
   box-shadow: 0 36px 75px #203c2c24;
 }
-.hero-image-frame > img {
+.hero-image-frame > picture > img {
   display: block;
   width: 100%;
   height: 100%;
@@ -584,7 +584,7 @@ textarea:focus-visible,
   object-position: center;
   transition: transform 1.2s cubic-bezier(0.2, 0.75, 0.25, 1);
 }
-.hero-image-frame:hover > img {
+.hero-image-frame:hover > picture > img {
   transform: scale(1.025);
 }
 .hero-image-shade {
@@ -2273,7 +2273,7 @@ blockquote {
     left: 30px;
   }
   .hero-image-frame,
-  .hero-image-frame > img {
+  .hero-image-frame > picture > img {
     min-height: 620px;
   }
   .hero-image-frame {
@@ -2326,7 +2326,7 @@ blockquote {
     aspect-ratio: auto;
     border-radius: 10px;
   }
-  .hero-image-frame > img {
+  .hero-image-frame > picture > img {
     min-height: 580px;
     height: 100%;
     object-position: center;
@@ -2686,7 +2686,7 @@ tbody th {
   box-shadow: none;
 }
 
-.hero-image-frame > img {
+.hero-image-frame > picture > img {
   height: 100%;
   min-height: 100%;
 }
@@ -2740,7 +2740,7 @@ tbody th {
   }
 
   .hero-image-frame,
-  .hero-image-frame > img {
+  .hero-image-frame > picture > img {
     height: max(620px, calc(100svh - 80px));
     min-height: max(620px, calc(100svh - 80px));
   }
@@ -2767,7 +2767,7 @@ tbody th {
   }
 
   .hero-image-frame,
-  .hero-image-frame > img {
+  .hero-image-frame > picture > img {
     height: max(600px, calc(100svh - 72px));
     min-height: max(600px, calc(100svh - 72px));
   }
@@ -2788,30 +2788,51 @@ tbody th {
   }
 }
 
-/* A slightly shorter hero keeps the scenery higher in the first viewport. */
+/* Match each supplied composition to its device orientation. */
 .hero-image-frame {
   width: 100%;
   height: auto;
   min-height: 0;
   padding: 0;
-  aspect-ratio: 1.95;
+  aspect-ratio: 16 / 9;
   background: #f8f7f4;
 }
 
-.hero-image-frame > img {
+.hero-image-frame > picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-image-frame > picture > img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   min-height: 0;
-  object-fit: cover;
-  object-position: center 75%;
+  object-fit: contain;
+  object-position: center;
   background: #f8f7f4;
   filter: brightness(0.83) saturate(0.88);
 }
 
-.hero-image-frame:hover > img {
+.hero-image-frame:hover > picture > img {
   transform: none;
+}
+
+@media (orientation: portrait) and (max-width: 1024px) {
+  .hero-image-frame {
+    aspect-ratio: 3 / 4;
+  }
+}
+
+@media (orientation: landscape) and (min-width: 768px) and (max-width: 1024px) and (min-height: 561px),
+  (orientation: landscape) and (min-width: 768px) and (max-width: 1366px) and (min-height: 561px) and (pointer: coarse) {
+  .hero-image-frame {
+    aspect-ratio: 4 / 3;
+  }
 }
 
 .hero-image-shade::before {
@@ -2960,5 +2981,12 @@ tbody th {
     margin-top: 5px;
     font-size: 9px;
     line-height: 1.65;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) and (max-width: 1024px) {
+  .hero-image-actions {
+    top: min(calc(100svh - 130px), calc(100% - 60px));
+    bottom: auto;
   }
 }

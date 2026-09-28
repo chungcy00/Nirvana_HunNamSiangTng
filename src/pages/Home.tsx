@@ -99,12 +99,27 @@ export default function Home() {
       <section className="home-hero">
         <div className="container home-hero-shell">
           <div className="hero-image-frame" data-reveal>
-            <img
-              src="/images/home-hero.png"
-              alt="富贵山庄与云南善堂的环境展示"
-              width="1672"
-              height="941"
-            />
+            <picture>
+              <source
+                media="(orientation: portrait) and (max-width: 1024px)"
+                srcSet="/images/home-hero-mobile.png"
+              />
+              <source
+                media="(orientation: landscape) and (min-width: 768px) and (max-width: 1366px) and (min-height: 561px) and (pointer: coarse)"
+                srcSet="/images/home-hero-tablet.png"
+              />
+              <source
+                media="(orientation: landscape) and (min-width: 768px) and (max-width: 1024px) and (min-height: 561px)"
+                srcSet="/images/home-hero-tablet.png"
+              />
+              <img
+                src="/images/home-hero.png"
+                alt="富贵山庄与云南善堂的环境展示"
+                width="1672"
+                height="941"
+                fetchPriority="high"
+              />
+            </picture>
             <div className="hero-image-shade" aria-hidden="true" />
             <div className="home-hero-heading">
               <p className="eyebrow">
