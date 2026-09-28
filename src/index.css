@@ -12,6 +12,7 @@
   --green-hover: #5f7567;
   --sage: #7c9082;
   --sage-ink: #596c60;
+  --footer-ink: #ced8d0;
   --gold: #7c9082;
   --cream: #f8f7f4;
   --secondary: #ced4bf;
@@ -182,7 +183,7 @@ textarea:focus-visible,
   background: #edf1e9;
 }
 .button-small {
-  min-height: 40px;
+  min-height: 44px;
   padding: 9px 16px;
   font-size: 13px;
 }
@@ -340,7 +341,7 @@ textarea:focus-visible,
 }
 .brand small {
   display: block;
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 2.2px;
   font-family: var(--sans);
   margin-top: 5px;
@@ -524,37 +525,13 @@ textarea:focus-visible,
 .home-hero-heading {
   position: absolute;
   z-index: 3;
-  top: 46px;
-  right: 38px;
-  left: 38px;
 }
 .home-hero-heading h1 {
-  max-width: 1050px;
   font-family: var(--serif);
-  font-size: clamp(44px, 6.4vw, 88px);
   font-weight: 400;
-  line-height: 1.08;
-  letter-spacing: -0.045em;
-  color: #455c4e;
-}
-.home-hero-heading h1 > span,
-.home-hero-heading h1 > strong {
-  display: block;
-}
-.home-hero-heading h1 strong {
-  color: #6c8a45;
-  font-weight: 650;
 }
 .hero-subtitle {
-  position: absolute;
-  z-index: 3;
-  bottom: 99px;
-  left: 38px;
-  color: #fffdf2;
   font-family: var(--serif);
-  font-size: clamp(16px, 1.55vw, 21px);
-  letter-spacing: 0.12em;
-  text-shadow: 0 2px 15px #111607a8;
 }
 .hero-image-frame {
   position: relative;
@@ -592,8 +569,6 @@ textarea:focus-visible,
 .hero-image-actions {
   position: absolute;
   z-index: 3;
-  left: 38px;
-  bottom: 28px;
   display: flex;
   gap: 12px;
 }
@@ -722,8 +697,8 @@ textarea:focus-visible,
   transform: translateY(-180px);
 }
 .portal-summary-copy small {
-  font-size: 10px;
-  letter-spacing: 0.16em;
+  font-size: 12px;
+  letter-spacing: 0.12em;
   line-height: 1.5;
   color: #dfeacb;
 }
@@ -761,7 +736,7 @@ textarea:focus-visible,
 }
 .portal-details p {
   max-width: 450px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.8;
 }
 .portal-details ul {
@@ -775,7 +750,7 @@ textarea:focus-visible,
   border: 1px solid #dce8c66e;
   border-radius: 999px;
   background: #eef3df12;
-  font-size: 11px;
+  font-size: 12px;
 }
 .portal-link {
   display: inline-flex;
@@ -1568,7 +1543,7 @@ blockquote {
   border-color: #8e9f75;
 }
 .footer-grid > div:first-child > p {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 2;
   margin-top: 22px;
   max-width: 350px;
@@ -1582,21 +1557,21 @@ blockquote {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
-  min-height: 32px;
+  font-size: 13px;
+  min-height: 44px;
 }
 .footer-grid > div:not(:first-child) > p {
-  font-size: 12px;
+  font-size: 13px;
   margin-bottom: 5px;
 }
 .footer-note {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 10px;
   color: #a6b79d;
 }
 .footer-disclaimer {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.9;
   color: #a4b59b;
   border-top: 1px solid #3b644b;
@@ -1608,7 +1583,7 @@ blockquote {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  font-size: 10px;
+  font-size: 11px;
   color: #aebda2;
   margin-top: 22px;
 }
@@ -1821,7 +1796,6 @@ blockquote {
     letter-spacing: 0.5px;
   }
   .brand small {
-    font-size: 9px;
     letter-spacing: 1.7px;
   }
   .brand-logo {
@@ -2233,7 +2207,6 @@ blockquote {
     margin-top: 27px;
   }
   .footer-bottom {
-    font-size: 9px;
     gap: 10px;
   }
   .floating-consult {
@@ -2251,31 +2224,8 @@ blockquote {
     font-size: 30px;
   }
 }
-/* Home-specific responsive refinements are kept last to override legacy page rules. */
+/* Service portal layout at compact widths. */
 @media (max-width: 960px) {
-  .home-hero-shell {
-    padding-block: 32px 48px;
-  }
-  .home-hero-heading {
-    top: 38px;
-    right: 30px;
-    left: 30px;
-  }
-  .hero-image-frame,
-  .hero-image-frame > picture > img {
-    min-height: 620px;
-  }
-  .hero-image-frame {
-    border-radius: 12px;
-  }
-  .hero-subtitle {
-    bottom: 94px;
-    left: 30px;
-  }
-  .hero-image-actions {
-    bottom: 25px;
-    left: 30px;
-  }
   .portal-card,
   .portal-card .portal-visual,
   .portal-card .portal-visual > img {
@@ -2289,61 +2239,6 @@ blockquote {
 }
 
 @media (max-width: 640px) {
-  .home-hero-shell {
-    padding-block: 20px 30px;
-  }
-  .home-hero-heading {
-    top: 30px;
-    right: 20px;
-    left: 20px;
-  }
-  .home-hero-heading h1 {
-    font-size: clamp(32px, 10.7vw, 43px);
-    line-height: 1.13;
-    letter-spacing: -0.06em;
-  }
-  .home-hero-heading h1 > span {
-    white-space: nowrap;
-  }
-  .hero-subtitle {
-    bottom: 105px;
-    left: 20px;
-    font-size: 14px;
-  }
-  .hero-image-frame {
-    min-height: 580px;
-    aspect-ratio: auto;
-    border-radius: 10px;
-  }
-  .hero-image-frame > picture > img {
-    min-height: 580px;
-    height: 100%;
-    object-position: center;
-  }
-  .hero-image-shade {
-    background: linear-gradient(
-      180deg,
-      #fcf7ed 0%,
-      #fcf7edf8 24%,
-      #fcf7edd9 39%,
-      #fcf7ed25 61%,
-      #1116072b 74%,
-      #111607df 100%
-    );
-  }
-  .hero-image-actions {
-    right: 20px;
-    bottom: 24px;
-    left: 20px;
-    gap: 7px;
-  }
-  .hero-image-actions .button {
-    flex: 1;
-    min-width: 0;
-    min-height: 40px;
-    padding: 8px 10px;
-    font-size: 11px;
-  }
   .principles-grid {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -2580,12 +2475,12 @@ tbody th {
 .footer-note,
 .footer-disclaimer,
 .footer-bottom {
-  color: #ced8d0;
+  color: var(--footer-ink);
 }
 
 .site-footer .brand-mark,
 .footer-disclaimer {
-  border-color: #7c9082;
+  border-color: var(--sage);
 }
 
 .site-footer .brand-mark {
@@ -2680,20 +2575,6 @@ tbody th {
   min-height: 100%;
 }
 
-.home-hero-heading {
-  top: clamp(42px, 7vh, 78px);
-  right: clamp(28px, 7vw, 104px);
-  left: clamp(28px, 7vw, 104px);
-}
-
-.home-hero-heading h1 {
-  color: #334b3c;
-}
-
-.home-hero-heading h1 strong {
-  color: var(--sage);
-}
-
 .hero-image-shade {
   background: linear-gradient(
     180deg,
@@ -2704,15 +2585,6 @@ tbody th {
     #1a1f2e1f 76%,
     #1a1f2ed9 100%
   );
-}
-
-.hero-subtitle,
-.hero-image-actions {
-  left: clamp(28px, 7vw, 104px);
-}
-
-.hero-image-actions .button {
-  border-radius: 999px;
 }
 
 .service-portals .section-heading h2 {
@@ -2903,6 +2775,7 @@ tbody th {
 
   .hero-image-actions .button {
     width: 100%;
+    min-width: 0;
     min-height: 44px;
     padding: 8px 7px;
     font-size: 12px;
