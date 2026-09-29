@@ -44,7 +44,6 @@ export default function Home() {
       return;
     }
 
-    root.classList.add("motion-enhanced");
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -54,51 +53,17 @@ export default function Home() {
           }
         });
       },
-      { threshold: 0.14 },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0 },
     );
     items.forEach((item) => observer.observe(item));
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const root = page.current;
-    if (!root || !("IntersectionObserver" in window)) return;
-
-    const touchPointer = window.matchMedia("(hover: none), (pointer: coarse)");
-    const cards = Array.from(root.querySelectorAll<HTMLElement>(".portal-card"));
-    let observer: IntersectionObserver | undefined;
-
-    const observeCards = () => {
-      observer?.disconnect();
-      cards.forEach((card) => {
-        card.classList.remove("is-in-view");
-      });
-      if (!touchPointer.matches) return;
-
-      observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            entry.target.classList.toggle("is-in-view", entry.isIntersecting);
-          });
-        },
-        { rootMargin: "-18% 0px -18% 0px", threshold: 0.25 },
-      );
-      cards.forEach((card) => observer?.observe(card));
-    };
-
-    observeCards();
-    touchPointer.addEventListener("change", observeCards);
-    return () => {
-      observer?.disconnect();
-      touchPointer.removeEventListener("change", observeCards);
-    };
   }, []);
 
   return (
     <div className="home-page" ref={page}>
       <section className="home-hero">
         <div className="container home-hero-shell">
-          <div className="hero-image-frame" data-reveal>
+          <div className="hero-image-frame">
             <picture>
               <source
                 media="(orientation: portrait) and (max-width: 1024px)"
@@ -158,7 +123,7 @@ export default function Home() {
           title="循心而往，我们陪您做选择"
         />
         <div className="portal-grid">
-          {servicePortals.map((portal, index) => (
+          {servicePortals.map((portal) => (
             <article
               className="portal-card"
               key={portal.title}
@@ -174,8 +139,8 @@ export default function Home() {
                 />
                 <span className="portal-shade" aria-hidden="true" />
                 <span className="portal-summary-copy">
-                  <small>0{index + 1} · {portal.english}</small>
-                  <strong>{portal.title}</strong>
+                  <small>{portal.english}</small>
+                  <h3>{portal.title}</h3>
                 </span>
               </div>
               <div className="portal-details">
