@@ -106,8 +106,7 @@ export default function Home() {
       <section className="container section service-portals" id="services">
         <SectionHeading
           eyebrow="TWO PLACES, ONE THOUGHT"
-          title="先了解两家机构"
-          text="本站为独立资讯与咨询平台，整理两家机构的服务资讯；并非相关机构官方网站。"
+          title="两处用心，一份嘱托"
         />
         <div className="portal-grid">
           {servicePortals.map((portal) => (
