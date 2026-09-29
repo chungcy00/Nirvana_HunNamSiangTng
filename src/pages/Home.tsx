@@ -16,7 +16,7 @@ const servicePortals = [
   {
     title: "富贵山庄",
     english: "NIRVANA MEMORIAL PARK",
-    description: "从生前规划到即时需求，了解安葬、安置与告别服务。",
+    description: "想了解福地、骨灰殿或殡仪服务，可从这里开始。",
     services: ["福地", "骨灰殿", "殡仪服务", "宠物纪念"],
     to: "/nirvana",
     imagePosition: "left center",
@@ -24,7 +24,7 @@ const servicePortals = [
   {
     title: "云南善堂",
     english: "HUN NAM SIANG TNG",
-    description: "按家庭当下的需要，了解流程、仪式与相关协助。",
+    description: "想了解殡葬流程、仪式与家属协助，可从这里开始。",
     services: ["殡葬咨询", "流程说明", "家属协助", "后续安排"],
     to: "/yunnan-siantang",
     imagePosition: "right center",
@@ -89,6 +89,9 @@ export default function Home() {
             <div className="home-hero-heading">
               <h1>归于土，化于风，安于心</h1>
               <p className="hero-subtitle">身后之事，皆有所依</p>
+              <p className="hero-service-line">
+                了解生前规划与即时需求的服务资讯
+              </p>
             </div>
             <div className="hero-image-actions">
               <ConsultButton />
@@ -100,27 +103,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="principles-bar" data-reveal>
-        <div className="container principles-grid">
-          {principles.map((item, i) => {
-            const Icon = icons[i];
-            return (
-              <article className="principle" key={item.title}>
-                <Icon strokeWidth={1.35} aria-hidden="true" />
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
       <section className="container section service-portals" id="services">
         <SectionHeading
           eyebrow="TWO PLACES, ONE THOUGHT"
-          title="循心而往，我们陪您做选择"
+          title="先了解两家机构"
+          text="本站为独立资讯与咨询平台，整理两家机构的服务资讯；并非相关机构官方网站。"
         />
         <div className="portal-grid">
           {servicePortals.map((portal) => (
@@ -159,7 +146,24 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container section journey" data-reveal>
+      <section className="principles-bar" data-reveal>
+        <div className="container principles-grid">
+          {principles.map((item, i) => {
+            const Icon = icons[i];
+            return (
+              <article className="principle" key={item.title}>
+                <Icon strokeWidth={1.35} aria-hidden="true" />
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="container section journey">
         <SectionHeading
           eyebrow="STEP BY STEP, WITH CARE"
           title="每一步，皆有安心的托付"
@@ -169,9 +173,9 @@ export default function Home() {
             ["倾听您的需要", "了解您的家庭、信仰与预算"],
             ["为您细说选择", "对比各项服务、安排与差异"],
             ["与您共商细节", "共同厘清费用、流程与时间"],
-            ["随您所愿安排", "按您的意愿，随时联系我"],
+            ["随您所愿安排", "按您的意愿，继续确认安排"],
           ].map(([title, text], i) => (
-            <li key={title}>
+            <li key={title} data-reveal>
               <span>0{i + 1}</span>
               <h3>{title}</h3>
               <p>{text}</p>
@@ -179,7 +183,7 @@ export default function Home() {
           ))}
         </ol>
       </section>
-      <ContactCTA />
+      <ContactCTA text="先整理您的需要，再了解可选择的安排" />
     </div>
   );
 }

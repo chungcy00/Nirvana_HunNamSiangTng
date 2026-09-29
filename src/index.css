@@ -552,6 +552,9 @@ textarea:focus-visible,
 .service-portals {
   scroll-margin-top: 88px;
 }
+.service-portals .section-heading {
+  margin-bottom: 26px;
+}
 .portal-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -696,7 +699,9 @@ textarea:focus-visible,
     transform: translate(-50%, 0);
   }
 }
-[data-reveal].is-visible {
+.principles-bar[data-reveal].is-visible,
+.portal-card[data-reveal].is-visible,
+.steps li[data-reveal].is-visible {
   animation: home-arrive 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .portal-card:nth-child(2)[data-reveal].is-visible {
@@ -713,8 +718,42 @@ textarea:focus-visible,
   margin: 32px 0 0;
 }
 .steps li {
-  border-top: 1px solid #bdc9b3;
+  position: relative;
   padding-top: 22px;
+}
+.steps li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #bdc9b3;
+  transform-origin: left center;
+}
+.steps li:nth-child(2) {
+  --step-delay: 0.08s;
+}
+.steps li:nth-child(3) {
+  --step-delay: 0.16s;
+}
+.steps li:nth-child(4) {
+  --step-delay: 0.24s;
+}
+.steps li[data-reveal].is-visible {
+  animation-delay: var(--step-delay, 0s);
+}
+.steps li[data-reveal].is-visible::before {
+  animation: step-line 0.58s var(--step-delay, 0s)
+    cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes step-line {
+  from {
+    transform: scaleX(0.15);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 .steps li > span {
   font-family: var(--serif);
@@ -2566,6 +2605,17 @@ tbody th {
   text-shadow: 0 0 4px var(--cream), 0 1px 14px var(--cream);
 }
 
+.home-hero-heading .hero-service-line {
+  margin-top: clamp(8px, 1.1vw, 14px);
+  color: #284637;
+  font-family: var(--sans);
+  font-size: clamp(12px, 1.1vw, 15px);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 8px var(--cream), 0 1px 16px var(--cream);
+}
+
 .hero-image-actions {
   position: absolute;
   z-index: 3;
@@ -2603,6 +2653,11 @@ tbody th {
     font-size: clamp(13px, 3.1vw, 16px);
   }
 
+  .home-hero-heading .hero-service-line {
+    margin-top: 5px;
+    font-size: 11px;
+  }
+
   .hero-image-actions {
     bottom: 7px;
     display: grid;
@@ -2626,6 +2681,10 @@ tbody th {
 }
 
 @media (max-width: 640px) and (orientation: portrait) {
+  .service-portals {
+    padding-top: 34px;
+  }
+
   .principles-bar {
     padding-block: 16px;
   }

@@ -194,13 +194,17 @@ export function ProductCard({ product }: { product: Product }) {
     </article>
   );
 }
-export function ContactCTA() {
+export function ContactCTA({
+  text = "您的每一个需求，我都会为您仔细考量与安排",
+}: {
+  text?: string;
+} = {}) {
   return (
     <section className="container cta">
       <div>
         <p className="eyebrow">HERE, WITH YOU</p>
         <h2>此刻，您不是一个人在做决定</h2>
-        <p>您的每一个需求，我都会为您仔细考量与安排</p>
+        <p>{text}</p>
       </div>
       <ConsultButton>开始咨询</ConsultButton>
     </section>
