@@ -1,5 +1,10 @@
 // Fill only with contact information verified by the site owner.
 export const advisor = {
+  name: "",
+  title: "身后规划与服务顾问",
+  agentNumber: "",
+  experience: "",
+  languages: "",
   phone: "",
   whatsapp: "",
   email: "",
@@ -36,6 +41,12 @@ export const principles = [
     title: "安然定夺",
     description: "先倾听内心的声音，再安然规划往后的安排",
   },
+];
+export const aboutPrinciples = [
+  { title: "专业咨询", description: "把复杂的安排，解释得清楚易懂。" },
+  { title: "多元选择", description: "尊重每个家庭的信仰、文化与预算。" },
+  { title: "安心规划", description: "先了解需要，再一起考虑合适选择。" },
+  { title: "温暖陪伴", description: "从初次了解，到每一步的安排。" },
 ];
 export const assistance = [
   {

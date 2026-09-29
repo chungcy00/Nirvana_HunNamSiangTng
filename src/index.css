@@ -1347,6 +1347,9 @@ blockquote {
   justify-content: center;
   gap: 40px;
 }
+.cta.about-cta p:not(.eyebrow) {
+  font-size: 14px;
+}
 .contact-layout {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
