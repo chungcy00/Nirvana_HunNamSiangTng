@@ -16,16 +16,16 @@ const servicePortals = [
   {
     title: "富贵山庄",
     english: "NIRVANA MEMORIAL PARK",
-    description: "想了解福地、骨灰殿或殡仪服务，可从这里开始。",
-    services: ["福地", "骨灰殿", "殡仪服务", "宠物纪念"],
+    description: "想了解福地、骨灰殿及殡仪安排，可以由此开始",
+    services: ["福地（土葬/火葬）", "骨灰殿", "殡仪服务", "宠物纪念"],
     to: "/nirvana",
     imagePosition: "left center",
   },
   {
     title: "云南善堂",
     english: "HUN NAM SIANG TNG",
-    description: "想了解殡葬流程、仪式与家属协助，可从这里开始。",
-    services: ["殡葬咨询", "流程说明", "家属协助", "后续安排"],
+    description: "想了解从治丧到出殡的全程安排，可以由此开始",
+    services: ["治丧礼仪", "灵堂布置", "出殡安排", "殡仪配套"],
     to: "/yunnan-siantang",
     imagePosition: "right center",
   },
@@ -90,7 +90,7 @@ export default function Home() {
               <h1>归于土，化于风，安于心</h1>
               <p className="hero-subtitle">身后之事，皆有所依</p>
               <p className="hero-service-line">
-                了解生前规划与即时需求的服务资讯
+                从生前规划到即时安排，为您梳理全流程服务
               </p>
             </div>
             <div className="hero-image-actions">
@@ -106,7 +106,7 @@ export default function Home() {
       <section className="container section service-portals" id="services">
         <SectionHeading
           eyebrow="TWO PLACES, ONE THOUGHT"
-          title="两处用心，一份嘱托"
+          title="两处安排，皆可安心"
         />
         <div className="portal-grid">
           {servicePortals.map((portal) => (
