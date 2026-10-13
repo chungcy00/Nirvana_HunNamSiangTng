@@ -3,15 +3,15 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { navigation } from "../../data/site";
 import { ConsultButton } from "../ui";
-export function Brand() {
+export function Brand({ footer = false }: { footer?: boolean }) {
   return (
     <Link to="/" className="brand" aria-label="身后事 · 皆可托，返回首页">
       <img
         className="brand-logo"
-        src="/images/brand-logo.png"
+        src={footer ? "/images/footer-brand-logo.png" : "/images/brand-logo.png"}
         alt=""
-        width="1448"
-        height="1086"
+        width={footer ? 2048 : 1448}
+        height={footer ? 768 : 1086}
       />
     </Link>
   );

@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <Brand />
+            <Brand footer />
             <p>
               以温柔相送，让身后事 · 皆可托
               <br />

@@ -1737,7 +1737,7 @@ blockquote {
   .header-inner {
     height: 72px;
     gap: 8px;
-    grid-template-columns: 96px minmax(0, 1fr) 96px;
+    grid-template-columns: 120px minmax(0, 1fr) 44px;
   }
   .brand {
     font-size: 18px;
@@ -1748,9 +1748,9 @@ blockquote {
     letter-spacing: 1.7px;
   }
   .site-header .brand-logo {
-    width: 96px;
-    height: 36px;
-    flex-basis: 96px;
+    width: 120px;
+    height: 45px;
+    flex-basis: 120px;
   }
   .brand-mark {
     width: 36px;
@@ -1761,9 +1761,15 @@ blockquote {
     display: block;
   }
   .header-consult .button {
-    padding: 9px 10px;
-    font-size: 12px;
+    padding: 7px 8px;
+    min-height: 38px;
+    font-size: 11px;
+    gap: 5px;
     white-space: nowrap;
+  }
+  .header-consult .button svg {
+    width: 15px;
+    height: 15px;
   }
   .section {
     padding-block: 48px;
@@ -2413,6 +2419,7 @@ tbody th {
   width: 260px;
   height: 96px;
   flex-basis: 260px;
+  object-fit: contain;
 }
 
 @media (min-width: 961px) {
@@ -2817,12 +2824,12 @@ tbody th {
 }
 @media (max-width: 360px) {
   .header-inner {
-    grid-template-columns: 80px minmax(0, 1fr) 80px;
+    grid-template-columns: 104px minmax(0, 1fr) 44px;
   }
   .site-header .brand-logo {
-    width: 80px;
-    height: 30px;
-    flex-basis: 80px;
+    width: 104px;
+    height: 39px;
+    flex-basis: 104px;
   }
   .header-consult .button {
     font-size: 11px;
