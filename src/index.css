@@ -2534,6 +2534,12 @@ tbody th {
   }
 }
 
+@media (orientation: portrait) and (min-width: 641px) and (max-width: 1024px) {
+  .hero-image-frame {
+    aspect-ratio: 1.12;
+  }
+}
+
 @media (orientation: landscape) and (min-width: 768px) and (max-width: 1024px) and (min-height: 561px),
   (orientation: landscape) and (min-width: 768px) and (max-width: 1366px) and (min-height: 561px) and (any-pointer: coarse) {
   .hero-image-frame {
