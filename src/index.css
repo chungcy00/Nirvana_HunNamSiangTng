@@ -2413,8 +2413,6 @@ tbody th {
   width: 260px;
   height: 96px;
   flex-basis: 260px;
-  background: var(--cream);
-  border-radius: 6px;
 }
 
 @media (min-width: 961px) {
