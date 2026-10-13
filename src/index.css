@@ -1616,7 +1616,7 @@ blockquote {
   .header-inner {
     display: grid;
     grid-template-columns: 72px minmax(0, 1fr) 72px;
-    height: 76px;
+    height: 92px;
   }
   .menu-toggle {
     justify-self: end;
