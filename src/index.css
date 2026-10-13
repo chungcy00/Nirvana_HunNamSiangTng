@@ -349,9 +349,9 @@ textarea:focus-visible,
 }
 .brand-logo {
   display: block;
-  width: 58px;
-  height: 58px;
-  flex: 0 0 58px;
+  width: 72px;
+  height: 76px;
+  flex: 0 0 72px;
   object-fit: contain;
 }
 .brand-mark {
@@ -1625,10 +1625,16 @@ blockquote {
     display: flex;
   }
   .header-consult {
-    margin-left: auto;
+    margin-left: 0;
+    justify-self: center;
   }
   .header-inner {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) 72px;
     height: 76px;
+  }
+  .menu-toggle {
+    justify-self: end;
   }
   .grid-three {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1757,9 +1763,9 @@ blockquote {
     letter-spacing: 1.7px;
   }
   .brand-logo {
-    width: 46px;
-    height: 46px;
-    flex-basis: 46px;
+    width: 61px;
+    height: 64px;
+    flex-basis: 61px;
   }
   .brand-mark {
     width: 36px;
@@ -1767,7 +1773,12 @@ blockquote {
     font-size: 8px;
   }
   .header-consult {
-    display: none;
+    display: block;
+  }
+  .header-consult .button {
+    padding: 9px 10px;
+    font-size: 12px;
+    white-space: nowrap;
   }
   .section {
     padding-block: 48px;
@@ -2422,11 +2433,9 @@ tbody th {
 }
 
 .site-footer .brand-logo {
-  border-radius: 50%;
-  background: #f8f7f4;
-  width: 44px;
-  height: 44px;
-  flex-basis: 44px;
+  width: 124px;
+  height: 130px;
+  flex-basis: 124px;
 }
 
 @media (min-width: 961px) {
@@ -2466,9 +2475,9 @@ tbody th {
 
 @media (max-width: 640px) {
   .site-footer .brand-logo {
-    width: 36px;
-    height: 36px;
-    flex-basis: 36px;
+    width: 105px;
+    height: 110px;
+    flex-basis: 105px;
   }
 }
 
@@ -2546,6 +2555,17 @@ tbody th {
   .hero-image-frame {
     height: min(133.333vw, calc(100svh - 76px));
     min-height: 420px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 640px) {
+  .hero-image-frame {
+    height: 105vw;
+    min-height: 0;
+  }
+
+  .hero-image-frame > picture > img {
+    object-position: center 48%;
   }
 }
 

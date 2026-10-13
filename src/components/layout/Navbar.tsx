@@ -10,12 +10,9 @@ export function Brand() {
         className="brand-logo"
         src="/images/brand-logo.png"
         alt=""
-        width="256"
-        height="256"
+        width="1192"
+        height="1252"
       />
-      <span>
-        身后事 · 皆可托<small>LIFE · MEMORY · PEACE</small>
-      </span>
     </Link>
   );
 }
