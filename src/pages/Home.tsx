@@ -8,7 +8,7 @@ import {
   ListChecks,
 } from "lucide-react";
 import { principles } from "../data/site";
-import { ConsultButton, ContactCTA, SectionHeading } from "../components/ui";
+import { ConsultButton, SectionHeading } from "../components/ui";
 
 const icons = [HeartHandshake, Leaf, ListChecks, CheckCircle2];
 
@@ -162,27 +162,19 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container section journey">
-        <SectionHeading
-          eyebrow="STEP BY STEP, WITH CARE"
-          title="每一步，皆有安心的托付"
-        />
-        <ol className="steps">
-          {[
-            ["倾听您的需要", "了解您的家庭、信仰与预算"],
-            ["为您细说选择", "对比各项服务、安排与差异"],
-            ["与您共商细节", "共同厘清费用、流程与时间"],
-            ["随您所愿安排", "按您的意愿，继续确认安排"],
-          ].map(([title, text], i) => (
-            <li key={title} data-reveal>
-              <span>0{i + 1}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
+      <section className="container consultation-flow" aria-labelledby="consultation-flow-title">
+        <h2 id="consultation-flow-title">每一步，皆有安心的托付</h2>
+        <ol className="consultation-timeline" aria-label="服务流程">
+          {["倾听需要", "细说选择", "共商细节", "随愿安排"].map((step) => (
+            <li key={step}>
+              <span className="consultation-node" aria-hidden="true" />
+              <span>{step}</span>
             </li>
           ))}
         </ol>
+        <p className="consultation-reassurance">此刻，您不是一个人在做决定</p>
+        <ConsultButton className="consultation-start">开始咨询</ConsultButton>
       </section>
-      <ContactCTA text="先整理您的需要，再了解可选择的安排" />
     </div>
   );
 }

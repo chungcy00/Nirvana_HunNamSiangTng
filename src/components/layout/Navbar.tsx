@@ -10,8 +10,8 @@ export function Brand() {
         className="brand-logo"
         src="/images/brand-logo.png"
         alt=""
-        width="1192"
-        height="1252"
+        width="1448"
+        height="1086"
       />
     </Link>
   );

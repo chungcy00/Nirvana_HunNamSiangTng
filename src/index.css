@@ -349,10 +349,10 @@ textarea:focus-visible,
 }
 .brand-logo {
   display: block;
-  width: 72px;
-  height: 76px;
-  flex: 0 0 72px;
-  object-fit: contain;
+  width: 200px;
+  height: 72px;
+  flex: 0 0 200px;
+  object-fit: cover;
 }
 .brand-mark {
   display: flex;
@@ -1615,11 +1615,16 @@ blockquote {
   }
   .header-inner {
     display: grid;
-    grid-template-columns: 72px minmax(0, 1fr) 72px;
+    grid-template-columns: 180px minmax(0, 1fr) 180px;
     height: 92px;
   }
   .menu-toggle {
     justify-self: end;
+  }
+  .site-header .brand-logo {
+    width: 180px;
+    height: 66px;
+    flex-basis: 180px;
   }
   .grid-three {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1731,7 +1736,8 @@ blockquote {
   }
   .header-inner {
     height: 72px;
-    gap: 12px;
+    gap: 8px;
+    grid-template-columns: 96px minmax(0, 1fr) 96px;
   }
   .brand {
     font-size: 18px;
@@ -1741,10 +1747,10 @@ blockquote {
   .brand small {
     letter-spacing: 1.7px;
   }
-  .brand-logo {
-    width: 61px;
-    height: 64px;
-    flex-basis: 61px;
+  .site-header .brand-logo {
+    width: 96px;
+    height: 36px;
+    flex-basis: 96px;
   }
   .brand-mark {
     width: 36px;
@@ -2404,9 +2410,11 @@ tbody th {
 }
 
 .site-footer .brand-logo {
-  width: 124px;
-  height: 130px;
-  flex-basis: 124px;
+  width: 260px;
+  height: 96px;
+  flex-basis: 260px;
+  background: var(--cream);
+  border-radius: 6px;
 }
 
 @media (min-width: 961px) {
@@ -2446,9 +2454,9 @@ tbody th {
 
 @media (max-width: 640px) {
   .site-footer .brand-logo {
-    width: 105px;
-    height: 110px;
-    flex-basis: 105px;
+    width: 220px;
+    height: 82px;
+    flex-basis: 220px;
   }
 }
 
@@ -2735,5 +2743,95 @@ tbody th {
   .hero-image-actions {
     top: min(calc(100svh - 130px), calc(100% - 60px));
     bottom: auto;
+  }
+}
+
+/* A quiet, compact path from understanding the service to starting a conversation. */
+.consultation-flow {
+  padding-block: clamp(48px, 6vw, 80px);
+  text-align: center;
+  font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", var(--sans);
+}
+.consultation-flow h2 {
+  font-family: inherit;
+  font-size: clamp(21px, 3vw, 30px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.015em;
+}
+.consultation-timeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 620px;
+  margin: 36px auto 0;
+  padding: 0;
+  list-style: none;
+}
+.consultation-timeline li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  font-size: clamp(12px, 2.8vw, 16px);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.consultation-timeline li:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 100%;
+  height: 1px;
+  background: #d9ddd7;
+}
+.consultation-node {
+  position: relative;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 5px var(--cream);
+}
+.consultation-reassurance {
+  margin-top: 32px;
+  color: var(--sage-ink);
+  font-size: clamp(15px, 3.8vw, 19px);
+  line-height: 1.7;
+}
+.consultation-flow .consultation-start {
+  margin-top: 24px;
+  min-width: 190px;
+  min-height: 48px;
+  border-radius: 999px;
+  font-family: inherit;
+  color: #fff;
+  box-shadow: 0 4px 12px #455c4e18;
+}
+@media (max-width: 640px) {
+  .consultation-timeline {
+    margin-top: 30px;
+  }
+  .consultation-flow .consultation-start {
+    width: min(100%, 300px);
+  }
+}
+@media (max-width: 360px) {
+  .header-inner {
+    grid-template-columns: 80px minmax(0, 1fr) 80px;
+  }
+  .site-header .brand-logo {
+    width: 80px;
+    height: 30px;
+    flex-basis: 80px;
+  }
+  .header-consult .button {
+    font-size: 11px;
+    gap: 5px;
+    padding-inline: 6px;
+  }
+  .header-consult .button svg {
+    width: 15px;
   }
 }
