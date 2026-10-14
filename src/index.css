@@ -2495,6 +2495,13 @@ tbody th {
   background: var(--cream);
 }
 
+@media (min-width: 1025px) and (hover: hover) and (pointer: fine) {
+  .hero-image-frame {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
 .hero-image-shade {
   position: absolute;
   inset: 0;
