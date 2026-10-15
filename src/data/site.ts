@@ -26,20 +26,20 @@ export function whatsappUrl(message: string) {
 }
 export const principles = [
   {
-    title: "敬重所信",
-    description: "敬畏不同的信仰、文化与习俗，理解每一份安排背后的深情",
+    title: "尊重信仰",
+    description: "尊重不同的信仰、文化与习俗",
   },
   {
-    title: "随心而择",
-    description: "从心出发，寻找最契合的服务与安置方式",
+    title: "多元选择",
+    description: "了解不同的服务与安置方式",
   },
   {
-    title: "缓步悉知",
-    description: "缓步梳理服务与流程，让每一次选择都心中有数",
+    title: "循序了解",
+    description: "按自己的节奏，逐步了解服务",
   },
   {
-    title: "安然定夺",
-    description: "先倾听内心的声音，再安然规划往后的安排",
+    title: "从容决定",
+    description: "留出商量的时间，尊重家庭决定",
   },
 ];
 export const aboutPrinciples = [

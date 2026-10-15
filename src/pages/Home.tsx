@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -16,51 +15,24 @@ const servicePortals = [
   {
     title: "富贵山庄",
     english: "NIRVANA MEMORIAL PARK",
-    description: "想了解福地、骨灰殿及殡仪安排，可以由此开始",
-    services: ["福地（土葬/火葬）", "骨灰殿", "殡仪服务", "宠物纪念"],
+    description: "从福地、骨灰殿到殡仪服务，了解不同的安葬与纪念安排。",
+    services: ["福地（土葬／火葬）", "骨灰殿", "殡仪服务", "宠物纪念"],
     to: "/nirvana",
     imagePosition: "left center",
   },
   {
     title: "云南善堂",
     english: "HUN NAM SIANG TNG",
-    description: "想了解从治丧到出殡的全程安排，可以由此开始",
-    services: ["治丧礼仪", "灵堂布置", "出殡安排", "殡仪配套"],
+    description: "以殡仪配套涵盖治丧礼仪、灵堂布置及出殡相关安排。",
+    services: ["治丧礼仪", "灵堂布置", "出殡安排"],
     to: "/yunnan-siantang",
     imagePosition: "right center",
   },
 ];
 
 export default function Home() {
-  const page = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const root = page.current;
-    if (!root) return;
-
-    const items = Array.from(root.querySelectorAll<HTMLElement>("[data-reveal]"));
-    if (!("IntersectionObserver" in window)) {
-      items.forEach((item) => item.classList.add("is-visible"));
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0 },
-    );
-    items.forEach((item) => observer.observe(item));
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div className="home-page" ref={page}>
+    <div className="home-page">
       <section className="home-hero">
         <div className="container home-hero-shell">
           <div className="hero-image-frame">
@@ -94,7 +66,7 @@ export default function Home() {
               </p>
             </div>
             <div className="hero-image-actions">
-              <ConsultButton />
+              <ConsultButton>立即咨询</ConsultButton>
               <a className="button button-light" href="#services">
                 了解服务 <ArrowRight size={17} aria-hidden="true" />
               </a>
@@ -110,11 +82,7 @@ export default function Home() {
         />
         <div className="portal-grid">
           {servicePortals.map((portal) => (
-            <article
-              className="portal-card"
-              key={portal.title}
-              data-reveal
-            >
+            <Link className="portal-card" key={portal.title} to={portal.to} aria-label={`进入${portal.title}`}>
               <div className="portal-visual">
                 <img
                   src="/images/home-hero.webp"
@@ -136,22 +104,35 @@ export default function Home() {
                     <li key={service}>{service}</li>
                   ))}
                 </ul>
-                <Link className="portal-link" to={portal.to}>
+                <span className="portal-link">
                   进入{portal.title} <ArrowRight size={18} aria-hidden="true" />
-                </Link>
+                </span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="principles-bar" data-reveal>
+      <section className="container needs-guide" aria-labelledby="needs-guide-title">
+        <div>
+          <h2 id="needs-guide-title">还不确定从哪里开始？</h2>
+          <p>可以先了解适合自己的安排，也可以直接联系顾问。</p>
+        </div>
+        <div className="needs-guide-actions">
+          <Link className="button button-outline" to="/contact#needs-questionnaire">
+            根据需求了解 <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+          <ConsultButton className="guide-consult">直接咨询顾问</ConsultButton>
+        </div>
+      </section>
+
+      <section className="principles-bar">
         <div className="container principles-grid">
           {principles.map((item, i) => {
             const Icon = icons[i];
             return (
               <article className="principle" key={item.title}>
-                <Icon strokeWidth={1.35} aria-hidden="true" />
+                <Icon strokeWidth={2} aria-hidden="true" />
                 <div>
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
@@ -165,15 +146,21 @@ export default function Home() {
       <section className="container consultation-flow" aria-labelledby="consultation-flow-title">
         <h2 id="consultation-flow-title">每一步，皆有安心的托付</h2>
         <ol className="consultation-timeline" aria-label="服务流程">
-          {["倾听需要", "细说选择", "共商细节", "随愿安排"].map((step) => (
+          {[
+            ["倾听需要", "了解家庭需求"],
+            ["细说选择", "介绍合适服务"],
+            ["共同商量", "解答相关疑问"],
+            ["随愿安排", "尊重家庭决定"],
+          ].map(([step, description], index) => (
             <li key={step}>
               <span className="consultation-node" aria-hidden="true" />
+              <small className="consultation-number">0{index + 1}</small>
               <span>{step}</span>
+              <p>{description}</p>
             </li>
           ))}
         </ol>
-        <p className="consultation-reassurance">此刻，您不是一个人在做决定</p>
-        <ConsultButton className="consultation-start">开始咨询</ConsultButton>
+        <Link className="button consultation-start" to="/contact#needs-questionnaire">开始了解 <ArrowRight size={17} aria-hidden="true" /></Link>
       </section>
     </div>
   );

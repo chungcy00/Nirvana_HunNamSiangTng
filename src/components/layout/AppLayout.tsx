@@ -2,16 +2,23 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import FloatingConsult from "./FloatingConsult";
 import { navigation } from "../../data/site";
 export default function AppLayout() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
-    document.getElementById("main-content")?.focus({ preventScroll: true });
+    const target = hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null;
+    if (target) {
+      target.scrollIntoView({ block: "start", behavior: "instant" });
+      target.focus({ preventScroll: true });
+    } else {
+      window.scrollTo(0, 0);
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+    }
     const page =
       navigation.find((item) => item.to === pathname)?.label || "配套与服务";
     document.title = `${page}｜身后事 · 皆可托`;
-  }, [pathname]);
+  }, [pathname, hash]);
   return (
     <>
       <a className="skip-link" href="#main-content">
@@ -22,6 +29,7 @@ export default function AppLayout() {
         <Outlet />
       </main>
       <Footer />
+      <FloatingConsult />
     </>
   );
 }

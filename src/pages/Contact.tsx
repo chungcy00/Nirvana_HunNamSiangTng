@@ -105,9 +105,9 @@ export default function Contact() {
               : "联系资料暂未填入。当前可预览咨询内容，正式联系方式补充后即可发送。"}
           </div>
         </div>
-        <div className="card contact-form">
+        <div className="card contact-form" id="needs-questionnaire" tabIndex={-1} aria-labelledby="inquiry-title">
           <p className="eyebrow">MAKE THE FIRST STEP</p>
-          <h2>您想了解什么？</h2>
+          <h2 id="inquiry-title">您想了解什么？</h2>
           <p className="muted small">先整理您的问题，按自己的节奏开始。</p>
           <form
             onSubmit={prepare}

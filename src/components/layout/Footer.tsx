@@ -1,14 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { advisor, navigation } from "../../data/site";
-import { Brand } from "./Navbar";
 export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="container">
         <div className="footer-grid">
           <div>
-            <Brand footer />
+            <Link to="/" className="brand footer-brand-name" aria-label="身后事 · 皆可托，返回首页">身后事 · 皆可托</Link>
             <p>
               以温柔相送，让身后事 · 皆可托
               <br />
