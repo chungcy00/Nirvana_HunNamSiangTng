@@ -1740,7 +1740,7 @@ blockquote {
   .header-inner {
     height: 72px;
     gap: 8px;
-    grid-template-columns: clamp(120px, 26vw, 144px) minmax(0, 1fr) 44px;
+    grid-template-columns: clamp(136px, 30vw, 168px) minmax(0, 1fr) 44px;
   }
   .brand {
     font-size: 18px;
@@ -1751,8 +1751,8 @@ blockquote {
     letter-spacing: 1.7px;
   }
   .site-header .brand-logo {
-    width: clamp(120px, 26vw, 144px);
-    height: 54px;
+    width: clamp(136px, 30vw, 168px);
+    height: 63px;
     flex-basis: auto;
   }
   .brand-mark {
@@ -2818,12 +2818,14 @@ tbody th {
 }
 @media (max-width: 360px) {
   .header-inner {
-    grid-template-columns: 104px minmax(0, 1fr) 44px;
+    width: calc(100% - 24px);
+    gap: 6px;
+    grid-template-columns: 112px minmax(0, 1fr) 44px;
   }
   .site-header .brand-logo {
-    width: 104px;
-    height: 39px;
-    flex-basis: 104px;
+    width: 112px;
+    height: 42px;
+    flex-basis: 112px;
   }
   .header-consult .button {
     font-size: 11px;
