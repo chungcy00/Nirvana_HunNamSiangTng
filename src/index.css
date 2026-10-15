@@ -2497,8 +2497,7 @@ tbody th {
 
 @media (min-width: 1025px) and (hover: hover) and (pointer: fine) {
   .hero-image-frame {
-    height: auto;
-    aspect-ratio: 16 / 9;
+    height: min(56.25vw, calc(100svh - 89px));
   }
 
   .home-hero .hero-image-actions {
