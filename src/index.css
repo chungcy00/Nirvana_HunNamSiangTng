@@ -1614,11 +1614,11 @@ blockquote {
   }
   .header-consult {
     margin-left: 0;
-    justify-self: center;
+    justify-self: end;
   }
   .header-inner {
     display: grid;
-    grid-template-columns: 180px minmax(0, 1fr) 180px;
+    grid-template-columns: 180px minmax(0, 1fr) 44px;
     height: 92px;
   }
   .menu-toggle {
