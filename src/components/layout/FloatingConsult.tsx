@@ -4,10 +4,22 @@ import { ConsultButton } from "../ui";
 
 export default function FloatingConsult() {
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches,
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 640px)");
+    const update = () => setIsMobile(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
   const container = useRef<HTMLDivElement>(null);
   const [obscured, setObscured] = useState(false);
 
   useEffect(() => {
+    if (isMobile) return;
     let frame = 0;
     const targets = Array.from(document.querySelectorAll<HTMLElement>(
       "main a, main button, main input, main select, main textarea, main h1, main h2, main h3, main p, .site-footer",
@@ -41,7 +53,9 @@ export default function FloatingConsult() {
       window.removeEventListener("resize", schedule);
       window.visualViewport?.removeEventListener("resize", schedule);
     };
-  }, [location.key]);
+  }, [location.key, isMobile]);
+
+  if (isMobile) return null;
 
   return (
     <div ref={container} className="floating-consult-container" data-obscured={obscured} inert={obscured}>

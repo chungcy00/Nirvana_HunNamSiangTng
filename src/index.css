@@ -2904,8 +2904,7 @@ body:has(.mobile-nav:not([hidden])) .floating-consult { visibility: hidden; }
   .consultation-timeline li > span:last-of-type { grid-column: 3; grid-row: 1; }
   .consultation-timeline p { grid-column: 3; grid-row: 2; font-size: 13px; }
   .consultation-timeline li:not(:last-child)::before { display: block; top: 12px; left: 5px; width: 1px; height: 100%; }
-  .floating-consult-container { right: max(20px, env(safe-area-inset-right)); bottom: calc(20px + env(safe-area-inset-bottom)); }
-  .floating-consult.button { right: auto; bottom: auto; width: 48px; height: 48px; }
+  .floating-consult-container { display: none; }
 }
 
 .site-footer .footer-brand-name { font-size: clamp(22px, 2.2vw, 24px); font-weight: 500; line-height: 1.5; letter-spacing: 0.025em; }
