@@ -2500,6 +2500,10 @@ tbody th {
     height: auto;
     aspect-ratio: 16 / 9;
   }
+
+  .home-hero .hero-image-actions {
+    bottom: max(32px, calc(100% - 100svh + 120px));
+  }
 }
 
 .hero-image-shade {
