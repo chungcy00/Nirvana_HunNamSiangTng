@@ -1,28 +1,38 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
-  Phone,
   MessageCircle,
-  Mail,
   MapPin,
   Clock,
   ArrowRight,
 } from "lucide-react";
 import { advisor, whatsappUrl } from "../data/site";
+import NeedsQuestionnaire from "../components/NeedsQuestionnaire";
 import { PageHero } from "../components/ui";
+
+const serviceChoices = [
+  "骨灰位",
+  "火化土葬",
+  "传统土葬",
+  "殡仪服务",
+  "神主灵位",
+  "宠物纪念",
+  "其他咨询",
+];
+
 export default function Contact() {
   const [params] = useSearchParams();
   const requested = params.get("service") || "";
-  const [service, setService] = useState(requested);
+  const requestedCategory = serviceChoices.includes(requested) ? requested : "";
+  const [service, setService] = useState(requestedCategory);
+  const [message, setMessage] = useState("");
   const [preview, setPreview] = useState("");
   const [copied, setCopied] = useState(false);
   useEffect(() => {
-    setService(requested);
+    setService(requestedCategory);
     setPreview("");
     setCopied(false);
-  }, [requested]);
-  const choices = ["富贵山庄", "云南善堂", "宠物纪念", "其他咨询"];
-  if (requested && !choices.includes(requested)) choices.unshift(requested);
+  }, [requestedCategory]);
   function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -54,24 +64,16 @@ export default function Contact() {
           <div className="contact-items">
             {[
               {
-                icon: Phone,
-                label: "联系电话",
-                value: advisor.phone,
-                href: advisor.phone
-                  ? `tel:${advisor.phone.replace(/[^\d+]/g, "")}`
-                  : "",
-              },
-              {
                 icon: MessageCircle,
                 label: "WhatsApp",
                 value: advisor.whatsapp,
                 href: whatsappUrl("您好，我想咨询相关服务。") || "",
               },
               {
-                icon: Mail,
-                label: "电子邮件",
-                value: advisor.email,
-                href: advisor.email ? `mailto:${advisor.email}` : "",
+                icon: MessageCircle,
+                label: "WhatsApp（另一号码）",
+                value: advisor.whatsappSecondary,
+                href: whatsappUrl("您好，我想咨询相关服务。", advisor.whatsappSecondary) || "",
               },
               {
                 icon: MapPin,
@@ -105,7 +107,7 @@ export default function Contact() {
               : "联系资料暂未填入。当前可预览咨询内容，正式联系方式补充后即可发送。"}
           </div>
         </div>
-        <div className="card contact-form" id="needs-questionnaire" tabIndex={-1} aria-labelledby="inquiry-title">
+        <div className="card contact-form" id="inquiry-form" tabIndex={-1} aria-labelledby="inquiry-title">
           <p className="eyebrow">MAKE THE FIRST STEP</p>
           <h2 id="inquiry-title">您想了解什么？</h2>
           <p className="muted small">先整理您的问题，按自己的节奏开始。</p>
@@ -153,7 +155,7 @@ export default function Contact() {
                 required
               >
                 <option value="">请选择一项服务</option>
-                {choices.map((choice) => (
+                {serviceChoices.map((choice) => (
                   <option key={choice}>{choice}</option>
                 ))}
               </select>
@@ -164,7 +166,8 @@ export default function Contact() {
                 id="message"
                 name="message"
                 rows={4}
-                maxLength={1500}
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
                 placeholder="例如：想先了解配套选择、预算或相关流程……"
               />
             </label>
@@ -207,6 +210,7 @@ export default function Contact() {
           )}
         </div>
       </section>
+      <NeedsQuestionnaire />
     </>
   );
 }

@@ -28,9 +28,6 @@ export default function Footer() {
             <Link to="/contact">
               联络资料与咨询 <ArrowUpRight size={14} />
             </Link>
-            <span className="footer-note">
-              {advisor.phone || "联系电话 · 待补充"}
-            </span>
           </div>
         </div>
         <div className="footer-disclaimer">
