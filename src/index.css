@@ -346,9 +346,9 @@ textarea:focus-visible,
 }
 .brand-logo {
   display: block;
-  width: 200px;
-  height: 72px;
-  flex: 0 0 200px;
+  width: 180px;
+  height: 64px;
+  flex: 0 0 180px;
   object-fit: cover;
 }
 .brand-mark {
@@ -1618,16 +1618,16 @@ blockquote {
   }
   .header-inner {
     display: grid;
-    grid-template-columns: 180px minmax(0, 1fr) 44px;
+    grid-template-columns: 170px minmax(0, 1fr) 44px;
     height: 92px;
   }
   .menu-toggle {
     justify-self: end;
   }
   .site-header .brand-logo {
-    width: 180px;
-    height: 66px;
-    flex-basis: 180px;
+    width: 170px;
+    height: 60px;
+    flex-basis: 170px;
   }
   .grid-three {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1740,7 +1740,7 @@ blockquote {
   .header-inner {
     height: 72px;
     gap: 8px;
-    grid-template-columns: clamp(136px, 30vw, 168px) minmax(0, 1fr) 44px;
+    grid-template-columns: clamp(130px, 36vw, 150px) minmax(0, 1fr) 44px;
   }
   .brand {
     font-size: 18px;
@@ -1751,8 +1751,8 @@ blockquote {
     letter-spacing: 1.7px;
   }
   .site-header .brand-logo {
-    width: clamp(136px, 30vw, 168px);
-    height: 63px;
+    width: clamp(130px, 36vw, 150px);
+    height: 50px;
     flex-basis: auto;
   }
   .brand-mark {
@@ -2908,3 +2908,63 @@ body:has(.mobile-nav:not([hidden])) .floating-consult { visibility: hidden; }
 }
 
 .site-footer .footer-brand-name { font-size: clamp(22px, 2.2vw, 24px); font-weight: 500; line-height: 1.5; letter-spacing: 0.025em; }
+
+/* Only the homepage places the navigation over its opening photograph. */
+.site-header-home { position: fixed; inset: 0 0 auto; }
+.site-header { transition: background-color 180ms ease, border-color 180ms ease; }
+.site-header.is-transparent { background: transparent; backdrop-filter: none; border-bottom-color: transparent; }
+.site-header.is-transparent .desktop-nav a { color: #fffbed; text-shadow: 0 1px 4px #152c2480; }
+.site-header.is-transparent .desktop-nav a.active::after { background: #fffbed; }
+.site-header.is-transparent .menu-toggle { color: #fffbed; border-color: #fffbed80; }
+.site-header-home + main .home-hero-heading { margin-top: 88px; }
+.site-header-home + main .hero-image-frame { min-height: 608px; }
+@media (max-width: 960px) {
+  .site-header-home + main .home-hero-heading { margin-top: 92px; }
+}
+@media (max-width: 640px) {
+  .site-header-home + main .home-hero-heading { margin-top: 72px; }
+}
+@media (prefers-reduced-motion: reduce) { .site-header { transition: none; } }
+
+/* Fit the complete artwork instead of cropping the PNG's transparent canvas. */
+.site-header .brand-logo { object-fit: contain; }
+@media (min-width: 641px) and (hover: hover) and (pointer: fine) {
+  .site-header-home + main .hero-image-frame {
+    height: 100svh;
+    min-height: 460px;
+    aspect-ratio: auto;
+  }
+  .home-hero .hero-image-actions {
+    top: auto;
+    bottom: clamp(24px, 4vh, 48px);
+  }
+}
+
+/* A shared icon groups both advisor numbers; contact details stay in one column. */
+.contact-items { grid-template-columns: minmax(0, 1fr); }
+.contact-whatsapp { align-items: flex-start; }
+.contact-whatsapp-numbers { display: grid; gap: 18px; min-width: 0; }
+.contact-whatsapp a { white-space: nowrap; overflow-wrap: normal; }
+.menu-toggle { border: 0; border-radius: 0; box-shadow: none; }
+.mobile-menu-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(82vw, 340px);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0 0 0 auto;
+  padding: 24px;
+  border: 0;
+  color: var(--green);
+  background: var(--cream);
+}
+.mobile-menu-drawer::backdrop { background: #152c2466; }
+.mobile-menu-drawer[open] { animation: menu-slide-in 220ms ease-out; }
+.menu-close { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: auto; padding: 0; border: 0; background: transparent; color: var(--green); }
+.mobile-menu-drawer .mobile-nav { padding: 28px 0 0; border: 0; }
+.mobile-menu-drawer .mobile-nav > a { padding: 18px 10px; font-size: 17px; }
+.site-header.is-menu-open .header-inner > .brand,
+.site-header.is-menu-open .header-consult { visibility: hidden; }
+@keyframes menu-slide-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .mobile-menu-drawer[open] { animation: none; } }

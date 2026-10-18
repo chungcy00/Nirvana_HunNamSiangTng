@@ -62,19 +62,20 @@ export default function Contact() {
           <h2>从这里，说明您的需要</h2>
           <p className="muted">选择您觉得自在的方式，开始了解。</p>
           <div className="contact-items">
+            <div className="contact-item contact-whatsapp">
+              <MessageCircle size={20} strokeWidth={1.4} />
+              <div className="contact-whatsapp-numbers">
+                <div>
+                  <span>WhatsApp 第一联系方式</span>
+                  <a href={whatsappUrl("您好，我想咨询相关服务。") || ""}>{advisor.whatsapp}</a>
+                </div>
+                <div>
+                  <span>WhatsApp 第二联系方式</span>
+                  <a href={whatsappUrl("您好，我想咨询相关服务。", advisor.whatsappSecondary) || ""}>{advisor.whatsappSecondary}</a>
+                </div>
+              </div>
+            </div>
             {[
-              {
-                icon: MessageCircle,
-                label: "WhatsApp",
-                value: advisor.whatsapp,
-                href: whatsappUrl("您好，我想咨询相关服务。") || "",
-              },
-              {
-                icon: MessageCircle,
-                label: "WhatsApp（另一号码）",
-                value: advisor.whatsappSecondary,
-                href: whatsappUrl("您好，我想咨询相关服务。", advisor.whatsappSecondary) || "",
-              },
               {
                 icon: MapPin,
                 label: "服务地区",
