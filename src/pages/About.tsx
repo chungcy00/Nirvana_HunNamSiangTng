@@ -1,99 +1,63 @@
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { advisor, aboutPrinciples } from "../data/site";
-import {
-  Placeholder,
-  ConsultButton,
-  SectionHeading,
-} from "../components/ui";
+import { Phone } from "lucide-react";
+import "./About.css";
+
+const identity = "富贵山庄 025组织｜云南善堂蓝十组主任";
+
 export default function About() {
   return (
-    <>
-      <section className="container section about-hero">
-        <Placeholder portrait label="顾问正式照片预留" />
-        <div>
-          <p className="eyebrow">YOUR GUIDE, WITH CARE</p>
-          <h1>
-            用心服务，
-            <br />
-            让安排更安心。
-          </h1>
-          <p className="advisor-name">{advisor.name || "顾问姓名待补充"}</p>
-          <p>{advisor.title}</p>
-          <p className="hero-description">
-            每个家庭都有自己的故事。我的角色，是倾听您的需要，协助您理清资讯，一起找到更适合家人的选择。
-          </p>
-          <ConsultButton />
+    <div className="advisor-profile">
+      <section className="container advisor-introduction" aria-labelledby="advisor-name">
+        <div className="advisor-photo">
+          <img
+            src="/images/advisor-zhong-yongxin.png"
+            alt="钟永新顾问半身照"
+            width={1161}
+            height={1354}
+            fetchPriority="high"
+          />
+        </div>
+        <div className="advisor-biography">
+          <h1 id="advisor-name">钟永新</h1>
+          <p className="advisor-identity">{identity}</p>
+          <div className="advisor-story">
+            <p>在富贵山庄 025组织服务26年，深耕殡葬行业，累计为约500位客户提供咨询与协助，在殡葬规划、安葬安排及殡仪服务方面积累了丰富的实务经验。</p>
+            <p>同时，自2026年起，担任云南善堂蓝十组主任，参与殡仪服务的协调与安排。面对不同信仰与需求的家庭，始终以倾听为先，提供合适的建议与周到的协助，让每一个家庭在告别与后续安排中，都能感到安心与尊重。</p>
+          </div>
+          <dl className="advisor-experience">
+            <div><dt>富贵山庄服务经验</dt><dd>26<span>年</span></dd></div>
+            <div><dt>累计服务客户</dt><dd><span>约</span>500<span>位</span></dd></div>
+          </dl>
         </div>
       </section>
-      <section className="soft-section">
-        <div className="container section intro-split">
-          <SectionHeading
-            eyebrow="A LITTLE ABOUT ME"
-            title="先认识彼此，再开始规划"
-          />
+
+      <section className="advisor-beliefs" aria-labelledby="advisor-beliefs-title">
+        <div className="container advisor-beliefs-inner">
+          <h2 id="advisor-beliefs-title">服务理念与个人信念</h2>
           <div>
-            <dl className="specifications">
-              {[
-                ["代理身份 / 编号", advisor.agentNumber || "待补充与确认"],
-                ["服务地区", advisor.serviceArea],
-                ["服务经验", advisor.experience || "待补充"],
-                ["沟通语言", advisor.languages || "待补充"],
-                ["联系时间", advisor.businessHours || "待补充"],
-              ].map(([label, value]) => (
-                <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="content-slot">
-              <p>个人经历与服务故事预留</p>
-              <span>在这里介绍顾问的真实经历、可协助事项与服务方式。</span>
-            </div>
+            <p>深信殡葬服务不只是流程安排，更是在重要时刻给家人一份支持与陪伴。</p>
+            <p>从生前规划到身后安排，以真诚与细心陪伴每一个家庭。</p>
           </div>
         </div>
       </section>
-      <section className="container section">
-        <SectionHeading
-          eyebrow="WHAT I BELIEVE IN"
-          title="尊重每个家庭，认真对待每一份托付"
-        />
-        <div className="grid-four values">
-          {aboutPrinciples.map((p, i) => (
-            <article key={p.title}>
-              <span className="service-number">0{i + 1}</span>
-              <h3>{p.title}</h3>
-              <p>{p.description}</p>
-            </article>
-          ))}
+
+      <div className="advisor-motto">
+        <p className="container">用心服务 · 周全安排 · 一路相伴</p>
+      </div>
+
+      <section className="container advisor-consultation" aria-labelledby="advisor-consultation-title">
+        <div className="advisor-invitation">
+          <h2 id="advisor-consultation-title">欢迎咨询</h2>
+          <p>如需了解殡葬规划、安葬安排或殡仪服务，欢迎联系咨询。</p>
         </div>
-        <blockquote>
-          理解不同家庭的宗教、文化与纪念方式，
-          <br />
-          以尊重和包容的态度，提供清楚的资讯与选择。
-        </blockquote>
-        <div className="about-links">
-          <Link className="text-link" to="/nirvana">
-            了解富贵山庄 <ArrowRight size={16} />
-          </Link>
-          <Link className="text-link" to="/yunnan-siantang">
-            了解云南善堂 <ArrowRight size={16} />
-          </Link>
+        <div className="advisor-contact-details">
+          <h3>钟永新</h3>
+          <p className="advisor-contact-identity">{identity}</p>
+          <div className="advisor-telephone-links">
+            <a href="tel:+60198186134"><Phone size={20} strokeWidth={1.5} aria-hidden="true" /><span>019-818 6134</span></a>
+            <a href="tel:+60167760560"><Phone size={20} strokeWidth={1.5} aria-hidden="true" /><span>016-776 0560</span></a>
+          </div>
         </div>
       </section>
-      <section className="container cta about-cta">
-        <div>
-          <p className="eyebrow">HERE, WITH YOU</p>
-          <h2>
-            不确定从哪里开始？
-            <br className="mobile-only" />
-            我们可以一起慢慢了解。
-          </h2>
-          <p>说说您的需要，让下一步更清晰。</p>
-        </div>
-        <ConsultButton>与我聊一聊</ConsultButton>
-      </section>
-    </>
+    </div>
   );
 }

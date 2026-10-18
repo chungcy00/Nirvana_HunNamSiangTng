@@ -1,0 +1,174 @@
+.advisor-profile {
+  --advisor-gold: #ad8540;
+  color: var(--muted);
+}
+.advisor-introduction {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(40px, 6vw, 88px);
+  padding-block: 64px 80px;
+}
+.advisor-photo {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #e9ede5;
+}
+.advisor-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.advisor-biography {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+.advisor-biography h1 {
+  margin-bottom: 16px;
+}
+.advisor-profile .advisor-identity {
+  color: var(--green);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+.advisor-story p + p {
+  margin-top: 20px;
+}
+.advisor-story p {
+  line-height: 2;
+}
+.advisor-experience {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 48px;
+  margin: 32px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.advisor-experience > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+}
+.advisor-experience dt {
+  font-size: 14px;
+}
+.advisor-experience dd {
+  margin: 0;
+  color: var(--green);
+  font-family: var(--sans);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.advisor-experience dd span {
+  font-size: 20px;
+  margin-inline: 4px;
+}
+.advisor-beliefs {
+  background: #eef0e9;
+}
+.advisor-beliefs-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 40px 64px;
+  padding-block: 64px;
+}
+.advisor-beliefs-inner h2 {
+  font-size: clamp(24px, 2.5vw, 32px);
+}
+.advisor-beliefs-inner p + p {
+  margin-top: 16px;
+}
+.advisor-motto {
+  background: var(--green);
+  color: var(--cream);
+  text-align: center;
+  padding-block: 40px;
+}
+.advisor-motto p {
+  font-size: clamp(21px, 2.5vw, 32px);
+  font-weight: 500;
+  line-height: 1.8;
+  text-wrap: balance;
+}
+.advisor-consultation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px 80px;
+  padding-block: 72px 80px;
+}
+.advisor-invitation h2 {
+  margin-bottom: 16px;
+}
+.advisor-contact-details h3 {
+  margin-bottom: 8px;
+  font-size: 24px;
+}
+.advisor-contact-identity {
+  margin-bottom: 24px;
+}
+.advisor-telephone-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.advisor-telephone-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 48px;
+  color: var(--green);
+  font-family: var(--sans);
+  font-size: 23px;
+  white-space: nowrap;
+  text-underline-offset: 6px;
+}
+.advisor-telephone-links a svg {
+  color: var(--advisor-gold);
+}
+.advisor-telephone-links a:hover {
+  text-decoration: underline;
+}
+.advisor-telephone-links a:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+@media (max-width: 800px) {
+  .advisor-introduction {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding-block: 32px 48px;
+  }
+  .advisor-photo {
+    grid-column: 1;
+    grid-row: 1;
+    width: min(100%, 400px);
+    justify-self: center;
+  }
+  .advisor-biography {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .advisor-beliefs-inner,
+  .advisor-consultation {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding-block: 48px;
+  }
+  .advisor-experience {
+    column-gap: 32px;
+  }
+  .advisor-motto {
+    padding-block: 32px;
+  }
+}
