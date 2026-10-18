@@ -7,6 +7,7 @@ export const advisor = {
   languages: "",
   phone: "",
   whatsapp: "+60 19-818 6134",
+  whatsappRecipient: "+60 14-586 6878",
   whatsappSecondary: "+60 16-776 0560",
   email: "",
   businessHours: "24小时",
@@ -19,7 +20,7 @@ export const navigation = [
   { label: "关于服务", to: "/about" },
   { label: "联系代理", to: "/contact" },
 ];
-export function whatsappUrl(message: string, recipient = advisor.whatsapp) {
+export function whatsappUrl(message: string, recipient = advisor.whatsappRecipient) {
   const number = recipient.replace(/\D/g, "");
   return /^\d{8,15}$/.test(number)
     ? `https://wa.me/${number}?text=${encodeURIComponent(message)}`

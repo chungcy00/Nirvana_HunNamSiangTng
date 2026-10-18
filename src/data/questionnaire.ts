@@ -116,9 +116,33 @@ export function answerLines(a: Answers) {
   return lines;
 }
 export function inquirySummary(a: Answers, selected: string[], browsing: boolean) {
-  return ['您好，我想了解以下服务。', ...answerLines(a), ...(browsing?['正在查看当前类别的其他选择，所选产品可能不符合当前条件。']:[]),
-    '感兴趣的产品：', ...(selected.length ? questionnaireProducts.filter(p=>selected.includes(p.id)).map(p=>`${p.provider} · ${p.name}\n${applicableVariants(p,a).map(v=>`${v.label} ${money(v.price)}${withinBudget(v.price,a)?'（符合所选预算）':'（不符合所选预算）'}`).join('；') || '价格需确认'}\n需确认：${p.restriction}${productStatus(p,a)==='confirm'?' 宗教、容量或价格等资料需进一步确认。':''}`) : ['尚未选择产品，可以先与顾问沟通。']),
-    ...(a.religion==='其他'?['宗教及仪式适用情况需咨询确认。']:[]),supplyNotice].join('\n');
+  const chosen = questionnaireProducts.filter(p=>selected.includes(p.id));
+  const sections = ['您好，我想了解以下服务。'];
+  const needs = answerLines(a).filter(line=>!line.endsWith('：尚未填写'));
+  if (needs.length) sections.push(['【咨询需求】', ...needs.map(line=>`• ${line}`)].join('\n'));
+  if (browsing) sections.push('【浏览说明】\n• 正在查看当前类别的其他选择，所选产品可能不符合当前条件。');
+  const productBlocks = chosen.map((p,index)=>{
+    const prices = applicableVariants(p,a).map(v=>{
+      const budgetNote = !a.budget || a.budget==='any' ? '' : withinBudget(v.price,a) ? '（符合所选预算）' : '（不符合所选预算）';
+      return `    - ${v.label ? v.label+'：' : ''}${money(v.price)}${budgetNote}`;
+    });
+    const items = (value: string) => value.split(/[；。\r\n]+/).map(line=>line.trim()).filter(Boolean);
+    const confirmations = items(p.restriction);
+    if (!prices.length) confirmations.push('参考价格需咨询确认');
+    if (productStatus(p,a)==='confirm') confirmations.push('宗教、容量或价格等资料需进一步确认');
+    const basic = [`${index+1}. ${p.name}`, ...(p.provider?[`  所属机构：${p.provider}`]:[])].join('\n');
+    const parts: string[] = [];
+    if (prices.length) parts.push(['  参考价格：', ...prices].join('\n'));
+    const included = items(p.includes);
+    if (included.length) parts.push(['  包含内容：', ...included.map(line=>`    - ${line}`)].join('\n'));
+    if (confirmations.length) parts.push(['  需确认事项：', ...confirmations.map(line=>`    - ${line}`)].join('\n'));
+    return [basic, parts.join('\n')].filter(Boolean).join('\n\n');
+  });
+  if (productBlocks.length) sections.push(['【感兴趣的产品】', ...productBlocks].join('\n\n'));
+  if (a.religion==='其他') sections.push('【宗教与仪式】\n• 宗教及仪式适用情况需咨询确认。');
+  sections.push(`【价格及供应说明】\n• ${supplyNotice}`, '麻烦按以上需求提供进一步资料，谢谢。');
+  // Real line feeds are encoded once by whatsappUrl, identically on every device.
+  return sections.join('\n\n');
 }
 export function updateAnswers(a: Answers, key: keyof Answers, value: string): Answers {
   if(key==='category') return {...emptyAnswers, category:value as Answers['category'], religion:a.category && a.category!=='宠物纪念' && value!=='宠物纪念' ? a.religion : ''};
