@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   MessageCircle,
@@ -7,6 +7,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { advisor, whatsappUrl } from "../data/site";
+import { callbackPhonePattern, contactInquiryMessage } from "../data/contactInquiry";
 import NeedsQuestionnaire from "../components/NeedsQuestionnaire";
 import { PageHero } from "../components/ui";
 
@@ -26,29 +27,12 @@ export default function Contact() {
   const requestedCategory = serviceChoices.includes(requested) ? requested : "";
   const [service, setService] = useState(requestedCategory);
   const [message, setMessage] = useState("");
-  const [preview, setPreview] = useState("");
-  const [copied, setCopied] = useState(false);
-  useEffect(() => {
-    setService(requestedCategory);
-    setPreview("");
-    setCopied(false);
-  }, [requestedCategory]);
-  function prepare(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const text = `您好，我想咨询「${service}」。\n姓名：${String(data.get("name")).trim()}\n联系电话：${String(data.get("phone")).trim()}\n${String(data.get("message")).trim()}`;
-    setPreview(text);
-    setCopied(false);
-  }
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(preview);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
-  }
-  const url = whatsappUrl(preview);
+  const [name, setName] = useState("");
+  const [callback, setCallback] = useState(false);
+  const [phone, setPhone] = useState("");
+  useEffect(() => { setService(requestedCategory); }, [requestedCategory]);
+  const inquiry = contactInquiryMessage({ name, service, message, callback, phone });
+  const whatsappAction = whatsappUrl("")?.split("?")[0];
   return (
     <>
       <PageHero
@@ -59,7 +43,7 @@ export default function Contact() {
       <section className="container contact-layout section">
         <div className="contact-information">
           <p className="eyebrow">GET IN TOUCH</p>
-          <h2>从这里，说明您的需要</h2>
+          <h2>欢迎与我联系</h2>
           <p className="muted">选择您觉得自在的方式，开始了解。</p>
           <div className="contact-items">
             <div className="contact-item contact-whatsapp">
@@ -102,58 +86,54 @@ export default function Contact() {
               </div>
             ))}
           </div>
-          <div className="contact-note">
-            {whatsappUrl("")
-              ? "咨询内容会由您在 WhatsApp 中确认后发送。"
-              : "联系资料暂未填入。当前可预览咨询内容，正式联系方式补充后即可发送。"}
-          </div>
         </div>
         <div className="card contact-form" id="inquiry-form" tabIndex={-1} aria-labelledby="inquiry-title">
           <p className="eyebrow">MAKE THE FIRST STEP</p>
-          <h2 id="inquiry-title">您想了解什么？</h2>
-          <p className="muted small">先整理您的问题，按自己的节奏开始。</p>
-          <form
-            onSubmit={prepare}
-            onChange={() => {
-              setPreview("");
-              setCopied(false);
-            }}
-          >
+          <h2 id="inquiry-title">直接咨询顾问</h2>
+          <p className="muted small">简单说说您的需要，即可联系顾问，无需先填写下方问卷。</p>
+          <form action={whatsappAction} method="get" target="_blank" rel="noopener noreferrer">
+            <input type="hidden" name="text" value={inquiry} />
             <div className="form-row">
               <label htmlFor="name">
-                姓名 <span>*</span>
+                称呼 <small>（选填）</small>
                 <input
                   id="name"
-                  name="name"
-                  required
-                  pattern=".*\S.*"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
                   maxLength={80}
                   autoComplete="name"
                   placeholder="您的称呼"
                 />
               </label>
-              <label htmlFor="phone">
+              {callback && <label htmlFor="phone">
                 联系电话 <span>*</span>
                 <input
                   id="phone"
-                  name="phone"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
                   type="tel"
                   required
-                  pattern="[+0-9 ()-]{7,24}"
-                  title="请输入 7 至 24 位的电话号码，可包含 +、空格或连字符"
+                  pattern={callbackPhonePattern}
+                  title="请输入包含 7 至 15 个数字的电话号码，可包含 +、空格、括号或连字符"
                   maxLength={24}
                   autoComplete="tel"
                   placeholder="您的手机号码"
                 />
-              </label>
+              </label>}
             </div>
+            <label className="callback-choice">
+              <input type="checkbox" checked={callback} onChange={(event) => {
+                setCallback(event.target.checked);
+                if (!event.target.checked) setPhone("");
+              }} />
+              希望顾问电话联系我
+            </label>
             <label htmlFor="service">
-              想咨询的服务 <span>*</span>
+              想咨询的服务 <small>（选填）</small>
               <select
                 id="service"
                 value={service}
                 onChange={(event) => setService(event.target.value)}
-                required
               >
                 <option value="">请选择一项服务</option>
                 {serviceChoices.map((choice) => (
@@ -165,50 +145,17 @@ export default function Contact() {
               留言内容 <small>（选填）</small>
               <textarea
                 id="message"
-                name="message"
                 rows={4}
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder="例如：想先了解配套选择、预算或相关流程……"
               />
             </label>
-            <p className="small muted">
-              内容仅在当前页面整理，不会自动发送或储存。
-            </p>
             <button className="button" type="submit">
-              预览咨询内容 <ArrowRight size={17} />
+              前往 WhatsApp 咨询 <ArrowRight size={17} />
             </button>
+            <p className="small muted">咨询内容将带入对话框，由您确认后发送。</p>
           </form>
-          {preview && (
-            <div className="inquiry-preview" role="status">
-              <h3>咨询内容已整理，尚未发送</h3>
-              <pre>{preview}</pre>
-              <div className="button-row">
-                {url && (
-                  <a
-                    className="button"
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    打开 WhatsApp 继续
-                  </a>
-                )}
-                <button
-                  type="button"
-                  className="button button-outline"
-                  onClick={copy}
-                >
-                  {copied ? "已复制" : "复制内容"}
-                </button>
-              </div>
-              {!url && (
-                <p className="small">
-                  顾问 WhatsApp 号码待补充，当前无法发送咨询。
-                </p>
-              )}
-            </div>
-          )}
         </div>
       </section>
       <NeedsQuestionnaire />

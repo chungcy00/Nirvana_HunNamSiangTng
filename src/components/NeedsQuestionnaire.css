@@ -51,3 +51,34 @@
 @media (max-width: 640px) { .needs-products { grid-template-columns: 1fr; } .needs-question legend { font-size: 17px; gap: 10px; } .needs-options { grid-template-columns: 1fr; } .needs-option { padding: 14px; } .needs-product { padding: 22px; } .needs-product-heading { display: block; } .needs-status { display: inline-block; margin-top: 10px; } .needs-intro { margin-bottom: 30px; } }
 .needs-product-restriction { margin-top: 10px; }
 #inquiry-form { scroll-margin-top: 112px; }
+.needs-question.is-pending .needs-option { background: #fff; cursor: default; }
+.needs-question.is-pending .needs-option:hover { border-color: var(--accent); }
+.needs-detail-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--green); text-decoration: underline; text-underline-offset: 4px; }
+.needs-product { scroll-margin-top: 112px; }
+.needs-product h4 a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.needs-question { scroll-margin-top: 132px; }
+.needs-question.is-current { outline: none; }
+.needs-question:focus { outline: none; }
+.needs-question.is-current legend { color: var(--green); }
+.needs-question.is-current .needs-number { color: var(--green); font-weight: 700; }
+#needs-results { scroll-margin-top: 112px; }
+#needs-results:focus { outline: none; }
+.questionnaire-return-link { display: inline-flex; align-items: center; min-height: 44px; margin: 20px 0; color: var(--green); text-decoration: underline; text-underline-offset: 4px; }
+
+/* Question focus is expressed through type and control color, not a tinted panel. */
+.needs-question .needs-option,
+.needs-question .needs-option.is-selected { background: #fff; }
+.needs-question.is-pending legend,
+.needs-question.is-pending .needs-option strong,
+.needs-question.is-pending .needs-option small,
+.needs-question.is-pending .needs-help,
+.needs-question.is-pending .needs-number { color: #9aa39d; }
+.needs-question.is-pending .needs-option { border-color: #dce1da; }
+.needs-question.is-enabled legend,
+.needs-question.is-enabled .needs-option strong,
+.needs-question.is-enabled .needs-number { color: #284c3d; }
+.needs-question.is-enabled .needs-option small,
+.needs-question.is-enabled .needs-help { color: #53675a; }
+.needs-question.is-enabled .needs-option { border-color: #8fa394; }
+.needs-question .needs-option.is-selected { border-color: var(--green); }

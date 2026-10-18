@@ -1,3 +1,4 @@
+import { Link, useLocation } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { useCatalog } from "../catalog/context";
 import CatalogueSection from "../components/CatalogueSection";
@@ -11,6 +12,9 @@ import {
 } from "../components/ui";
 export default function Yunnan() {
   const catalog = useCatalog();
+  const location = useLocation();
+  const requestedReturn = location.state?.questionnaireReturn;
+  const questionnaireReturn = typeof requestedReturn==='string' && requestedReturn.startsWith('/contact#needs-product-') ? requestedReturn : null;
   const provider = catalog.getProviderBySlug("yunnan-siantang");
   if (!provider) return <NotFound />;
   return (
@@ -23,6 +27,7 @@ export default function Yunnan() {
       >
         <ConsultButton subject="云南善堂相关协助" />
       </PageHero>
+      {questionnaireReturn && <div className="container"><Link className="questionnaire-return-link" to={questionnaireReturn}>返回问卷结果</Link></div>}
       <section className="container section intro-split">
         <SectionHeading
           eyebrow="UNDERSTANDING THE SUPPORT"

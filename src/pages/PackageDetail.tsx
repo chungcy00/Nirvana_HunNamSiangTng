@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, useLocation, Link } from "react-router-dom";
 import { Check, Plus } from "lucide-react";
 import { useCatalog } from "../catalog/context";
 import { categoryPath } from "../catalog/repository";
@@ -12,6 +12,9 @@ import {
   money,
 } from "../components/ui";
 export default function PackageDetail() {
+  const location = useLocation();
+  const requestedReturn = location.state?.questionnaireReturn;
+  const questionnaireReturn = typeof requestedReturn==='string' && requestedReturn.startsWith('/contact#needs-product-') ? requestedReturn : null;
   const { slug, providerSlug } = useParams();
   const catalog = useCatalog();
   const provider = catalog.getProviderBySlug(providerSlug || "");
@@ -35,6 +38,7 @@ export default function PackageDetail() {
     .slice(0, 3);
   return (
     <div className="container detail-page">
+      {questionnaireReturn && <Link className="questionnaire-return-link" to={questionnaireReturn}>返回问卷结果</Link>}
       <Breadcrumb
         items={[
           { label: provider.name, to: `/${provider.slug}` },

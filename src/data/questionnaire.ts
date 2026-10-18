@@ -3,6 +3,11 @@ export const categories = ['骨灰位', '火化土葬', '传统土葬', '殡仪�
 export type ServiceCategory = typeof categories[number];
 export type Answers = { category: ServiceCategory | ''; religion: string; capacity: string; situation: string; method: string; size: string; budget: string };
 export const emptyAnswers: Answers = { category: '', religion: '', capacity: '', situation: '', method: '', size: '', budget: '' };
+export function questionKeys(a: Answers): (keyof Answers)[] {
+  if (!a.category) return ['category'];
+  if (a.category === '宠物纪念') return a.method === '宠物土葬' ? ['category','method','size','budget'] : ['category','method','budget'];
+  return a.category === '殡仪服务' ? ['category','religion','situation','budget'] : ['category','religion','capacity','budget'];
+}
 export const budgetBounds: Record<ServiceCategory, number[]> = {
   骨灰位: [0, 10000, 20000, 50000, 100000], 火化土葬: [0, 20000, 50000],
   传统土葬: [0, 30000, 60000, 100000, 200000], 殡仪服务: [0, 10000, 20000, 30000, 40000], 宠物纪念: [0, 5000, 9000],
