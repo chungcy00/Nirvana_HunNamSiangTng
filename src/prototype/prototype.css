@@ -372,3 +372,15 @@
 .fgp-service-detail { grid-template-columns: 1fr; }
 .fgp-website .fgp-view-list .fgp-card-funeral .fgp-product-link { height: auto; min-height: var(--list-size); }
 .fgp-website .fgp-card-funeral .fgp-card-body { width: 100%; }
+
+/* Touch and keyboard usability; card, image and theme styles stay unchanged. */
+.fgp-website .fgp-reset, .fgp-website .fgp-back, .fgp-website .fgp-text-link { min-height: 44px; }
+.fgp-website .fgp-reset { min-width: 44px; }
+.fgp-website .fgp-primary { color: white; }
+.fgp-website :is(button, a, select):focus-visible { outline: 3px solid var(--p-green); outline-offset: 4px; }
+@media (max-width: 650px) {
+  .fgp-website .fgp-filter-row { flex-wrap: wrap; row-gap: 8px; }
+  .fgp-website .fgp-filter-label { flex-shrink: 0; }
+  .fgp-website .fgp-capacities { flex: 1 1 200px; gap: 6px; }
+  .fgp-website .fgp-display-controls { flex-wrap: wrap; row-gap: 8px; }
+}

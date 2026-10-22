@@ -2985,3 +2985,17 @@ body:has(.mobile-nav:not([hidden])) .floating-consult { visibility: hidden; }
 .placement-tag {
   width: fit-content;
 }
+
+/* Confirmed usability-only changes. Keep the existing visual design. */
+.contact-form .callback-choice { min-height: 44px; }
+.contact-form label > .contact-field-error { display: block; color: #a32d2d; font-size: 13px; font-weight: 400; line-height: 1.6; margin-top: 4px; }
+.contact-form input[aria-invalid="true"] { border-color: #a32d2d; }
+@media (max-width: 640px) {
+  .contact-form form { display: grid; gap: 20px; }
+  .contact-form label { margin-bottom: 0; }
+  .contact-form .form-row { gap: 20px; min-width: 0; }
+  .contact-form input:not([type="checkbox"]):not([type="hidden"]),
+  .contact-form select { min-height: 44px; min-width: 0; }
+  .contact-form .button { min-height: 44px; white-space: normal; }
+  .contact-whatsapp-numbers a { display: inline-flex; align-items: center; min-height: 44px; }
+}

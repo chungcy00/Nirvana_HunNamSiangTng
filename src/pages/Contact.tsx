@@ -30,6 +30,8 @@ export default function Contact() {
   const [name, setName] = useState("");
   const [callback, setCallback] = useState(false);
   const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const phoneErrorText = "请输入包含 7 至 15 个数字的电话号码，可包含 +、空格、括号或连字符。";
   useEffect(() => { setService(requestedCategory); }, [requestedCategory]);
   const inquiry = contactInquiryMessage({ name, service, message, callback, phone });
   const whatsappAction = whatsappUrl("")?.split("?")[0];
@@ -110,7 +112,20 @@ export default function Contact() {
                 <input
                   id="phone"
                   value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
+                  onChange={(event) => {
+                    setPhone(event.target.value);
+                    if (phoneError && event.target.validity.valid) setPhoneError("");
+                  }}
+                  onInvalid={(event) => {
+                    event.preventDefault();
+                    setPhoneError(phoneErrorText);
+                    event.currentTarget.focus();
+                  }}
+                  onBlur={(event) => {
+                    if (event.target.value || phoneError) setPhoneError(event.target.validity.valid ? "" : phoneErrorText);
+                  }}
+                  aria-invalid={phoneError ? true : undefined}
+                  aria-describedby={phoneError ? "phone-error" : undefined}
                   type="tel"
                   required
                   pattern={callbackPhonePattern}
@@ -119,12 +134,13 @@ export default function Contact() {
                   autoComplete="tel"
                   placeholder="您的手机号码"
                 />
+                {phoneError && <span id="phone-error" className="contact-field-error" role="alert">{phoneError}</span>}
               </label>}
             </div>
             <label className="callback-choice">
               <input type="checkbox" checked={callback} onChange={(event) => {
                 setCallback(event.target.checked);
-                if (!event.target.checked) setPhone("");
+                if (!event.target.checked) { setPhone(""); setPhoneError(""); }
               }} />
               希望顾问电话联系我
             </label>

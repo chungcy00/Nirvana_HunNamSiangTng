@@ -62,7 +62,7 @@ test("production data never falls back to static catalogue during loading/error/
         ? /正在载入/
         : state === "error"
           ? /重新载入/
-          : /暂时没有符合条件/,
+          : /当前分类暂无产品/,
     );
   }
   assert.match(render("ready", "/nirvana/products/item/live-w"), /已公开产品/);
@@ -255,4 +255,15 @@ test("published funeral service needs no photo in grid, list or detail", () => {
     assert.doesNotMatch(html, /实拍.*待补充/);
     assert.match(html, /殡仪服务/);
   }
+});
+
+ test("empty category offers contact; an active empty filter offers reset", () => {
+  const category = render("ready", "/nirvana?category=2");
+  assert.match(category, /当前分类暂无产品/);
+  assert.match(category, /href="\/contact"[^>]*>联系代理/);
+  assert.doesNotMatch(category, /清除筛选/);
+  const filtered = render("ready", "/nirvana?category=1&capacity=family");
+  assert.match(filtered, /暂时没有符合条件的产品/);
+  assert.match(filtered, /清除筛选/);
+  assert.doesNotMatch(filtered, /当前分类暂无产品/);
 });
