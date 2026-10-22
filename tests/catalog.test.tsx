@@ -77,7 +77,8 @@ test("all existing products and pages retain their URLs and product content", ()
       );
       assert(
         imageSources.every((source) => source === "/images/brand-logo.png" ||
-          (path === "/about" && source === "/images/advisor-zhong-yongxin.png")),
+          (path === "/about" && source === "/images/advisor-zhong-yongxin.png") ||
+          (path === "/nirvana" && /^\/images\/sort-(ascending|descending|default)\.png$/.test(source))),
         path,
       );
     }

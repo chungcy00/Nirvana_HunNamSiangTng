@@ -360,3 +360,6 @@
   .fgp-website .fgp-view-list .fgp-prices > div + div { border: 0; padding: 0; }
   .fgp-sort select { width: 100%; padding: 0; font-size: 16px; }
 }
+
+.fgp-sort-icon { display: block; width: 28px; height: 28px; object-fit: contain; }
+.fgp-sort-icon-default { width: 34px; height: 34px; }
