@@ -1,0 +1,66 @@
+{
+  "environment": "local-browser-real-supabase",
+  "tests": [
+    {
+      "name": "Real password login and persisted session survive refresh",
+      "status": "PASS"
+    },
+    {
+      "name": "Name search and category filters use real RPC results",
+      "status": "PASS"
+    },
+    {
+      "name": "New product is a real draft, seven category forms use schema fields",
+      "status": "PASS"
+    },
+    {
+      "name": "Quick-add series and religion persist while product draft stays unsaved",
+      "status": "PASS"
+    },
+    {
+      "name": "Real file upload, main image and price submit with publication confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "Card and detail preview are a protected real-form projection",
+      "status": "PASS"
+    },
+    {
+      "name": "Version conflict retains form and does not overwrite another change",
+      "status": "PASS"
+    },
+    {
+      "name": "Category order modal persists once, with mobile keyboard controls",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop, tablet and mobile keep full document within viewport",
+      "status": "PASS"
+    },
+    {
+      "name": "Yunnan institution is a placeholder with no editing entry",
+      "status": "PASS"
+    },
+    {
+      "name": "Editor login cannot publish, alter dictionaries or edit published product",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser product state has no demo/local database persistence",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "/Users/caiying/Downloads/Nirvana_HunNamSiangTng-main/.impeccable/review/admin/products-desktop.png",
+    "/Users/caiying/Downloads/Nirvana_HunNamSiangTng-main/.impeccable/review/admin/niche-editor-desktop.png",
+    "/Users/caiying/Downloads/Nirvana_HunNamSiangTng-main/.impeccable/review/admin/images-desktop.png",
+    "/Users/caiying/Downloads/Nirvana_HunNamSiangTng-main/.impeccable/review/admin/preview-desktop.png",
+    "/Users/caiying/Downloads/Nirvana_HunNamSiangTng-main/.impeccable/review/admin/editor-1440.png",
+    "/Users/caiying/Downloads/Nirvana_HunNamSiangTng-main/.impeccable/review/admin/editor-768.png",
+    "/Users/caiying/Downloads/Nirvana_HunNamSiangTng-main/.impeccable/review/admin/editor-390.png",
+    "/Users/caiying/Downloads/Nirvana_HunNamSiangTng-main/.impeccable/review/admin/yunnan-desktop.png"
+  ],
+  "finished_at": "2026-10-22T10:26:21.847Z",
+  "passed": 12,
+  "failed": 0
+}

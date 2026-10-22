@@ -1,0 +1,1102 @@
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams, useBlocker } from 'react-router-dom';
+import { ArrowDown, ArrowUp, GripVertical } from 'lucide-react';
+import { useAuth } from './auth';
+import { useAdmin } from './context';
+import { Check, Field, Modal, Photo, Preview } from './components';
+import { ReferenceDialog } from './references';
+import { changesFor, priceLines, reclassify, uuid, validate } from './model';
+import { readProduct, rpc, errorText, supabase, removeUnreferenced } from './client';
+import {
+  type Row,
+  type Bundle,
+  type DictionaryKind,
+  sections,
+  categories,
+  capacities,
+  statuses,
+  tableFor,
+  money,
+} from './types';
+
+export default function Editor() {
+  const { id } = useParams(),
+    navigate = useNavigate(),
+    { member } = useAuth(),
+    { refs, reload, notify } = useAdmin();
+  const [bundle, setBundle] = useState<Bundle | null>(null),
+    [original, setOriginal] = useState<Bundle | null>(null),
+    [section, setSection] = useState(0),
+    [errors, setErrors] = useState<string[]>([]),
+    [busy, setBusy] = useState(false),
+    [preview, setPreview] = useState(false),
+    [confirmPublish, setConfirmPublish] = useState(false),
+    [related, setRelated] = useState<DictionaryKind | null>(null),
+    [uploadBucket, setUploadBucket] = useState('catalog-media-private');
+  const staged = useRef<Row[]>([]),
+    ignoreLeave = useRef(false);
+  const dirty = !!bundle && !!original && JSON.stringify(bundle) !== JSON.stringify(original);
+  const blocker = useBlocker(dirty && !ignoreLeave.current);
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      if (window.confirm('产品还有未保存修改。离开将放弃这些修改，是否继续？')) {
+        void removeUnreferenced(staged.current).catch(() => {});
+        blocker.proceed();
+      } else blocker.reset();
+    }
+  }, [blocker]);
+  useEffect(() => {
+    const warn = (e: BeforeUnloadEvent) => {
+      if (dirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty]);
+  async function load() {
+    try {
+      const data = await readProduct(id!);
+      if (!data) throw new Error('产品不存在或无法读取。');
+      setOriginal(data);
+      setBundle(structuredClone(data));
+      setErrors([]);
+    } catch (e) {
+      setErrors([errorText(e)]);
+    }
+  }
+  useEffect(() => {
+    staged.current = [];
+    ignoreLeave.current = false;
+    setBundle(null);
+    setOriginal(null);
+    void load();
+  }, [id]);
+  if (!bundle || !original)
+    return (
+      <section>
+        <h1>产品编辑</h1>
+        {errors.length ? (
+          <p className="error" role="alert">
+            {errors.join(' ')} <button onClick={() => void load()}>重试</button>
+          </p>
+        ) : (
+          <p role="status">正在读取产品资料…</p>
+        )}
+      </section>
+    );
+  const p = bundle.product,
+    editable = member?.role === 'admin' || p.publication_status === 'draft';
+  const setProduct = (k: string, v: any) =>
+    setBundle((b) => ({ ...b!, product: { ...b!.product, [k]: v } }));
+  const setRows = (table: string, rows: Row[]) => setBundle((b) => ({ ...b!, [table]: rows }));
+  const update = (table: string, key: string, k: string, v: any) =>
+    setBundle((b) => ({
+      ...b!,
+      [table]: b![table].map((r: Row) => ((r.id || r.product_id) === key ? { ...r, [k]: v } : r)),
+    }));
+  const remove = (table: string, key: string) =>
+    setRows(
+      table,
+      bundle[table].filter((r: Row) => (r.id || r.product_id) !== key),
+    );
+  const relationOptions: [string, string][] = [
+    ['', '共通'],
+    ...bundle.product_religions.map(
+      (r: Row) =>
+        [
+          String(r.religion_id),
+          refs.religions.find((x) => x.id === r.religion_id)?.name || '未命名宗教',
+        ] as [string, string],
+    ),
+  ];
+  const field = (
+    label: string,
+    k: string,
+    type = 'text',
+    hint?: string,
+    options?: [string, string][],
+    wide = false,
+  ) => (
+    <Field
+      key={k}
+      label={label}
+      value={p[k]}
+      onChange={(v) => setProduct(k, options && v === '' ? null : v)}
+      type={type}
+      hint={hint}
+      options={options}
+      wide={wide}
+    />
+  );
+  const childField = (
+    table: string,
+    row: Row,
+    label: string,
+    k: string,
+    type = 'text',
+    options?: [string, string][],
+    wide = false,
+  ) => (
+    <Field
+      key={k}
+      label={label}
+      value={row[k]}
+      onChange={(v) =>
+        update(
+          table,
+          row.id || row.product_id,
+          k,
+          options ? (v === '' ? null : ['religion_id'].includes(k) ? Number(v) : v) : v,
+        )
+      }
+      type={type}
+      options={options}
+      wide={wide}
+    />
+  );
+  const attrs = bundle[tableFor(p.category_id)]?.[0] || { product_id: p.id };
+  const attr = (label: string, k: string, type = 'text', options?: [string, string][]) => (
+    <Field
+      key={k}
+      label={label}
+      value={attrs[k]}
+      type={type}
+      options={options}
+      onChange={(v) =>
+        setRows(tableFor(p.category_id), [{ ...attrs, [k]: options && v === '' ? null : v }])
+      }
+    />
+  );
+  function move(table: string, from: number, to: number) {
+    if (to < 0 || to >= bundle![table].length) return;
+    const rows = [...bundle![table]];
+    rows.splice(to, 0, rows.splice(from, 1)[0]);
+    setRows(
+      table,
+      rows.map((r, i) => ({ ...r, sort_order: i })),
+    );
+  }
+  async function save(status: string) {
+    if (busy) return;
+    const checks = validate(bundle!, status === 'published');
+    if (checks.length) {
+      setErrors(checks);
+      setConfirmPublish(false);
+      return;
+    }
+    setBusy(true);
+    setErrors([]);
+    setConfirmPublish(false);
+    try {
+      const previous = original!,
+        stagedBefore = [...staged.current];
+      await rpc('save_product', changesFor(previous, bundle!, status));
+      const data = await readProduct(p.id);
+      setOriginal(data);
+      setBundle(structuredClone(data));
+      staged.current = [];
+      notify(status === 'published' ? '产品已保存并发布。' : '产品已保存。');
+      const removed = [...previous.product_images, ...stagedBefore].filter(
+        (r: Row) =>
+          !data.product_images.some(
+            (x: Row) => x.storage_path === r.storage_path && x.storage_bucket === r.storage_bucket,
+          ),
+      );
+      if (removed.length)
+        try {
+          await removeUnreferenced(removed);
+        } catch {
+          notify('资料已保存；旧文件清理未完成，可在图片区重试。');
+          staged.current = removed;
+        }
+    } catch (e) {
+      setErrors([errorText(e)]);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function upload(files: FileList | null, replace?: string) {
+    if (!files?.length || busy) return;
+    setBusy(true);
+    setErrors([]);
+    try {
+      for (const file of Array.from(files)) {
+        if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 10485760)
+          throw new Error('仅支持 JPEG、PNG、WebP，单张不超过 10 MiB。');
+        const bitmap = await createImageBitmap(file);
+        bitmap.close();
+        const ext =
+            file.type === 'image/jpeg' ? 'jpg' : file.type === 'image/webp' ? 'webp' : 'png',
+          path = `${p.id}/${uuid()}.${ext}`;
+        const bucket = replace
+          ? bundle!.product_images.find((x: Row) => x.id === replace)?.storage_bucket ||
+            uploadBucket
+          : uploadBucket;
+        const result = await supabase!.storage
+          .from(bucket)
+          .upload(path, file, { contentType: file.type, upsert: false, cacheControl: '0' });
+        if (result.error) throw result.error;
+        const previous = replace ? bundle!.product_images.find((x: Row) => x.id === replace) : null;
+        const row = {
+          id: uuid(),
+          product_id: p.id,
+          storage_bucket: bucket,
+          storage_path: path,
+          alt_text: previous?.alt_text || file.name,
+          religion_id: previous?.religion_id || null,
+          design_name: previous?.design_name || null,
+          image_type: previous?.image_type || 'real',
+          sort_order: previous?.sort_order || bundle!.product_images.length,
+          is_primary: previous?.is_primary || false,
+          is_published: false,
+        };
+        staged.current.push(row);
+        setBundle((b) => ({
+          ...b!,
+          product_images: [...b!.product_images.filter((x: Row) => x.id !== replace), row],
+        }));
+      }
+    } catch (e) {
+      setErrors([errorText(e)]);
+    } finally {
+      setBusy(false);
+    }
+  }
+  const addOffer = () =>
+    setRows('product_offers', [
+      ...bundle.product_offers,
+      {
+        id: uuid(),
+        product_id: p.id,
+        offer_code: `offer-${uuid()}`,
+        name: '',
+        is_active: true,
+        religion_id: null,
+        position_type: null,
+        facing_override: null,
+        area_sqft_override: null,
+        sort_order: bundle.product_offers.length,
+      },
+    ]);
+  const priceInput = (offer: Row, type: string) => {
+    const row = bundle.offer_prices.find(
+      (r: Row) => r.offer_id === offer.id && r.price_type === type,
+    );
+    return (
+      <div key={type} className="entry">
+        <Field
+          label={
+            type === 'pre_need'
+              ? '预购价格（RM）'
+              : type === 'at_need'
+                ? '即用价格（RM）'
+                : p.category_id === 3
+                  ? '最低价格（RM）'
+                  : '实际售价（RM）'
+          }
+          value={row?.price_amount}
+          type="number"
+          onChange={(v) => {
+            const other = bundle.offer_prices.filter((r: Row) => r.id !== row?.id);
+            setRows(
+              'offer_prices',
+              v === null
+                ? other
+                : [
+                    ...other,
+                    {
+                      ...(row || {
+                        id: uuid(),
+                        offer_id: offer.id,
+                        price_type: type,
+                        currency: 'MYR',
+                        is_published: false,
+                      }),
+                      price_amount: v,
+                    },
+                  ],
+            );
+          }}
+        />
+        {row && (
+          <>
+            <Check
+              label="批准公开此价格"
+              value={row.is_published}
+              onChange={(v) => update('offer_prices', row.id, 'is_published', v)}
+            />
+            {childField('offer_prices', row, '方案专属价格备注', 'price_note', 'textarea')}
+          </>
+        )}
+      </div>
+    );
+  };
+  return (
+    <>
+      <div className="pagehead row between">
+        <div>
+          <h1>{p.name || '未命名草稿'}</h1>
+          <p>
+            {categories[p.category_id]} ·{' '}
+            <span className={`badge ${p.publication_status}`}>
+              {statuses[p.publication_status]}
+            </span>
+            {dirty && <span className="badge">有未保存修改</span>}
+          </p>
+        </div>
+        <div className="row">
+          <button onClick={() => navigate('/products')}>返回列表</button>
+          <button
+            onClick={() => {
+              if (!dirty || window.confirm('重新载入将放弃当前未保存修改，是否继续？')) void load();
+            }}
+          >
+            重新载入
+          </button>
+          <button onClick={() => setPreview(true)}>预览</button>
+        </div>
+      </div>
+      {errors.length > 0 && (
+        <div className="error" role="alert">
+          <strong>未完成保存</strong>
+          <ul>
+            {errors.map((x, i) => (
+              <li key={i}>{x}</li>
+            ))}
+          </ul>
+          <button
+            onClick={() => {
+              const url = URL.createObjectURL(
+                new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' }),
+              );
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = '未保存产品修改.json';
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+          >
+            导出当前修改备份
+          </button>
+        </div>
+      )}
+      {!editable && <p className="permission">当前为只读预览。编辑员仅能修改从未发布的草稿。</p>}
+      <div className="editor">
+        <nav className="sections" aria-label="编辑分区">
+          {sections.map((s, i) => (
+            <button
+              key={s}
+              aria-current={section === i ? 'step' : undefined}
+              className={section === i ? 'active' : ''}
+              onClick={() => setSection(i)}
+            >
+              {s}
+            </button>
+          ))}
+        </nav>
+        <div>
+          <fieldset disabled={!editable || busy}>
+            {section === 0 && (
+              <section className="panel">
+                <h2>基本资料</h2>
+                <div className="fields">
+                  {field('产品名称', 'name')}
+                  <Field
+                    label="产品类别"
+                    value={p.category_id}
+                    onChange={(v) => {
+                      if (window.confirm('切换类别将清除不适用的属性及价格，是否继续？'))
+                        setBundle(reclassify(bundle, Number(v)));
+                    }}
+                    options={categories.slice(1).map((n, i) => [String(i + 1), n])}
+                  />
+                  <div className="field">
+                    <label htmlFor="series">园区／产品系列</label>
+                    <div className="inline-related">
+                      <select
+                        id="series"
+                        value={p.series_id || ''}
+                        onChange={(e) => setProduct('series_id', e.target.value || null)}
+                      >
+                        <option value="">暂不指定</option>
+                        {refs.series
+                          .filter((s) => s.is_active || s.id === p.series_id)
+                          .map((s) => (
+                            <option key={s.id} value={s.id}>
+                              {s.name}
+                              {!s.is_active ? '（已停用，保留原关联）' : ''}
+                            </option>
+                          ))}
+                      </select>
+                      {member?.role === 'admin' && (
+                        <button onClick={() => setRelated('series')}>＋ 新增</button>
+                      )}
+                    </div>
+                  </div>
+                  {field('内部产品代码', 'product_code', 'text', '仅后台可见，填写时必须唯一。')}
+                  {p.category_id <= 2 &&
+                    field('产品类型', 'product_form', 'text', undefined, [
+                      ['', '暂不选择'],
+                      ['lot', '地段'],
+                      ['package', '配套'],
+                      ['other', '其他'],
+                    ])}
+                  {p.category_id <= 3 && (
+                    <>
+                      <Field
+                        label="使用人数"
+                        value={p.capacity_group}
+                        onChange={(v) => {
+                          setProduct('capacity_group', v || null);
+                          setProduct(
+                            'capacity_count',
+                            ({ single: 1, double: 2, triple: 3 } as any)[v] || null,
+                          );
+                        }}
+                        options={[
+                          ['', '暂不选择'],
+                          ...(p.category_id === 3
+                            ? ['single', 'double', 'triple', 'four_plus']
+                            : ['single', 'double', 'family']
+                          ).map((k) => [k, capacities[k]] as [string, string]),
+                        ]}
+                      />
+                      {field('实际人数（有明确资料时填写）', 'capacity_count', 'number')}
+                    </>
+                  )}
+                  {field('产品网址标识', 'slug', 'text', '请保留已有网址，避免原链接失效。')}
+                  {field('产品副标题', 'subtitle')}
+                  {field('产品简介', 'description', 'textarea', undefined, undefined, true)}
+                  {field('内部备注', 'internal_notes', 'textarea', '仅后台可见。', undefined, true)}
+                  {field(
+                    '资料来源',
+                    'source_reference',
+                    'textarea',
+                    '仅后台可见，不上传来源附件。',
+                    undefined,
+                    true,
+                  )}
+                </div>
+                <p className="help">
+                  最后修改：
+                  {new Date(p.updated_at).toLocaleString('zh-CN', { timeZone: 'Asia/Kuching' })} ·
+                  操作人：{p.updated_by || '系统维护'}
+                  <br />
+                  新产品和重分类产品自动排到类别末尾；展示顺序在产品列表独立调整。
+                </p>
+              </section>
+            )}
+            {section === 1 && (
+              <section className="panel">
+                <h2>类别专属属性</h2>
+                <div className="fields">
+                  {p.category_id <= 2 ? (
+                    <>
+                      {attr('朝向', 'facing')}
+                      {attr('面积（sqft）', 'area_sqft', 'number')}
+                      {attr('长度（英尺）', 'length_ft', 'number')}
+                      {attr('宽度（英尺）', 'width_ft', 'number')}
+                      {p.category_id === 1 && (
+                        <>
+                          {attr('骨灰瓮安放数量', 'urn_capacity', 'number')}
+                          {attr('包含火化次数', 'cremation_count', 'number')}
+                        </>
+                      )}
+                      {attr('安葬说明', 'burial_notes', 'textarea')}
+                    </>
+                  ) : p.category_id === 3 ? (
+                    <>
+                      {attr('产品主题', 'theme_name')}
+                      {attr('设计款式说明', 'niche_style', 'textarea')}
+                      {attr('补充说明', 'niche_notes', 'textarea')}
+                      <div className="field wide">
+                        <span>安放环境</span>
+                        <p className="notice">安放环境暂未开放编辑，当前保存不会包含此项。</p>
+                      </div>
+                    </>
+                  ) : p.category_id === 4 ? (
+                    <>
+                      {attr('服务天数', 'duration_days', 'number')}
+                      {attr('服务夜数', 'duration_nights', 'number')}
+                      {attr('适用安葬安排', 'funeral_method', 'text', [
+                        ['', '暂不选择'],
+                        ['cremation', '火化'],
+                        ['burial', '土葬'],
+                        ['both', '两者皆可'],
+                      ])}
+                      {attr('服务地点', 'service_venue')}
+                      {attr('价格／服务适用条件', 'terms_summary', 'textarea')}
+                    </>
+                  ) : p.category_id === 5 ? (
+                    <>
+                      {attr('牌位类型', 'tablet_type')}
+                      {attr('牌位容量', 'tablet_capacity', 'number')}
+                      {attr('朝向', 'facing')}
+                      {attr('补充说明', 'tablet_notes', 'textarea')}
+                    </>
+                  ) : p.category_id === 6 ? (
+                    <>
+                      {attr('生基类型', 'fengshui_type')}
+                      {attr('朝向', 'facing')}
+                      {attr('面积（sqft）', 'area_sqft', 'number')}
+                      {attr('配置说明', 'configuration_notes', 'textarea')}
+                    </>
+                  ) : (
+                    <>
+                      {attr('安葬类型', 'pet_burial_method', 'text', [
+                        ['', '暂不选择'],
+                        ['body_burial', '遗体土葬'],
+                        ['ash_burial', '骨灰安葬'],
+                      ])}
+                      {attr('宠物规格', 'pet_size_class')}
+                      {attr('长度（英尺）', 'length_ft', 'number')}
+                      {attr('宽度（英尺）', 'width_ft', 'number')}
+                      {attr('面积（sqft）', 'area_sqft', 'number')}
+                      {attr('朝向', 'facing')}
+                      {attr('补充说明', 'pet_notes', 'textarea')}
+                    </>
+                  )}
+                </div>
+              </section>
+            )}
+            {section === 2 && (
+              <section className="panel">
+                <h2>宗教与设计</h2>
+                {p.category_id > 4 ? (
+                  <p>此类别不要求宗教配置，前台不提供宗教筛选。</p>
+                ) : (
+                  <>
+                    <p className="help">新增宗教仅加入字典；关联和公开需要分别设置。</p>
+                    <div className="row">
+                      {refs.religions
+                        .filter(
+                          (r) =>
+                            r.is_active &&
+                            !bundle.product_religions.some((x: Row) => x.religion_id === r.id),
+                        )
+                        .map((r) => (
+                          <button
+                            key={r.id}
+                            onClick={() =>
+                              setRows('product_religions', [
+                                ...bundle.product_religions,
+                                {
+                                  id: uuid(),
+                                  product_id: p.id,
+                                  religion_id: r.id,
+                                  configuration_name: '',
+                                  configuration_notes: '',
+                                  is_published: false,
+                                },
+                              ])
+                            }
+                          >
+                            添加{r.name}
+                          </button>
+                        ))}
+                      {member?.role === 'admin' && (
+                        <button onClick={() => setRelated('religions')}>＋ 新增宗教</button>
+                      )}
+                    </div>
+                    {bundle.product_religions.map((r: Row) => (
+                      <div className="entry" key={r.id}>
+                        <div className="row between">
+                          <h3>{refs.religions.find((x) => x.id === r.religion_id)?.name}</h3>
+                          <button
+                            onClick={() => {
+                              if (
+                                ['product_images', 'product_inclusions', 'product_offers'].some(
+                                  (t) =>
+                                    bundle[t].some((x: Row) => x.religion_id === r.religion_id),
+                                )
+                              ) {
+                                setErrors([
+                                  '此宗教仍有图片、包含项目或价格方案关联，请先调整关联。',
+                                ]);
+                                return;
+                              }
+                              remove('product_religions', r.id);
+                            }}
+                          >
+                            移除关联
+                          </button>
+                        </div>
+                        <div className="fields">
+                          {childField('product_religions', r, '配置名称', 'configuration_name')}
+                          {childField(
+                            'product_religions',
+                            r,
+                            '配置说明',
+                            'configuration_notes',
+                            'textarea',
+                          )}
+                          <Check
+                            label="公开此宗教配置"
+                            value={r.is_published}
+                            onChange={(v) => update('product_religions', r.id, 'is_published', v)}
+                          />
+                        </div>
+                        <button onClick={() => setSection(5)}>管理设计图片</button>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </section>
+            )}
+            {section === 3 && (
+              <section className="panel">
+                <div className="row between">
+                  <h2>包含项目</h2>
+                  <button
+                    onClick={() =>
+                      setRows('product_inclusions', [
+                        ...bundle.product_inclusions,
+                        {
+                          id: uuid(),
+                          product_id: p.id,
+                          item_name: '',
+                          quantity: null,
+                          unit: '',
+                          description: '',
+                          religion_id: null,
+                          offer_id: null,
+                          sort_order: bundle.product_inclusions.length,
+                        },
+                      ])
+                    }
+                  >
+                    添加项目
+                  </button>
+                </div>
+                {bundle.product_inclusions.map((r: Row, i: number) => (
+                  <div className="entry" key={r.id}>
+                    <div className="row between">
+                      <strong>项目 {i + 1}</strong>
+                      <div className="row">
+                        <button
+                          aria-label={`项目${i + 1}上移`}
+                          disabled={!i}
+                          onClick={() => move('product_inclusions', i, i - 1)}
+                        >
+                          <ArrowUp size={16} />
+                        </button>
+                        <button
+                          aria-label={`项目${i + 1}下移`}
+                          disabled={i === bundle.product_inclusions.length - 1}
+                          onClick={() => move('product_inclusions', i, i + 1)}
+                        >
+                          <ArrowDown size={16} />
+                        </button>
+                        <button onClick={() => remove('product_inclusions', r.id)}>删除</button>
+                      </div>
+                    </div>
+                    <div className="fields">
+                      {childField('product_inclusions', r, '项目名称', 'item_name')}
+                      {childField('product_inclusions', r, '数量', 'quantity', 'number')}
+                      {childField('product_inclusions', r, '单位', 'unit')}
+                      {childField('product_inclusions', r, '说明', 'description', 'textarea')}
+                      {p.category_id <= 4 &&
+                        childField(
+                          'product_inclusions',
+                          r,
+                          '适用宗教',
+                          'religion_id',
+                          'text',
+                          relationOptions,
+                        )}
+                      {childField('product_inclusions', r, '适用方案', 'offer_id', 'text', [
+                        ['', '产品共通'],
+                        ...bundle.product_offers.map(
+                          (o: Row) => [o.id, o.name || '默认方案'] as [string, string],
+                        ),
+                      ])}
+                    </div>
+                  </div>
+                ))}
+              </section>
+            )}
+            {section === 4 && (
+              <section className="panel">
+                <div className="row between">
+                  <h2>价格</h2>
+                  {![3, 4].includes(p.category_id) && (
+                    <button onClick={addOffer}>添加价格方案</button>
+                  )}
+                </div>
+                <p className="help">
+                  金额必须大于零。清空金额表示不保存该价格行；骨灰位仅有一条最低价，殡仪两种价格互不相加。
+                </p>
+                {bundle.product_offers.map((o: Row) => (
+                  <div className="entry" key={o.id}>
+                    {![3, 4].includes(p.category_id) && (
+                      <>
+                        <div className="row between">
+                          <strong>{o.name || '价格方案'}</strong>
+                          <div className="row">
+                            <Check
+                              label="启用"
+                              value={o.is_active}
+                              onChange={(v) => update('product_offers', o.id, 'is_active', v)}
+                            />
+                            <button
+                              onClick={() => {
+                                if (
+                                  bundle.product_inclusions.some((r: Row) => r.offer_id === o.id)
+                                ) {
+                                  setErrors(['此方案仍有关联包含项目，请先调整。']);
+                                  return;
+                                }
+                                setRows(
+                                  'product_offers',
+                                  bundle.product_offers.filter((r: Row) => r.id !== o.id),
+                                );
+                                setRows(
+                                  'offer_prices',
+                                  bundle.offer_prices.filter((r: Row) => r.offer_id !== o.id),
+                                );
+                              }}
+                            >
+                              删除方案
+                            </button>
+                          </div>
+                        </div>
+                        <div className="fields">
+                          {childField('product_offers', o, '方案名称', 'name')}
+                          {p.category_id <= 4 &&
+                            childField(
+                              'product_offers',
+                              o,
+                              '适用宗教',
+                              'religion_id',
+                              'text',
+                              relationOptions,
+                            )}
+                          {p.category_id <= 2 && (
+                            <>
+                              {childField('product_offers', o, '位置类型', 'position_type')}
+                              {childField('product_offers', o, '方案朝向', 'facing_override')}
+                              {childField(
+                                'product_offers',
+                                o,
+                                '方案面积（sqft）',
+                                'area_sqft_override',
+                                'number',
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </>
+                    )}
+                    {(p.category_id === 4 ? ['pre_need', 'at_need'] : ['standard']).map((t) =>
+                      priceInput(o, t),
+                    )}
+                  </div>
+                ))}
+                {field('产品专属价格备注', 'price_note_override', 'textarea')}
+              </section>
+            )}
+            {section === 5 && (
+              <section className="panel">
+                <h2>图片管理</h2>
+                <p className="help">
+                  JPEG / PNG / WebP，单张 ≤10
+                  MiB。先上传私有文件，再随产品保存图片引用。替换使用新路径。
+                </p>
+                <div className="upload">
+                  <Field
+                    label="上传素材访问范围"
+                    value={uploadBucket}
+                    onChange={setUploadBucket}
+                    options={[
+                      ['catalog-media-private', '普通产品素材'],
+                      ['catalog-media-restricted', '受限内部素材'],
+                    ]}
+                  />
+                  <label className="field">
+                    上传单张或多张图片
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      multiple
+                      onChange={(e) => {
+                        void upload(e.target.files);
+                        e.target.value = '';
+                      }}
+                    />
+                  </label>
+                </div>
+                <div className="imagegrid">
+                  {bundle.product_images.map((r: Row, i: number) => (
+                    <article
+                      className="imageitem"
+                      key={r.id}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const from = bundle.product_images.findIndex(
+                          (x: Row) => x.id === e.dataTransfer.getData('text/plain'),
+                        );
+                        if (from >= 0) move('product_images', from, i);
+                      }}
+                    >
+                      <Photo image={r} className="editor-photo" />
+                      <div className="row between">
+                        <span className="badge">
+                          {r.is_primary
+                            ? '主图'
+                            : r.storage_bucket === 'catalog-media-restricted'
+                              ? '受限素材'
+                              : `图片 ${i + 1}`}
+                        </span>
+                        <button
+                          draggable
+                          onDragStart={(e) => e.dataTransfer.setData('text/plain', r.id)}
+                          aria-label={`拖动图片${i + 1}`}
+                        >
+                          <GripVertical size={16} />
+                        </button>
+                      </div>
+                      {childField('product_images', r, '图片说明', 'alt_text')}
+                      {childField('product_images', r, '图片类型', 'image_type', 'text', [
+                        ['real', '实景图'],
+                        ['design', '设计图'],
+                        ['primary', '主图'],
+                      ])}
+                      {p.category_id <= 4 &&
+                        childField(
+                          'product_images',
+                          r,
+                          '适用宗教',
+                          'religion_id',
+                          'text',
+                          relationOptions,
+                        )}
+                      <Field
+                        label="设计名称"
+                        value={r.design_name}
+                        onChange={(v) =>
+                          setRows(
+                            'product_images',
+                            bundle.product_images.map((x: Row) =>
+                              x.id === r.id ||
+                              (r.design_name &&
+                                x.design_name === r.design_name &&
+                                x.religion_id === r.religion_id)
+                                ? { ...x, design_name: v }
+                                : x,
+                            ),
+                          )
+                        }
+                      />
+                      <Check
+                        label="设为共通主图"
+                        disabled={
+                          !!r.religion_id || r.storage_bucket === 'catalog-media-restricted'
+                        }
+                        value={r.is_primary}
+                        onChange={(v) =>
+                          setRows(
+                            'product_images',
+                            bundle.product_images.map((x: Row) => ({
+                              ...x,
+                              is_primary: x.id === r.id ? v : false,
+                            })),
+                          )
+                        }
+                      />
+                      <Check
+                        label="批准公开图片"
+                        disabled={r.storage_bucket === 'catalog-media-restricted'}
+                        value={r.is_published}
+                        onChange={(v) => update('product_images', r.id, 'is_published', v)}
+                      />
+                      <div className="row">
+                        <button
+                          aria-label={`图片${i + 1}上移`}
+                          disabled={!i}
+                          onClick={() => move('product_images', i, i - 1)}
+                        >
+                          <ArrowUp size={16} />
+                        </button>
+                        <button
+                          aria-label={`图片${i + 1}下移`}
+                          disabled={i === bundle.product_images.length - 1}
+                          onClick={() => move('product_images', i, i + 1)}
+                        >
+                          <ArrowDown size={16} />
+                        </button>
+                        <button onClick={() => remove('product_images', r.id)}>移除图片</button>
+                      </div>
+                      <label className="field">
+                        替换文件
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          onChange={(e) => {
+                            void upload(e.target.files, r.id);
+                            e.target.value = '';
+                          }}
+                        />
+                      </label>
+                    </article>
+                  ))}
+                </div>
+                <button
+                  onClick={async () => {
+                    try {
+                      const unreferenced = staged.current.filter(
+                        (r) =>
+                          !bundle.product_images.some(
+                            (x: Row) =>
+                              x.storage_bucket === r.storage_bucket &&
+                              x.storage_path === r.storage_path,
+                          ),
+                      );
+                      await removeUnreferenced(unreferenced);
+                      staged.current = staged.current.filter((r) => !unreferenced.includes(r));
+                      notify('无引用文件清理完成。');
+                    } catch (e) {
+                      setErrors([errorText(e)]);
+                    }
+                  }}
+                  disabled={
+                    !staged.current.some(
+                      (r) =>
+                        !bundle.product_images.some(
+                          (x: Row) =>
+                            x.storage_bucket === r.storage_bucket &&
+                            x.storage_path === r.storage_path,
+                        ),
+                    )
+                  }
+                >
+                  重试无引用文件清理
+                </button>
+              </section>
+            )}
+            {section === 6 && (
+              <section className="panel">
+                <h2>发布管理</h2>
+                <p>当前状态：{statuses[p.publication_status]}</p>
+                <p className="notice">
+                  预览不会发布。确认保存并发布后，产品、宗教、价格、图片引用、包含项目及审计在同一事务提交；任一步失败均保留原有效资料。
+                </p>
+                <ul>
+                  {validate(bundle, true).map((x) => (
+                    <li key={x}>{x}</li>
+                  ))}
+                </ul>
+                {p.publication_status !== 'draft' && (
+                  <p className="help">
+                    正式产品不保存为草稿；修改只暂存在当前表单，确认后一次提交。
+                  </p>
+                )}
+              </section>
+            )}
+          </fieldset>
+        </div>
+      </div>
+      <div className="stickyactions row between">
+        <span role="status">
+          {busy ? '正在处理，请稍候…' : dirty ? '有未保存修改' : '已载入最新资料'}
+        </span>
+        <div className="row">
+          <button onClick={() => setPreview(true)}>预览</button>
+          {editable && (
+            <>
+              {p.publication_status === 'draft' && (
+                <button disabled={busy} onClick={() => void save('draft')}>
+                  保存草稿
+                </button>
+              )}
+              {p.publication_status === 'hidden' && (
+                <button disabled={busy} onClick={() => void save('hidden')}>
+                  保存修改（保持隐藏）
+                </button>
+              )}
+              {member?.role === 'admin' && (
+                <>
+                  <button
+                    className="primary"
+                    disabled={busy}
+                    onClick={() => {
+                      const checks = validate(bundle, true);
+                      if (checks.length) {
+                        setErrors(checks);
+                        setSection(6);
+                      } else setConfirmPublish(true);
+                    }}
+                  >
+                    保存并发布
+                  </button>
+                  {p.publication_status === 'published' && (
+                    <button
+                      disabled={busy}
+                      onClick={() => {
+                        if (window.confirm('隐藏后网站无法读取此产品，确认保存当前修改并隐藏？'))
+                          void save('hidden');
+                      }}
+                    >
+                      隐藏产品
+                    </button>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+      {preview && <Preview bundle={bundle} refs={refs} onClose={() => setPreview(false)} />}
+      {related && (
+        <ReferenceDialog
+          kind={related}
+          onClose={() => setRelated(null)}
+          onSaved={(r) => {
+            const kind = related;
+            void reload();
+            setRelated(null);
+            if (kind === 'series') setProduct('series_id', r.id);
+            notify(
+              kind === 'religions'
+                ? '宗教已新增，请单独添加关联并设置公开状态。'
+                : '系列已保存并选入当前产品。',
+            );
+          }}
+        />
+      )}
+      {confirmPublish && (
+        <Modal title="确认保存并发布" onClose={() => setConfirmPublish(false)}>
+          <p>请核对价格修改。确认后当前表单内容将一次发布，网站可读取更新。</p>
+          <table className="confirmation">
+            <thead>
+              <tr>
+                <th>价格项目</th>
+                <th>当前数据库</th>
+                <th>本次提交</th>
+              </tr>
+            </thead>
+            <tbody>
+              {priceLines(bundle).map((r: Row) => (
+                <tr key={r.id}>
+                  <td>{r.label}</td>
+                  <td>
+                    {money(original.offer_prices.find((x: Row) => x.id === r.id)?.price_amount)}
+                  </td>
+                  <td>{money(r.price_amount)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="row">
+            <button onClick={() => setConfirmPublish(false)}>返回核对</button>
+            <button className="primary" onClick={() => void save('published')}>
+              确认保存并发布
+            </button>
+          </div>
+        </Modal>
+      )}
+    </>
+  );
+}

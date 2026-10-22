@@ -1,0 +1,106 @@
+{
+  "run": "1a982ecd",
+  "environment": "local-real-supabase",
+  "tests": [
+    {
+      "name": "Auth creates real local administrator, editor and ordinary user",
+      "status": "PASS"
+    },
+    {
+      "name": "18 tables and original niche columns remain unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "All bounded admin endpoints deny anonymous and nonmembers",
+      "status": "PASS"
+    },
+    {
+      "name": "Quick-add series persists, duplicate names and editor writes are denied",
+      "status": "PASS"
+    },
+    {
+      "name": "Dictionary version conflict preserves saved record",
+      "status": "PASS"
+    },
+    {
+      "name": "Religion dictionary uses smallint IDs, does not auto-associate or publish",
+      "status": "PASS"
+    },
+    {
+      "name": "Notice edits persist without adding date or price fields",
+      "status": "PASS"
+    },
+    {
+      "name": "New products append to own category and are searchable by internal code",
+      "status": "PASS"
+    },
+    {
+      "name": "Editor can read drafts but cannot reorder, view audit or alter dictionaries",
+      "status": "PASS"
+    },
+    {
+      "name": "Category reorder is atomic, isolated and rejects partial/cross-category/stale sets",
+      "status": "PASS"
+    },
+    {
+      "name": "Editor draft save is real; publication incomplete keeps old draft intact",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual image, religious contents and offer prices publish in one transaction",
+      "status": "PASS"
+    },
+    {
+      "name": "Referenced media cannot be removed even with service_role",
+      "status": "PASS"
+    },
+    {
+      "name": "Copy endpoint validates real JWT and role before any file operation",
+      "status": "PASS"
+    },
+    {
+      "name": "Real server copy creates new IDs, independent private file and unpublished child records",
+      "status": "PASS"
+    },
+    {
+      "name": "Wrong copied-image manifest rolls back partial rows and audit after copy starts",
+      "status": "PASS"
+    },
+    {
+      "name": "Stale copy HTTP returns 409 without preparing or changing source",
+      "status": "PASS"
+    },
+    {
+      "name": "Cleanup cannot remove referenced media; unreferenced files are really deleted",
+      "status": "PASS"
+    },
+    {
+      "name": "Editor cleanup is denied for unreferenced files of published product",
+      "status": "PASS"
+    },
+    {
+      "name": "Religion hide filters public items; last required religion cannot disappear",
+      "status": "PASS"
+    },
+    {
+      "name": "Audit is authentic and all legacy direct-table denials remain",
+      "status": "PASS"
+    },
+    {
+      "name": "A real concurrent edit during file copy returns 409 and compensates prepared files",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual Storage delete failure is reported and cleanup retry succeeds",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser acceptance account and sample IDs are saved only in ignored local work",
+      "status": "PASS"
+    }
+  ],
+  "host": "http://127.0.0.1:56321",
+  "finished_at": "2026-10-22T10:12:18.326Z",
+  "passed": 24,
+  "failed": 0
+}

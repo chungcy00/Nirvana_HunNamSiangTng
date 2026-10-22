@@ -1,0 +1,163 @@
+{
+  "checked_at": "2026-10-22T10:22:39.302Z",
+  "environment": "existing hosted Supabase",
+  "business_tables": 18,
+  "rls_tables": 18,
+  "foreign_keys": 22,
+  "api_rpcs": 15,
+  "recorded_migrations": 9,
+  "business_records_unchanged": true,
+  "before": {
+    "products": {
+      "hash": "d86e162aa6bd688a5d3712f3b3795135",
+      "count": 20
+    },
+    "religions": {
+      "hash": "386fedb8cdfea250c21646be88d087b5",
+      "count": 2
+    },
+    "audit_logs": {
+      "hash": "e2521fc34cd96fec521b81ada42dd404",
+      "count": 754
+    },
+    "pet_details": {
+      "hash": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "offer_prices": {
+      "hash": "2e89c8745aa045c8ad202458eb76c8c9",
+      "count": 32
+    },
+    "admin_members": {
+      "hash": "7d7a030583b35944ea97ee88eb072745",
+      "count": 1
+    },
+    "niche_details": {
+      "hash": "af2a717060ef99054f9d97d1e392951e",
+      "count": 4
+    },
+    "burial_details": {
+      "hash": "7f53fed055809ffd8b2f9480d3265f5c",
+      "count": 8
+    },
+    "product_images": {
+      "hash": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "product_offers": {
+      "hash": "c01613eeda3df740bc33e449e02eaceb",
+      "count": 28
+    },
+    "product_series": {
+      "hash": "d7ea317822f9449bfae6b4e41fb8b363",
+      "count": 3
+    },
+    "tablet_details": {
+      "hash": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "catalog_notices": {
+      "hash": "7c4a3f45a61c70d04e45fcb39d22d089",
+      "count": 1
+    },
+    "funeral_details": {
+      "hash": "9ed8c901b0d0f5b3cada3c9f15e2234e",
+      "count": 8
+    },
+    "fengshui_details": {
+      "hash": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "product_religions": {
+      "hash": "92a58ca92e401069feb041eb49bf69db",
+      "count": 18
+    },
+    "product_categories": {
+      "hash": "1f598a2e0e852c530dbc4c1fec435a98",
+      "count": 7
+    },
+    "product_inclusions": {
+      "hash": "b499608dc8937d704f2ee379a22c43b7",
+      "count": 267
+    }
+  },
+  "after": {
+    "products": {
+      "hash": "d86e162aa6bd688a5d3712f3b3795135",
+      "count": 20
+    },
+    "religions": {
+      "hash": "386fedb8cdfea250c21646be88d087b5",
+      "count": 2
+    },
+    "audit_logs": {
+      "hash": "e2521fc34cd96fec521b81ada42dd404",
+      "count": 754
+    },
+    "pet_details": {
+      "hash": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "offer_prices": {
+      "hash": "2e89c8745aa045c8ad202458eb76c8c9",
+      "count": 32
+    },
+    "admin_members": {
+      "hash": "7d7a030583b35944ea97ee88eb072745",
+      "count": 1
+    },
+    "niche_details": {
+      "hash": "af2a717060ef99054f9d97d1e392951e",
+      "count": 4
+    },
+    "burial_details": {
+      "hash": "7f53fed055809ffd8b2f9480d3265f5c",
+      "count": 8
+    },
+    "product_images": {
+      "hash": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "product_offers": {
+      "hash": "c01613eeda3df740bc33e449e02eaceb",
+      "count": 28
+    },
+    "product_series": {
+      "hash": "d7ea317822f9449bfae6b4e41fb8b363",
+      "count": 3
+    },
+    "tablet_details": {
+      "hash": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "catalog_notices": {
+      "hash": "7c4a3f45a61c70d04e45fcb39d22d089",
+      "count": 1
+    },
+    "funeral_details": {
+      "hash": "9ed8c901b0d0f5b3cada3c9f15e2234e",
+      "count": 8
+    },
+    "fengshui_details": {
+      "hash": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "product_religions": {
+      "hash": "92a58ca92e401069feb041eb49bf69db",
+      "count": 18
+    },
+    "product_categories": {
+      "hash": "1f598a2e0e852c530dbc4c1fec435a98",
+      "count": 7
+    },
+    "product_inclusions": {
+      "hash": "b499608dc8937d704f2ee379a22c43b7",
+      "count": 267
+    }
+  },
+  "read_only_authenticated_rpc_checks": "PASS; existing admin database identity, not a human password login",
+  "schema_contract": "PASS",
+  "pending_placement_migration_applied": false,
+  "remaining_advisor": "auth_leaked_password_protection",
+  "product_writes_performed": false
+}

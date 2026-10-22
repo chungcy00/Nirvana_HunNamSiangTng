@@ -37,7 +37,9 @@ BEGIN
   FOR item IN SELECT p.oid,p.proname,p.proowner,p.prosecdef,p.proconfig FROM pg_proc p
     JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='api' LOOP
     IF item.proname NOT IN ('catalog_product_list','catalog_product_detail','catalog_product_prices',
-        'save_product','delete_draft','admin_product','current_catalog_member')
+        'save_product','delete_draft','admin_product','current_catalog_member',
+        'admin_reference_data','admin_product_list','admin_category_order','admin_reorder_products',
+        'admin_save_reference','admin_copy_product','admin_audit_logs','admin_cleanup_candidates')
       OR NOT item.prosecdef OR NOT ('search_path=""'=ANY(item.proconfig))
       OR item.proowner<>(CASE WHEN item.proname LIKE 'catalog_%'
         THEN 'fg_catalog_reader'::regrole ELSE 'fg_catalog_writer'::regrole END)
@@ -46,7 +48,8 @@ BEGIN
       RAISE EXCEPTION 'Unsafe API RPC configuration: %',item.proname;
     END IF;
   END LOOP;
-  IF (SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='api')<>7
+  IF (SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='api')
+      <>(CASE WHEN to_regprocedure('api.admin_reference_data()') IS NULL THEN 7 ELSE 15 END)
     OR EXISTS(SELECT 1 FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
       WHERE n.nspname IN ('api','private') AND EXISTS
         (SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a
@@ -68,4 +71,5 @@ BEGIN
 END $contract$;
 SELECT jsonb_build_object('contract','document-3-v1.3','passed',true,
   'tables',18,'primary_keys',18,'validated_foreign_keys',22,'rls_tables',18,
-  'api_rpcs',7,'public_rpcs',3,'executor_roles_without_login_or_bypassrls',2) AS schema_contract;
+  'api_rpcs',(SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='api'),
+  'public_rpcs',3,'executor_roles_without_login_or_bypassrls',2) AS schema_contract;

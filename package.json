@@ -12,7 +12,11 @@
     "test": "node --import ./tests/register-css.mjs --import tsx --test tests/*.test.tsx",
     "catalog:security:start": "node scripts/catalog-security/start-local.mjs",
     "catalog:security:test": "node supabase/tests/integration.mjs",
-    "catalog:security:preflight": "node supabase/tests/preflight.mjs --remote"
+    "catalog:security:preflight": "node supabase/tests/preflight.mjs --remote",
+    "admin:dev": "npm run dev --prefix apps/admin",
+    "admin:build": "npm run build --prefix apps/admin",
+    "catalog:media:check": "node scripts/catalog-security/cleanup-media.mjs",
+    "catalog:security:migrate:local": "node scripts/catalog-security/apply-local-migrations.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.546.0",

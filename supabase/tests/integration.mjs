@@ -51,7 +51,7 @@ try{
     const sql=await fs.readFile(new URL('schema-contract.sql',import.meta.url),'utf8');
     await db.query(sql);
   });
-  await test('八个迁移已应用，18张业务表全部启用RLS',async()=>{
+  await test('基线迁移已应用，18张业务表全部启用RLS',async()=>{
     assert.ok(report.migrations.includes('20261022040009'));
     const n=await db.query("SELECT count(*)::int AS n,bool_and(c.relrowsecurity) AS secured FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='private' AND c.relkind='r'");
     assert.equal(n.rows[0].n,18);assert(n.rows[0].secured);
