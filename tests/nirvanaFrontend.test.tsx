@@ -84,7 +84,7 @@ test("网格卡片只显示最低起价，地段报价和印花税备注留在�
     assert.doesNotMatch(card, /产品售价|普通地段|角头地段|印花税|fgp-card-link/);
     assert.equal((card.match(/<a /g) || []).length, 1);
   }
-  assert.match(html, /以上价格未包含印花税/);
+  assert.doesNotMatch(html, /fgp-source-note|以上价格未包含印花税|每一份纪念/);
   const detail = render('/nirvana/products/item/w-family-lot');
   assert.match(detail, /普通地段 864 sqft/);
   assert.match(detail, /RM 258,888/);

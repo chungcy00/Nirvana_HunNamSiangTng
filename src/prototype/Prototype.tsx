@@ -139,7 +139,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
     <div className="fgp-wrap">
       {!home && <nav className="fgp-crumb" aria-label="当前位置"><Link to={homePath}>产品首页</Link><ChevronRight size={14}/><span>{category.name}</span></nav>}
       <section className={home ? "fgp-intro" : "fgp-list-intro"}>
-        <div><h1>{home ? website ? "富贵山庄" : <>每一份纪念，<br/>都有合适的安排。</> : category.name}</h1><p>{home ? website ? "每一份纪念，都有合适的安排。从产品类别开始，按人数与宗教了解适合的选择。" : "从产品类别开始，按人数与宗教了解适合的选择。" : category.description}</p></div>
+        <div><h1>{home ? website ? "富贵山庄" : <>每一份纪念，<br/>都有合适的安排。</> : category.name}</h1>{!(website && home) && <p>{home ? "从产品类别开始，按人数与宗教了解适合的选择。" : category.description}</p>}</div>
         {home ? !website && <div className="fgp-intro-note"><Leaf size={24} strokeWidth={1.2}/><p>资料清楚，选择从容。<br/><span>按实际适用的条件浏览，无需逐项填写。</span></p></div> : <Link className="fgp-text-link" to={homePath}>查看全部类别<ArrowRight size={16}/></Link>}
       </section>
     </div>
@@ -167,7 +167,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
       </div>
       {filtered && <div className="fgp-applied" aria-label="已选择条件">{capacity && <button onClick={()=>changeFilter("capacity","")}>{capacityLabels[capacity as keyof typeof capacityLabels] || capacity}<X size={13}/><span className="fgp-sr">清除人数筛选</span></button>}{religion && <button onClick={()=>changeFilter("religion","")}>{religions.find(r=>r.id===religion)?.name || religion}<X size={13}/><span className="fgp-sr">清除宗教筛选</span></button>}</div>}
       {products.length ? <div className={website ? `fgp-grid fgp-view-${view}` : "fgp-grid"}>{products.map(p=>website ? <WebsiteProductCard key={p.id} product={p} returnTo={returnTo} view={view}/> : <ProductCard key={p.id} product={p} returnTo={returnTo}/>)}</div> : <div className="fgp-empty"><Leaf size={32} strokeWidth={1}/><h3>暂时没有符合条件的产品</h3><p>您可以调整人数或宗教，继续浏览其他选择。</p><button className="fgp-primary" onClick={reset}>清除筛选<ArrowRight size={16}/></button></div>}
-      <p className="fgp-source-note">{website && <>以上价格未包含印花税。卡片起价为该产品已提供报价中的最低金额，详细方案与适用条件请查看产品详情。<br/></>}{website ? "价格供参考，实际售价及服务内容以咨询确认为准。产品实拍将在资料确认后补充。" : "价格按已提供产品资料展示；聚仙楼为待核实宣传参考起价。产品实拍将在资料确认后补充。"}</p>
+      {!website && <p className="fgp-source-note">价格按已提供产品资料展示；聚仙楼为待核实宣传参考起价。产品实拍将在资料确认后补充。</p>}
     </section>
   </>;
 }
