@@ -1,0 +1,18 @@
+{
+  "project_ref": "iapdtipxubhulsxqnriv",
+  "verified_local_date": "2026-10-22",
+  "migrations": [
+    {"local":"202610210001_catalog_tables.sql","remote_version":"20261021164046","remote_name":"catalog_tables_v13"},
+    {"local":"202610210002_catalog_validation.sql","remote_version":"20261021164054","remote_name":"catalog_validation_v13"},
+    {"local":"202610210003_catalog_access.sql","remote_version":"20261021164056","remote_name":"catalog_access_v13"},
+    {"local":"202610220001_catalog_media_security.sql","remote_version":"20261021164058","remote_name":"catalog_media_security_v13"},
+    {"local":"202610220002_catalog_auth_bridge.sql","remote_version":"20261021164100","remote_name":"catalog_auth_bridge_v13"},
+    {"local":"202610220003_catalog_media_revocation.sql","remote_version":"20261021164101","remote_name":"catalog_media_revocation_v13"},
+    {"local":"202610220004_catalog_private_boundary.sql","remote_version":"20261021164315","remote_name":"catalog_private_boundary_v13"},
+    {"local":"20261022040009_catalog_conflict_http_status.sql","remote_version":"20261022040101","remote_name":"catalog_conflict_http_status"}
+  ],
+  "hosted_validation":{"passed":true,"business_tables":18,"test_drafts":20,"source_prices":32,"published_products":0,"private_buckets":2,"expected_publication_rejections":20},
+  "administrator":{"user_id":"19256048-f7b6-48f6-a17b-dfe790600ef9","role":"admin","active":true,"database_identity_verified":true,"human_password_login_tested":false},
+  "remaining_auth_advisor":"auth_leaked_password_protection",
+  "warning":"Remote migration versions differ from local filenames. Reconcile history before CLI deployment; do not reset remote."
+}

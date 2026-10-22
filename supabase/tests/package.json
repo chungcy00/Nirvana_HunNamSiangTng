@@ -1,0 +1,8 @@
+{
+  "name": "nirvana-catalog-security-integration",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node integration.mjs", "preflight": "node preflight.mjs"},
+  "dependencies": {"@supabase/supabase-js": "2.118.0", "pg": "8.23.1"},
+  "devDependencies": {"supabase": "2.78.1"}
+}

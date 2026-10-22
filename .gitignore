@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+/work/catalog-security/
+/work/niche-review/
+/work/prototype/
+/supabase/.temp/
+/supabase/.branches/
+/supabase/tests/node_modules/

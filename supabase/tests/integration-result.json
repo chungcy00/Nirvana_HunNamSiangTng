@@ -1,0 +1,544 @@
+{
+  "environment": "local-supabase-real-services",
+  "host": "127.0.0.1",
+  "run_id": "ef47cd3a-64db-43c6-a306-03480dabb6ef",
+  "tests": [
+    {
+      "name": "文档③：18张表、22个外键、执行角色和RPC授权与安全契约一致",
+      "status": "PASS"
+    },
+    {
+      "name": "八个迁移已应用，18张业务表全部启用RLS",
+      "status": "PASS"
+    },
+    {
+      "name": "由真实Supabase Auth创建并登录管理员、编辑员和无后台权限用户",
+      "status": "PASS"
+    },
+    {
+      "name": "管理员身份来自数据库；普通用户伪造metadata.role无效",
+      "status": "PASS"
+    },
+    {
+      "name": "伪造JWT被网关或Auth拒绝",
+      "status": "PASS"
+    },
+    {
+      "name": "匿名不能调用后台入口或原表",
+      "status": "PASS"
+    },
+    {
+      "name": "两个媒体bucket私有、限制10MiB及JPEG/PNG/WebP",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜录入真实结构：双人火化土葬配套 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜录入真实结构：单人福地地段 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜录入真实结构：单人福地配套 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜录入真实结构：双人福地地段 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜录入真实结构：双人福地配套 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜录入真实结构：尊贵双人福地配套 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜录入真实结构：家庭福地 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone AA｜录入真实结构：双人火化土葬 · AA区",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜录入真实结构：富贵自由｜佛教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜录入真实结构：富贵圆满｜佛教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜录入真实结构：富贵尊荣｜佛教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜录入真实结构：富贵辉煌｜佛教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜录入真实结构：富贵自由｜基督教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜录入真实结构：富贵圆满｜基督教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜录入真实结构：富贵尊荣｜基督教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜录入真实结构：富贵辉煌｜基督教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "聚仙楼｜录入真实结构：聚仙楼 1.0： 金莲华 | 万佛朝宗",
+      "status": "PASS"
+    },
+    {
+      "name": "聚仙楼｜录入真实结构：聚仙楼2.0： 流金岁月",
+      "status": "PASS"
+    },
+    {
+      "name": "聚仙楼｜录入真实结构：聚仙楼2.0： 莲花观音",
+      "status": "PASS"
+    },
+    {
+      "name": "聚仙楼｜录入真实结构：聚仙楼3.0： 水月观音",
+      "status": "PASS"
+    },
+    {
+      "name": "草稿文件真实上传Storage，匿名不能下载",
+      "status": "PASS"
+    },
+    {
+      "name": "编辑员可上传草稿照片；普通登录用户不可上传",
+      "status": "PASS"
+    },
+    {
+      "name": "不符合路径、MIME及大小限制的文件不能上传",
+      "status": "PASS"
+    },
+    {
+      "name": "编辑员不能发布真实产品，管理员缺主图也不能发布",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜照片引用及发布验证：双人火化土葬配套 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜照片引用及发布验证：单人福地地段 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜照片引用及发布验证：单人福地配套 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜照片引用及发布验证：双人福地地段 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜照片引用及发布验证：双人福地配套 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜照片引用及发布验证：尊贵双人福地配套 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W｜照片引用及发布验证：家庭福地 · Zone W",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone AA｜照片引用及发布验证：双人火化土葬 · AA区",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜照片引用及发布验证：富贵自由｜佛教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜照片引用及发布验证：富贵圆满｜佛教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜照片引用及发布验证：富贵尊荣｜佛教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜照片引用及发布验证：富贵辉煌｜佛教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜照片引用及发布验证：富贵自由｜基督教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜照片引用及发布验证：富贵圆满｜基督教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜照片引用及发布验证：富贵尊荣｜基督教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "殡仪服务｜照片引用及发布验证：富贵辉煌｜基督教殡仪",
+      "status": "PASS"
+    },
+    {
+      "name": "聚仙楼｜照片引用及发布验证：聚仙楼 1.0： 金莲华 | 万佛朝宗",
+      "status": "PASS"
+    },
+    {
+      "name": "聚仙楼｜照片引用及发布验证：聚仙楼2.0： 流金岁月",
+      "status": "PASS"
+    },
+    {
+      "name": "聚仙楼｜照片引用及发布验证：聚仙楼2.0： 莲花观音",
+      "status": "PASS"
+    },
+    {
+      "name": "聚仙楼｜照片引用及发布验证：聚仙楼3.0： 水月观音",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone AA双宗教四设计共用63888售价，不重复产品",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W尊贵配套普通／角头及面积覆盖价格不混合",
+      "status": "PASS"
+    },
+    {
+      "name": "Zone W地段不继承配套宗教用品；家庭人数不强填数字",
+      "status": "PASS"
+    },
+    {
+      "name": "八款殡仪均分别返回来源中的预购／即用价格，无总价及人数条件",
+      "status": "PASS"
+    },
+    {
+      "name": "真实资料不足的聚仙楼四产品均保留草稿，无虚构起价",
+      "status": "PASS"
+    },
+    {
+      "name": "公开目录及详情排除内部字段，后台可以读取",
+      "status": "PASS"
+    },
+    {
+      "name": "直接SQL使用authenticated角色也不能读私表、改权限或改审计",
+      "status": "PASS"
+    },
+    {
+      "name": "已有公开主图不能原地覆盖或删除",
+      "status": "PASS"
+    },
+    {
+      "name": "编辑员不能向已发布产品上传新图或修改价格",
+      "status": "PASS"
+    },
+    {
+      "name": "关闭AA基督教配置后标签、设计图片字节及筛选同时隐藏",
+      "status": "PASS"
+    },
+    {
+      "name": "受限素材可后台读取，不能匿名读取、设为主图或输出目录",
+      "status": "PASS"
+    },
+    {
+      "name": "停用管理员账号：现有JWT仍有效但后台和受限图访问立即被拒",
+      "status": "PASS"
+    },
+    {
+      "name": "私有普通图与受限图均不能签发绕过后续权限检查的下载／上传URL",
+      "status": "PASS"
+    },
+    {
+      "name": "即使已有宽松Storage策略，目录bucket的限制仍不能被旁路",
+      "status": "PASS"
+    },
+    {
+      "name": "不能把另一个产品的已上传图片路径关联到当前产品",
+      "status": "PASS"
+    },
+    {
+      "name": "失败的正式改价事务保留原价格、更新时间及审计数",
+      "status": "PASS"
+    },
+    {
+      "name": "两个真实数据库连接同时编辑：第二人等待后收到冲突，不覆盖第一人",
+      "status": "PASS"
+    },
+    {
+      "name": "隐藏产品后公开RPC和旧普通图片下载均拒绝，后台仍可查看",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：未完成骨灰位可存草稿，自动生成默认方案与起价模式",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：零价、负价、NaN及空金额均不能保存",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：同方案同类型即使均未公开也不能重复报价",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：包含项目不能引用其他产品的方案",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：方案、图片及包含项目均不能引用未绑定宗教",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：专属属性类别匹配，重分类不能遗留错误属性",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：人数类别与数量匹配，家庭允许未知人数",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：方案数变化自动调整模式，殡仪和骨灰位禁止位置分价",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：拒绝客户端伪造操作人、更新时间及价格模式",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：非殡仪不能写预购价，殡仪不能写标准总价",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：已发布产品不能移除最后宗教、当前价格或共通主图",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：类别或宗教字典停用仍受发布完整性约束",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：停用系列不隐藏已有产品，但禁止新增绑定",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：引用中的类别及宗教不能删除；孤立价格不能创建",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：骨灰位逐项校验名称、人数、公开宗教、主图及最低价后才可发布",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：牌位、生基及宠物可在不填写人数和宗教时合法发布",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：只修改殡仪预购价不覆盖即用价，旧更新时间保存被拒绝",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：草稿可删除并级联子记录，审计记录保留",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：曾发布产品不能改回草稿、物理删除或交由编辑员修改",
+      "status": "PASS"
+    },
+    {
+      "name": "文档③：审计写入失败时产品、价格及并发标识整体回滚",
+      "status": "PASS"
+    }
+  ],
+  "products": [
+    {
+      "name": "双人火化土葬配套 · Zone W",
+      "group": "Zone W",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "单人福地地段 · Zone W",
+      "group": "Zone W",
+      "status": "correctly-blocked-missing-source-data",
+      "missing": [
+        "真实产品照片",
+        "宗教适用资料"
+      ],
+      "actual_photo": false
+    },
+    {
+      "name": "单人福地配套 · Zone W",
+      "group": "Zone W",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "双人福地地段 · Zone W",
+      "group": "Zone W",
+      "status": "correctly-blocked-missing-source-data",
+      "missing": [
+        "真实产品照片",
+        "宗教适用资料"
+      ],
+      "actual_photo": false
+    },
+    {
+      "name": "双人福地配套 · Zone W",
+      "group": "Zone W",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "尊贵双人福地配套 · Zone W",
+      "group": "Zone W",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "家庭福地 · Zone W",
+      "group": "Zone W",
+      "status": "correctly-blocked-missing-source-data",
+      "missing": [
+        "真实产品照片",
+        "宗教适用资料"
+      ],
+      "actual_photo": false
+    },
+    {
+      "name": "双人火化土葬 · AA区",
+      "group": "Zone AA",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "富贵自由｜佛教殡仪",
+      "group": "殡仪服务",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "富贵圆满｜佛教殡仪",
+      "group": "殡仪服务",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "富贵尊荣｜佛教殡仪",
+      "group": "殡仪服务",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "富贵辉煌｜佛教殡仪",
+      "group": "殡仪服务",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "富贵自由｜基督教殡仪",
+      "group": "殡仪服务",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "富贵圆满｜基督教殡仪",
+      "group": "殡仪服务",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "富贵尊荣｜基督教殡仪",
+      "group": "殡仪服务",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "富贵辉煌｜基督教殡仪",
+      "group": "殡仪服务",
+      "status": "published-in-local-test",
+      "actual_photo": false
+    },
+    {
+      "name": "聚仙楼 1.0： 金莲华 | 万佛朝宗",
+      "group": "聚仙楼",
+      "status": "correctly-blocked-missing-source-data",
+      "missing": [
+        "最低价格",
+        "人数／容量",
+        "适用宗教",
+        "包含项目明细",
+        "真实产品照片"
+      ],
+      "actual_photo": false
+    },
+    {
+      "name": "聚仙楼2.0： 流金岁月",
+      "group": "聚仙楼",
+      "status": "correctly-blocked-missing-source-data",
+      "missing": [
+        "最低价格",
+        "人数／容量",
+        "适用宗教",
+        "包含项目明细",
+        "真实产品照片"
+      ],
+      "actual_photo": false
+    },
+    {
+      "name": "聚仙楼2.0： 莲花观音",
+      "group": "聚仙楼",
+      "status": "correctly-blocked-missing-source-data",
+      "missing": [
+        "最低价格",
+        "人数／容量",
+        "适用宗教",
+        "包含项目明细",
+        "真实产品照片"
+      ],
+      "actual_photo": false
+    },
+    {
+      "name": "聚仙楼3.0： 水月观音",
+      "group": "聚仙楼",
+      "status": "correctly-blocked-missing-source-data",
+      "missing": [
+        "最低价格",
+        "人数／容量",
+        "适用宗教",
+        "包含项目明细",
+        "真实产品照片"
+      ],
+      "actual_photo": false
+    }
+  ],
+  "limitations": [
+    "产品结构来自所列资料；旧销售状态文字不导入，以1.3版需求为准。",
+    "图片测试使用明确标记的测试PNG，不是产品照片。",
+    "聚仙楼仅导入项目已有名称为草稿，缺失资料不推断。"
+  ],
+  "postgres": "PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+  "migrations": [
+    "202610210001",
+    "202610210002",
+    "202610210003",
+    "202610220001",
+    "202610220002",
+    "202610220003",
+    "202610220004",
+    "20261022040009"
+  ],
+  "passed": 89,
+  "failed": 0,
+  "finished_at": "2026-10-22T04:01:34.833Z"
+}

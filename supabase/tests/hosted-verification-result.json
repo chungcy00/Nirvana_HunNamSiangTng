@@ -1,0 +1,54 @@
+{
+  "project_ref": "iapdtipxubhulsxqnriv",
+  "verified_at": "2026-10-22T04:02:50.766Z",
+  "requirements_version": "document-3-v1.3",
+  "source_sha256": "7cfc71818e2b511f3218a178e5f026deebfa042984adc15decf83e0fb47cb967",
+  "schema_contract": {
+    "passed": true,
+    "tables": 18,
+    "api_rpcs": 7,
+    "contract": "document-3-v1.3",
+    "rls_tables": 18,
+    "public_rpcs": 3,
+    "primary_keys": 18,
+    "validated_foreign_keys": 22,
+    "executor_roles_without_login_or_bypassrls": 2
+  },
+  "hosted_conflict_validation": {
+    "passed": true,
+    "stale_save": "PT409",
+    "data_changes": false,
+    "stale_delete": "PT409",
+    "human_login_tested": false
+  },
+  "hosted_draft_validation": {
+    "passed": true,
+    "publication_rejections": 20,
+    "transaction_rolled_back": true
+  },
+  "security_advisors": {
+    "lints": [
+      {
+        "name": "auth_leaked_password_protection",
+        "title": "Leaked Password Protection Disabled",
+        "level": "WARN",
+        "facing": "EXTERNAL",
+        "categories": [
+          "SECURITY"
+        ],
+        "description": "Leaked password protection is currently disabled.",
+        "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection",
+        "count": 1,
+        "findings": [
+          {
+            "detail": "Supabase Auth prevents the use of compromised passwords by checking against HaveIBeenPwned.org. Enable this feature to enhance security.",
+            "metadata": {
+              "type": "auth",
+              "entity": "Auth"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

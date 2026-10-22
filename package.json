@@ -7,9 +7,12 @@
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
+    "prototype:preview": "vite --host 127.0.0.1 --port 3001",
     "lint": "tsc --noEmit",
     "test": "node --import ./tests/register-css.mjs --import tsx --test tests/*.test.tsx",
-    "prototype:preview": "vite --host 127.0.0.1 --port 3001"
+    "catalog:security:start": "node scripts/catalog-security/start-local.mjs",
+    "catalog:security:test": "node supabase/tests/integration.mjs",
+    "catalog:security:preflight": "node supabase/tests/preflight.mjs --remote"
   },
   "dependencies": {
     "lucide-react": "^0.546.0",

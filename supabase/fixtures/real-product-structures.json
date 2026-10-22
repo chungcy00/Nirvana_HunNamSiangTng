@@ -1,0 +1,951 @@
+{
+  "test_only": true,
+  "not_production_seed": true,
+  "sources": {
+    "Zone_W.docx": {
+      "sha256": "dd2a5ddd820d135bebc78acd01a57460b9a5427b967271e9235d427d72013d72"
+    },
+    "Zone AA.docx": {
+      "sha256": "0bf88865c94f402e431cb539e2587e30adefc345818c3ba18caada6547ab31e4"
+    },
+    "富贵山庄_佛教殡仪_网页产品资料_价格字段修正版.docx": {
+      "sha256": "5c85e4ab3440f8be9f5b4ef4b70220cf5e0069a18e9c6ef688e992eaff165444"
+    },
+    "富贵山庄_基督教殡仪_网页展示产品资料_价格字段修正版.docx": {
+      "sha256": "2e7f5a101098bcf72992b0f4ccf88642386c48a6d62febcf580880e59be01b28"
+    }
+  },
+  "rules": [
+    "产品结构来自所列资料；旧销售状态文字不导入，以1.3版需求为准。",
+    "图片测试使用明确标记的测试PNG，不是产品照片。",
+    "聚仙楼仅导入项目已有名称为草稿，缺失资料不推断。"
+  ],
+  "products": [
+    {
+      "key": "w-cremation",
+      "group": "Zone W",
+      "name": "双人火化土葬配套 · Zone W",
+      "category_id": 1,
+      "capacity_group": "double",
+      "religions": [
+        1,
+        2
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "普通地段",
+          "area_sqft": null,
+          "standard": 21888
+        }
+      ],
+      "source": "Zone_W.docx",
+      "product_form": "package",
+      "facing": "西北",
+      "area_sqft": 10.83,
+      "inclusions": [
+        "双人福地一个",
+        "墓碑",
+        "骨灰瓮两个",
+        "2×3英寸彩色瓷相两张",
+        "火化费用两次"
+      ],
+      "religious_inclusions": [
+        {
+          "religion_id": 1,
+          "item_name": "香炉",
+          "quantity": 1,
+          "unit": "个"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "花瓶",
+          "quantity": 1,
+          "unit": "对"
+        }
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "w-single-lot",
+      "group": "Zone W",
+      "name": "单人福地地段 · Zone W",
+      "category_id": 2,
+      "capacity_group": "single",
+      "religions": null,
+      "prices": [
+        {
+          "code": "option-1",
+          "name": "普通地段",
+          "area_sqft": null,
+          "standard": 27888
+        },
+        {
+          "code": "option-2",
+          "name": "角头地段",
+          "area_sqft": null,
+          "standard": 30888
+        }
+      ],
+      "source": "Zone_W.docx",
+      "product_form": "lot",
+      "facing": "西北",
+      "area_sqft": 108,
+      "inclusions": [
+        "土地",
+        "维护费",
+        "围墙与步道",
+        "挖墓费用"
+      ],
+      "religious_inclusions": [],
+      "missing": [
+        "真实产品照片",
+        "宗教适用资料"
+      ]
+    },
+    {
+      "key": "w-single-package",
+      "group": "Zone W",
+      "name": "单人福地配套 · Zone W",
+      "category_id": 2,
+      "capacity_group": "single",
+      "religions": [
+        1,
+        2
+      ],
+      "prices": [
+        {
+          "code": "option-1",
+          "name": "普通地段",
+          "area_sqft": null,
+          "standard": 33888
+        },
+        {
+          "code": "option-2",
+          "name": "角头地段",
+          "area_sqft": null,
+          "standard": 35888
+        }
+      ],
+      "source": "Zone_W.docx",
+      "product_form": "package",
+      "facing": "西北",
+      "area_sqft": 75,
+      "inclusions": [
+        "福地土地",
+        "墓碑"
+      ],
+      "religious_inclusions": [
+        {
+          "religion_id": 1,
+          "item_name": "香炉"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "后土"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "花瓶"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "彩色瓷相"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "一对天使"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "花瓶"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "彩色瓷相"
+        }
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "w-double-lot",
+      "group": "Zone W",
+      "name": "双人福地地段 · Zone W",
+      "category_id": 2,
+      "capacity_group": "double",
+      "religions": null,
+      "prices": [
+        {
+          "code": "option-1",
+          "name": "普通地段",
+          "area_sqft": null,
+          "standard": 60888
+        },
+        {
+          "code": "option-2",
+          "name": "角头地段",
+          "area_sqft": null,
+          "standard": 68888
+        }
+      ],
+      "source": "Zone_W.docx",
+      "product_form": "lot",
+      "facing": "西北",
+      "area_sqft": 216,
+      "inclusions": [
+        "土地",
+        "永久性服务与维护",
+        "围墙与步道"
+      ],
+      "religious_inclusions": [],
+      "missing": [
+        "真实产品照片",
+        "宗教适用资料"
+      ]
+    },
+    {
+      "key": "w-double-package",
+      "group": "Zone W",
+      "name": "双人福地配套 · Zone W",
+      "category_id": 2,
+      "capacity_group": "double",
+      "religions": [
+        1,
+        2
+      ],
+      "prices": [
+        {
+          "code": "option-1",
+          "name": "普通地段",
+          "area_sqft": null,
+          "standard": 86888
+        },
+        {
+          "code": "option-2",
+          "name": "角头地段",
+          "area_sqft": null,
+          "standard": 93888
+        }
+      ],
+      "source": "Zone_W.docx",
+      "product_form": "package",
+      "facing": "西北",
+      "area_sqft": 162,
+      "inclusions": [
+        "福地土地",
+        "墓碑"
+      ],
+      "religious_inclusions": [
+        {
+          "religion_id": 1,
+          "item_name": "香炉"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "后土"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "花瓶"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "彩色瓷相"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "一对天使"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "花瓶"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "彩色瓷相"
+        }
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "w-premium-package",
+      "group": "Zone W",
+      "name": "尊贵双人福地配套 · Zone W",
+      "category_id": 2,
+      "capacity_group": "double",
+      "religions": [
+        1,
+        2
+      ],
+      "prices": [
+        {
+          "code": "option-1",
+          "name": "普通地段 216 sqft",
+          "area_sqft": 216,
+          "standard": 113888
+        },
+        {
+          "code": "option-2",
+          "name": "角头地段 216 sqft",
+          "area_sqft": 216,
+          "standard": 123888
+        },
+        {
+          "code": "option-3",
+          "name": "普通地段 252 sqft",
+          "area_sqft": 252,
+          "standard": 120888
+        }
+      ],
+      "source": "Zone_W.docx",
+      "product_form": "package",
+      "facing": "西北",
+      "area_sqft": null,
+      "inclusions": [
+        "福地土地",
+        "墓碑"
+      ],
+      "religious_inclusions": [
+        {
+          "religion_id": 1,
+          "item_name": "香炉"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "后土"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "花瓶"
+        },
+        {
+          "religion_id": 1,
+          "item_name": "彩色瓷相"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "一对天使"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "花瓶"
+        },
+        {
+          "religion_id": 2,
+          "item_name": "彩色瓷相"
+        }
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "w-family-lot",
+      "group": "Zone W",
+      "name": "家庭福地 · Zone W",
+      "category_id": 2,
+      "capacity_group": "family",
+      "religions": null,
+      "prices": [
+        {
+          "code": "option-1",
+          "name": "普通地段 864 sqft",
+          "area_sqft": 864,
+          "standard": 238888
+        },
+        {
+          "code": "option-2",
+          "name": "角头地段 864 sqft",
+          "area_sqft": 864,
+          "standard": 258888
+        },
+        {
+          "code": "option-3",
+          "name": "普通地段 1080 sqft",
+          "area_sqft": 1080,
+          "standard": 308888
+        }
+      ],
+      "source": "Zone_W.docx",
+      "product_form": "lot",
+      "facing": "西北",
+      "area_sqft": null,
+      "inclusions": [
+        "土地",
+        "管理费",
+        "设施费用"
+      ],
+      "religious_inclusions": [],
+      "missing": [
+        "真实产品照片",
+        "宗教适用资料"
+      ]
+    },
+    {
+      "key": "aa-double-package",
+      "group": "Zone AA",
+      "name": "双人火化土葬 · AA区",
+      "category_id": 1,
+      "capacity_group": "double",
+      "religions": [
+        1,
+        2
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "standard": 63888
+        }
+      ],
+      "source": "Zone AA.docx",
+      "product_form": "package",
+      "facing": "朝南",
+      "area_sqft": 56,
+      "inclusions": [
+        "双人福地",
+        "风水建设",
+        "双人火化费",
+        "骨灰瓮及盒 × 2",
+        "寿洞",
+        "永久管理费",
+        "第二次下葬费"
+      ],
+      "designs": [
+        {
+          "religion_id": 1,
+          "name": "甲款"
+        },
+        {
+          "religion_id": 1,
+          "name": "乙款"
+        },
+        {
+          "religion_id": 2,
+          "name": "丙款"
+        },
+        {
+          "religion_id": 2,
+          "name": "丁款"
+        }
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "funeral-1-1",
+      "group": "殡仪服务",
+      "name": "富贵自由｜佛教殡仪",
+      "category_id": 4,
+      "capacity_group": null,
+      "religions": [
+        1
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "pre_need": 10888,
+          "at_need": 12888
+        }
+      ],
+      "source": "富贵山庄_佛教殡仪_网页产品资料_价格字段修正版.docx",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "funeral_method": "cremation",
+      "terms_summary": "预购须至少提前3天购买。仅限火化。",
+      "inclusions": [
+        "3 天 2 夜佛教殡仪服务",
+        "24 小时临终礼仪咨询",
+        "申报死亡与领取死亡证书",
+        "遗体接送：接体车 1 辆与接体人员",
+        "遗体穿衣与化妆服务",
+        "进口优质寿衣 1 套",
+        "遗体冰箱",
+        "陀罗尼经被 1 件",
+        "富贵自由火化寿木 1 副",
+        "风扇 1 台",
+        "桌子及桌布 2 套",
+        "椅子及椅套 30 套",
+        "使用庄严灵堂",
+        "灵桌花坛",
+        "遗照放大（10R）1 张",
+        "精致相框 1 个",
+        "使用佛歌机",
+        "路向指示牌",
+        "孝服 12 套",
+        "唁慰录 1 本",
+        "使用吊金箱 1 个",
+        "使用音响 1 套",
+        "专业治丧资讯及服务团队 1 队",
+        "殡仪协调人员 1 人",
+        "治丧流程表",
+        "入殓及安葬生肖相冲通告",
+        "佛教诵经服务",
+        "灵前供斋与供果 3 天",
+        "元宝蜡烛 1 套",
+        "糖果红包 100 份",
+        "饮用水 5 箱",
+        "专业扶柩队 1 队",
+        "寿内用品",
+        "入殓鲜花",
+        "大殓封棺",
+        "司仪 1 人",
+        "使用进口豪华灵车 1 辆／单程",
+        "做七及百日提醒",
+        "追思优盘 1 份"
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "funeral-1-2",
+      "group": "殡仪服务",
+      "name": "富贵圆满｜佛教殡仪",
+      "category_id": 4,
+      "capacity_group": null,
+      "religions": [
+        1
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "pre_need": 23888,
+          "at_need": 26888
+        }
+      ],
+      "source": "富贵山庄_佛教殡仪_网页产品资料_价格字段修正版.docx",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "funeral_method": "both",
+      "terms_summary": "预购须至少提前3天购买。土葬／火化用品按实际安葬方式适用。",
+      "inclusions": [
+        "3 天 2 夜佛教殡仪服务",
+        "24 小时临终礼仪咨询",
+        "申报死亡与领取死亡证书",
+        "遗体接送：接体车 1 辆与接体人员",
+        "遗体穿衣与化妆服务",
+        "进口优质寿衣 1 套",
+        "遗体冰箱",
+        "陀罗尼经被 1 件",
+        "豪华棺木或火化棺木 1 副",
+        "骨灰瓮 1 个",
+        "殡仪馆使用 2 晚，或特色大棚（20 尺 × 20 尺）及灯光 1 组",
+        "风扇 2 台",
+        "桌子及桌布 4 套",
+        "椅子及椅套 50 套",
+        "使用庄严灵堂",
+        "鲜花花坛",
+        "使用佛歌机",
+        "遗照放大（10R）1 张",
+        "精致相框 1 个",
+        "路向指示牌",
+        "孝服 24 套",
+        "唁慰录 1 本",
+        "使用吊金箱 1 个",
+        "使用追思屏风 1 个",
+        "使用音响 1 套",
+        "专业治丧协调顾问",
+        "专业丧务理事",
+        "殡仪协调人员（08:30－20:30）",
+        "治丧流程表",
+        "入殓及安葬生肖相冲通告",
+        "佛教诵经服务",
+        "水果素菜祭品 3 天",
+        "元宝蜡烛 1 套",
+        "精致纸扎 1 套",
+        "糖果红包 200 份",
+        "饮用水 10 箱",
+        "专业扶柩队 1 队",
+        "寿内用品",
+        "入殓鲜花",
+        "大殓封棺",
+        "司仪 1 人",
+        "礼仪助理 2 人",
+        "纪念品 50 份",
+        "引导车 1 辆／单程",
+        "使用进口豪华灵车 1 辆／单程",
+        "使用冷气巴士（40 座）1 辆",
+        "做七及百日提醒",
+        "追思优盘（80 张相片）1 份"
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "funeral-1-3",
+      "group": "殡仪服务",
+      "name": "富贵尊荣｜佛教殡仪",
+      "category_id": 4,
+      "capacity_group": null,
+      "religions": [
+        1
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "pre_need": 35888,
+          "at_need": 40888
+        }
+      ],
+      "source": "富贵山庄_佛教殡仪_网页产品资料_价格字段修正版.docx",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "funeral_method": "both",
+      "terms_summary": "预购须至少提前3天购买。土葬／火化用品按实际安葬方式适用。",
+      "inclusions": [
+        "3 天 2 夜佛教殡仪服务",
+        "24 小时临终礼仪咨询",
+        "申报死亡与领取死亡证书",
+        "遗体接送：接体车 1 辆与接体人员",
+        "遗体穿衣与化妆服务",
+        "进口优质寿衣 1 套",
+        "遗体冰箱",
+        "陀罗尼经被 1 件",
+        "豪华棺木或火化棺木 1 副",
+        "骨灰瓮 1 个",
+        "殡仪馆或特色大棚（20 尺 × 20 尺）及灯光 2 组",
+        "风扇 6 台",
+        "桌子及桌布 8 套",
+        "椅子及椅套 100 套",
+        "使用庄严灵堂",
+        "鲜花花坛",
+        "遗照放大（12R）1 张",
+        "精致相框 1 个",
+        "雕柱鲜花",
+        "使用佛歌机",
+        "路向指示牌",
+        "孝服 48 套",
+        "唁慰录 1 本",
+        "使用吊金箱 1 个",
+        "使用追思屏风 1 个",
+        "使用音响 1 套",
+        "专业治丧协调顾问",
+        "专业丧务理事",
+        "殡仪协调人员（08:30－20:30）",
+        "佛教诵经服务",
+        "治丧流程表",
+        "入殓及安葬生肖相冲通告",
+        "水果素菜祭品 3 天",
+        "元宝蜡烛 1 套",
+        "精致纸扎 1 套",
+        "糖果红包 300 份",
+        "饮用水 30 箱",
+        "花生 40 包",
+        "专业扶柩队 1 队",
+        "寿内用品",
+        "入殓鲜花",
+        "大殓封棺",
+        "司仪 1 人",
+        "礼仪助理 2 人",
+        "纪念品 150 份",
+        "引导车 1 辆／单程",
+        "使用进口豪华皇家灵车 1 辆／单程",
+        "使用冷气巴士（40 座）1 辆／单程",
+        "罗里载花圈 1 辆",
+        "做七及百日提醒",
+        "追思相册及优盘（120 张相片）1 份"
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "funeral-1-4",
+      "group": "殡仪服务",
+      "name": "富贵辉煌｜佛教殡仪",
+      "category_id": 4,
+      "capacity_group": null,
+      "religions": [
+        1
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "pre_need": 42888,
+          "at_need": 47888
+        }
+      ],
+      "source": "富贵山庄_佛教殡仪_网页产品资料_价格字段修正版.docx",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "funeral_method": "both",
+      "terms_summary": "预购须至少提前3天购买。土葬／火化用品按实际安葬方式适用。",
+      "inclusions": [
+        "3 天 2 夜佛教殡仪服务",
+        "24 小时临终礼仪咨询",
+        "申报死亡与领取死亡证书",
+        "遗体接送：接体车 1 辆与接体人员",
+        "遗体穿衣与化妆服务",
+        "进口优质寿衣 1 套",
+        "遗体冰箱",
+        "陀罗尼经被 1 件",
+        "豪华棺木或火化棺木 1 副",
+        "骨灰瓮 1 个",
+        "殡仪馆或特色大棚（20 尺 × 20 尺）及灯光 3 组",
+        "风扇 8 台",
+        "桌子及桌布 15 套",
+        "椅子及椅套 120 套",
+        "使用庄严灵堂",
+        "鲜花花坛",
+        "遗照放大（12R）1 张",
+        "精致相框 1 个",
+        "雕柱鲜花",
+        "使用佛歌机",
+        "路向指示牌",
+        "孝服 48 套",
+        "唁慰录 1 本",
+        "使用吊金箱 1 个",
+        "使用追思屏风 1 个",
+        "使用音响 1 套",
+        "地方版华文报刊登讣告：1／4 版黑白，1 日",
+        "专业治丧协调顾问",
+        "专业丧务理事",
+        "殡仪协调人员（08:30－20:30）",
+        "守夜服务：2 位工作人员，20:30－06:00，共 2 晚",
+        "佛教诵经服务",
+        "治丧流程表",
+        "入殓及安葬生肖相冲通告",
+        "水果素菜祭品 3 天",
+        "元宝蜡烛 1 套",
+        "精致纸扎 1 套",
+        "糖果红包 500 份",
+        "饮用水 40 箱",
+        "花生 50 包",
+        "专业扶柩队 1 队",
+        "寿内用品",
+        "入殓鲜花",
+        "大殓封棺",
+        "司仪 1 人",
+        "礼仪助理 2 人",
+        "纪念品 200 份",
+        "引导车 1 辆／单程",
+        "使用进口豪华皇家灵车 1 辆／单程",
+        "使用冷气巴士（40 座）1 辆／单程",
+        "罗里载花圈 1 辆",
+        "做七及百日提醒",
+        "追思相册及优盘（120 张相片）1 份",
+        "地方版华文报刊登感谢辞：1／4 版黑白，1 日"
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "funeral-2-1",
+      "group": "殡仪服务",
+      "name": "富贵自由｜基督教殡仪",
+      "category_id": 4,
+      "capacity_group": null,
+      "religions": [
+        2
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "pre_need": 9888,
+          "at_need": 11888
+        }
+      ],
+      "source": "富贵山庄_基督教殡仪_网页展示产品资料_价格字段修正版.docx",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "funeral_method": "cremation",
+      "terms_summary": "预购须至少提前3天购买。仅限火化。",
+      "inclusions": [
+        "临终咨询：24小时临终礼仪咨询。",
+        "遗体护理：申报死亡及领取死亡证书；遗体接送车1辆与接体人员；遗体净身、更衣及化妆；进口优质寿衣1套；遗体冰箱；十字被1件；富贵自由火化寿木1副。",
+        "灵堂及治丧布置：风扇1台；桌子及桌布2套；椅子及椅套30套；庄严灵堂；灵桌花坛；遗照放大10R（1份）；精致相框1个；路向指示牌；孝服12件；吊唁簿1本；吊金箱1个；音响设备1套。",
+        "治丧协调：专业治丧顾问及支援团队1组；殡仪协调人员1人；治丧流程表；蜡烛1套；十字架1个；糖果红包100份；饮用水5箱。",
+        "入殓及出殡：专业扶柩队1组；入殓鲜花；入殓与封棺服务；进口豪华灵车1辆（单程）。",
+        "后续关怀：做七及百日提醒；追思优盘1个。"
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "funeral-2-2",
+      "group": "殡仪服务",
+      "name": "富贵圆满｜基督教殡仪",
+      "category_id": 4,
+      "capacity_group": null,
+      "religions": [
+        2
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "pre_need": 21888,
+          "at_need": 24888
+        }
+      ],
+      "source": "富贵山庄_基督教殡仪_网页展示产品资料_价格字段修正版.docx",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "funeral_method": "both",
+      "terms_summary": "预购须至少提前3天购买。土葬／火化用品按实际安葬方式适用。",
+      "inclusions": [
+        "临终咨询：24小时临终礼仪咨询。",
+        "遗体护理：申报死亡及领取死亡证书；遗体接送车1辆与接体人员；遗体净身、更衣及化妆；进口优质寿衣1套；遗体冰箱；十字被1件；豪华棺木或火化棺木1副；骨灰瓮1个（火化适用）。",
+        "灵堂及治丧布置：殡仪馆2晚，或20×20尺特色灵棚及灯光1套；风扇2台；桌子及桌布4套；椅子及椅套50套；庄严灵堂；鲜花花坛；棺顶花1组；遗照放大10R（1份）；精致相框1个；蜡烛及十字架；路向指示牌；孝服24件；吊唁簿1本；吊金箱1个；追思屏风1组；音响设备1套。",
+        "治丧协调：专业治丧协调顾问；殡仪协调人员（上午8:30至晚上8:30）；糖果红包200份；饮用水20箱；花生20包。",
+        "入殓及出殡：专业扶柩队1组；入殓鲜花；入殓及封棺服务；纪念品50份；引导车1辆（单程）；进口豪华灵车1辆（单程）；40座冷气巴士1辆。",
+        "后续关怀：做七及百日提醒；追思相册及优盘1套（相片80张）。"
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "funeral-2-3",
+      "group": "殡仪服务",
+      "name": "富贵尊荣｜基督教殡仪",
+      "category_id": 4,
+      "capacity_group": null,
+      "religions": [
+        2
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "pre_need": 33888,
+          "at_need": 38888
+        }
+      ],
+      "source": "富贵山庄_基督教殡仪_网页展示产品资料_价格字段修正版.docx",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "funeral_method": "both",
+      "terms_summary": "预购须至少提前3天购买。土葬／火化用品按实际安葬方式适用。",
+      "inclusions": [
+        "临终咨询：24小时临终礼仪咨询。",
+        "遗体护理：申报死亡及领取死亡证书；遗体接送车1辆与接体人员；遗体净身、更衣及化妆；进口优质寿衣1套；遗体冰箱；十字被1件；豪华棺木或火化棺木1副；骨灰瓮1个（火化适用）。",
+        "灵堂及治丧布置：殡仪馆使用，或20×20尺特色灵棚及灯光2套；风扇6台；桌子及桌布8套；椅子及椅套100套；庄严灵堂；鲜花花坛；棺顶花1组；遗照放大12R（1份）；精致相框1个；雕柱鲜花；蜡烛及十字架；路向指示牌；孝服48件；吊唁簿1本；吊金箱1个；追思屏风1组；音响设备1套。",
+        "治丧协调：专业治丧协调顾问；专业丧务理事；殡仪协调人员（上午8:30至晚上8:30）；治丧流程表；糖果红包300份；饮用水30箱；花生40包。",
+        "入殓及出殡：专业扶柩队1组；入殓鲜花；入殓及封棺服务；纪念品150份；引导车1辆（单程）；进口豪华灵车1辆（单程）；40座冷气巴士1辆；花圈运输1项。",
+        "后续关怀：做七及百日提醒；追思相册及优盘1套（相片120张）。"
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "funeral-2-4",
+      "group": "殡仪服务",
+      "name": "富贵辉煌｜基督教殡仪",
+      "category_id": 4,
+      "capacity_group": null,
+      "religions": [
+        2
+      ],
+      "prices": [
+        {
+          "code": "default",
+          "name": "默认方案",
+          "pre_need": 40888,
+          "at_need": 45888
+        }
+      ],
+      "source": "富贵山庄_基督教殡仪_网页展示产品资料_价格字段修正版.docx",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "funeral_method": "both",
+      "terms_summary": "预购须至少提前3天购买。土葬／火化用品按实际安葬方式适用。",
+      "inclusions": [
+        "临终咨询：24小时临终礼仪咨询。",
+        "遗体护理：申报死亡及领取死亡证书；遗体接送车1辆与接体人员；遗体净身、更衣及化妆；进口优质寿衣1套；遗体冰箱；十字被1件；豪华棺木或火化棺木1副；骨灰瓮1个（火化适用）。",
+        "灵堂及治丧布置：殡仪馆使用，或20×20尺特色灵棚及灯光3套；风扇10台；桌子及桌布15套；椅子及椅套120套；庄严灵堂；鲜花花坛；棺顶花1组；遗照放大12R（1份）；精致相框1个；雕柱鲜花；蜡烛及十字架；路向指示牌；孝服48件；吊唁簿1本；吊金箱1个；追思屏风1组；音响设备1套；本地华文报四分之一版黑白讣告刊登1日。",
+        "治丧协调：专业治丧协调顾问；专业丧务理事；殡仪协调人员（上午8:30至晚上8:30）；夜间守夜服务2人、2晚（晚上8:30至次日上午6:00）；治丧流程表；糖果红包500份；饮用水40箱；花生50包。",
+        "入殓及出殡：专业扶柩队1组；入殓鲜花；入殓及封棺服务；纪念品250份；引导车1辆（单程）；进口豪华灵车1辆（单程）；40座冷气巴士1辆；花圈运输1项。",
+        "后续关怀：做七及百日提醒；追思相册及优盘1套（相片120张）；本地华文报四分之一版黑白谢辞刊登1日。"
+      ],
+      "missing": [
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "juxian-shrine7",
+      "group": "聚仙楼",
+      "name": "聚仙楼 1.0： 金莲华 | 万佛朝宗",
+      "category_id": 3,
+      "capacity_group": null,
+      "religions": null,
+      "prices": [],
+      "source": "src/data/catalog.ts",
+      "missing": [
+        "最低价格",
+        "人数／容量",
+        "适用宗教",
+        "包含项目明细",
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "juxian-earth",
+      "group": "聚仙楼",
+      "name": "聚仙楼2.0： 流金岁月",
+      "category_id": 3,
+      "capacity_group": null,
+      "religions": null,
+      "prices": [],
+      "source": "src/data/catalog.ts",
+      "missing": [
+        "最低价格",
+        "人数／容量",
+        "适用宗教",
+        "包含项目明细",
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "juxian-lotus",
+      "group": "聚仙楼",
+      "name": "聚仙楼2.0： 莲花观音",
+      "category_id": 3,
+      "capacity_group": null,
+      "religions": null,
+      "prices": [],
+      "source": "src/data/catalog.ts",
+      "missing": [
+        "最低价格",
+        "人数／容量",
+        "适用宗教",
+        "包含项目明细",
+        "真实产品照片"
+      ]
+    },
+    {
+      "key": "juxian-moon",
+      "group": "聚仙楼",
+      "name": "聚仙楼3.0： 水月观音",
+      "category_id": 3,
+      "capacity_group": null,
+      "religions": null,
+      "prices": [],
+      "source": "src/data/catalog.ts",
+      "missing": [
+        "最低价格",
+        "人数／容量",
+        "适用宗教",
+        "包含项目明细",
+        "真实产品照片"
+      ]
+    }
+  ]
+}
