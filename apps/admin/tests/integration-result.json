@@ -1,5 +1,5 @@
 {
-  "run": "1a982ecd",
+  "run": "196c39f8",
   "environment": "local-real-supabase",
   "tests": [
     {
@@ -100,7 +100,7 @@
     }
   ],
   "host": "http://127.0.0.1:56321",
-  "finished_at": "2026-10-22T10:12:18.326Z",
+  "finished_at": "2026-10-22T13:19:32.747Z",
   "passed": 24,
   "failed": 0
 }

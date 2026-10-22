@@ -23,7 +23,8 @@ const png = Buffer.from(
   'base64',
 );
 const bucket = 'catalog-media-private',
-  adminUrl = 'http://127.0.0.1:3002';
+  adminUrl = process.env.ADMIN_TEST_URL || 'http://127.0.0.1:3002';
+assert.equal(new URL(adminUrl).hostname, '127.0.0.1');
 async function test(name, fn) {
   try {
     await fn();

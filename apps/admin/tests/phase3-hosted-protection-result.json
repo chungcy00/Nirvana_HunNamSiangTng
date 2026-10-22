@@ -1,0 +1,154 @@
+{
+  "environment": "existing-hosted-supabase-original-row-comparison",
+  "checked_at": "2026-10-22T13:30:06.424Z",
+  "passed": 18,
+  "failed": 0,
+  "checks": [
+    {
+      "table": "products",
+      "original_count": 20,
+      "after_original_count": 20,
+      "before_hash": "d86e162aa6bd688a5d3712f3b3795135",
+      "after_hash": "d86e162aa6bd688a5d3712f3b3795135",
+      "unchanged": true
+    },
+    {
+      "table": "religions",
+      "original_count": 2,
+      "after_original_count": 2,
+      "before_hash": "386fedb8cdfea250c21646be88d087b5",
+      "after_hash": "386fedb8cdfea250c21646be88d087b5",
+      "unchanged": true
+    },
+    {
+      "table": "audit_logs",
+      "original_count": 754,
+      "after_original_count": 754,
+      "before_hash": "e2521fc34cd96fec521b81ada42dd404",
+      "after_hash": "e2521fc34cd96fec521b81ada42dd404",
+      "unchanged": true
+    },
+    {
+      "table": "pet_details",
+      "original_count": 0,
+      "after_original_count": 0,
+      "before_hash": "d751713988987e9331980363e24189ce",
+      "after_hash": "d751713988987e9331980363e24189ce",
+      "unchanged": true
+    },
+    {
+      "table": "offer_prices",
+      "original_count": 32,
+      "after_original_count": 32,
+      "before_hash": "2e89c8745aa045c8ad202458eb76c8c9",
+      "after_hash": "2e89c8745aa045c8ad202458eb76c8c9",
+      "unchanged": true
+    },
+    {
+      "table": "admin_members",
+      "original_count": 1,
+      "after_original_count": 1,
+      "before_hash": "7d7a030583b35944ea97ee88eb072745",
+      "after_hash": "7d7a030583b35944ea97ee88eb072745",
+      "unchanged": true
+    },
+    {
+      "table": "niche_details",
+      "original_count": 4,
+      "after_original_count": 4,
+      "before_hash": "af2a717060ef99054f9d97d1e392951e",
+      "after_hash": "af2a717060ef99054f9d97d1e392951e",
+      "unchanged": true
+    },
+    {
+      "table": "burial_details",
+      "original_count": 8,
+      "after_original_count": 8,
+      "before_hash": "7f53fed055809ffd8b2f9480d3265f5c",
+      "after_hash": "7f53fed055809ffd8b2f9480d3265f5c",
+      "unchanged": true
+    },
+    {
+      "table": "product_images",
+      "original_count": 0,
+      "after_original_count": 0,
+      "before_hash": "d751713988987e9331980363e24189ce",
+      "after_hash": "d751713988987e9331980363e24189ce",
+      "unchanged": true
+    },
+    {
+      "table": "product_offers",
+      "original_count": 28,
+      "after_original_count": 28,
+      "before_hash": "c01613eeda3df740bc33e449e02eaceb",
+      "after_hash": "c01613eeda3df740bc33e449e02eaceb",
+      "unchanged": true
+    },
+    {
+      "table": "product_series",
+      "original_count": 3,
+      "after_original_count": 3,
+      "before_hash": "d7ea317822f9449bfae6b4e41fb8b363",
+      "after_hash": "d7ea317822f9449bfae6b4e41fb8b363",
+      "unchanged": true
+    },
+    {
+      "table": "tablet_details",
+      "original_count": 0,
+      "after_original_count": 0,
+      "before_hash": "d751713988987e9331980363e24189ce",
+      "after_hash": "d751713988987e9331980363e24189ce",
+      "unchanged": true
+    },
+    {
+      "table": "catalog_notices",
+      "original_count": 1,
+      "after_original_count": 1,
+      "before_hash": "7c4a3f45a61c70d04e45fcb39d22d089",
+      "after_hash": "7c4a3f45a61c70d04e45fcb39d22d089",
+      "unchanged": true
+    },
+    {
+      "table": "funeral_details",
+      "original_count": 8,
+      "after_original_count": 8,
+      "before_hash": "9ed8c901b0d0f5b3cada3c9f15e2234e",
+      "after_hash": "9ed8c901b0d0f5b3cada3c9f15e2234e",
+      "unchanged": true
+    },
+    {
+      "table": "fengshui_details",
+      "original_count": 0,
+      "after_original_count": 0,
+      "before_hash": "d751713988987e9331980363e24189ce",
+      "after_hash": "d751713988987e9331980363e24189ce",
+      "unchanged": true
+    },
+    {
+      "table": "product_religions",
+      "original_count": 18,
+      "after_original_count": 18,
+      "before_hash": "92a58ca92e401069feb041eb49bf69db",
+      "after_hash": "92a58ca92e401069feb041eb49bf69db",
+      "unchanged": true
+    },
+    {
+      "table": "product_categories",
+      "original_count": 7,
+      "after_original_count": 7,
+      "before_hash": "1f598a2e0e852c530dbc4c1fec435a98",
+      "after_hash": "1f598a2e0e852c530dbc4c1fec435a98",
+      "unchanged": true
+    },
+    {
+      "table": "product_inclusions",
+      "original_count": 267,
+      "after_original_count": 267,
+      "before_hash": "b499608dc8937d704f2ee379a22c43b7",
+      "after_hash": "b499608dc8937d704f2ee379a22c43b7",
+      "unchanged": true
+    }
+  ],
+  "new_audit_rows_retained": true,
+  "pending_placement_migration_executed": false
+}

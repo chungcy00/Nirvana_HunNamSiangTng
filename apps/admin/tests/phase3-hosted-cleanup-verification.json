@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-10-22T13:31:20.036Z",
+  "run": "3e73e8d2",
+  "test_products_remaining": 0,
+  "test_auth_remaining": 0,
+  "test_sessions_remaining": 0,
+  "test_storage_remaining": 0,
+  "test_files_removed": 15,
+  "original_products": 20,
+  "published_products": 0,
+  "original_audit_rows": 754,
+  "audit_rows_after": 1140,
+  "new_audit_rows_retained": 386,
+  "applied_migrations": 9,
+  "placement_column_exists": false,
+  "browser_bundle_secret_scan": "PASS",
+  "temporary_secret_file_removed": true,
+  "test_credentials_file_removed": true,
+  "records": {
+    "w-premium-package": "45f735f6-bfd9-414a-8a87-bfed69254f18",
+    "aa-double-package": "7c884682-f24a-4980-b106-b47d9072294d",
+    "juxian-moon": "8185e411-6849-408d-b94b-207d57506859",
+    "funeral-1-2": "e0dc2212-9138-4112-bf57-7a2056220884",
+    "funeral-2-2": "553bfe23-7c38-4c70-9fe3-41d6c2fb2836"
+  },
+  "copy_id": "ea5dc6aa-7643-4bad-bbaa-9e7f88331e96"
+}

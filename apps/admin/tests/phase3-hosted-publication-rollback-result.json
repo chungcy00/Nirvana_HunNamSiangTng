@@ -1,0 +1,11 @@
+{
+  "environment": "existing-hosted-supabase-actual-rpc-transaction",
+  "run": "3e73e8d2",
+  "passed": true,
+  "products_tested": 4,
+  "cases": ["Zone W", "Zone AA", "Buddhist funeral", "Christian funeral"],
+  "checks": ["publish", "public RPC projection", "religion-specific design filtering", "funeral dual-price validation", "invalid multi-table save and audit rollback", "hide", "stale version rejection", "former publication deletion denial", "republish"],
+  "transaction_rolled_back": true,
+  "committed_test_publications": 0,
+  "scope": "Actual deployed cloud RPCs and RLS projections in a rolled-back transaction; committed public HTTP/image lifecycle is tested only on isolated localhost Supabase."
+}

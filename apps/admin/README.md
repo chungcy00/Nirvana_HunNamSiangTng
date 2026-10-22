@@ -64,3 +64,11 @@ Vercel 后台项目根目录为 `apps/admin`，安装 `npm ci`，构建 `npm run
 恢复本地开发：`npm run setup:local --prefix apps/admin` 会重建本地环境文件并移除验证开关，开发服务器自动重启。重新执行本地集成／浏览器测试前必须完成此步骤，不能在云端验证模式跑产品写入测试。`npm run test:auth --prefix apps/admin` 为第二阶段真实本地安全测试，依赖运行于 3002 的正常本地后台，以及由启动命令启用的本地收信箱 `http://127.0.0.1:56324`。测试邮件只留在本机，验证码和邮件链接不得提交。
 
 本地配置中 `[auth].enable_signup=false` 禁止公开注册，`[auth.email].enable_signup=true` 保持 Email 登录提供方启用。CLI 2.78.1 若同时将两者设为 false，会连邮件登录一并关闭；不要混淆这两项。
+
+## 第三阶段：独立资料真实集成测试
+
+本次本地测试后台独立使用 3004，未覆盖 3002 云端验收连接。后台接口测试支持 `ADMIN_TEST_URL=http://127.0.0.1:3004`，且只接受 localhost；浏览器测试读取接口测试生成的本机私有 fixture。
+
+云端测试 `node --import tsx tests/phase3-hosted.mjs prepare|run|cleanup` 必须从 `apps/admin` 执行；它只使用当前运行的独立白名单草稿，连接的项目 ID 固定为现有测试目标。临时服务器文件中存放服务端密钥（0600），不得使用 `VITE_` 变量；临时成员仅绑定本次测试账号。发布事务脚本必须显式回滚，避免公开测试产品；完整公开 HTTP 和图片生命周期在独立本地 Supabase 验证。复测前后必须核对原有行摘要、清理独立草稿和文件、撤销临时会话并删除测试用户、删除临时密钥及凭据。
+
+详见 `docs/第三阶段真实Supabase集成测试报告.md` 和 `tests/phase3-hosted-*-result.json`。不要把默认本地产品写入测试直接改成云端 URL，也不要执行室内／室外待审迁移。
