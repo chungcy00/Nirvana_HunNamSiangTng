@@ -17,7 +17,7 @@ export function nirvanaQuestionnaireProducts(): ServiceProduct[] {
         ...(p.atNeed === undefined ? [] : [{ label: '即用价格', price: p.atNeed, timing: 'now' as const }]),
       ]
       : p.category === 3
-        ? p.offers.length ? [{ label: p.referencePrice ? '宣传参考起价 · 待核实' : '最低起价', price: Math.min(...p.offers.map(o => o.amount)) }] : []
+        ? p.offers.length ? [{ label: '最低起价', price: Math.min(...p.offers.map(o => o.amount)) }] : []
         : p.offers.map(o => ({ label: p.offers.length > 1 ? o.name : '产品售价', price: o.amount }));
     return [{
       id: p.id, name: p.name, category, provider: '富贵山庄' as const,
@@ -29,7 +29,7 @@ export function nirvanaQuestionnaireProducts(): ServiceProduct[] {
       description: p.name, variants,
       includes: p.inclusions.join('；') || '包含项目尚待核实。',
       religiousInclusions: Object.fromEntries(p.religions.map(r => [r.name, r.inclusions])),
-      restriction: [p.terms, p.priceNote].filter(Boolean).join(' '),
+      restriction: [p.referencePrice ? '具体售价及服务内容请与顾问确认。' : p.terms, p.priceNote].filter(Boolean).join(' '),
       referencePrice: p.referencePrice, startingPrice: p.category === 3,
       source: '富贵山庄产品目录',
     }];

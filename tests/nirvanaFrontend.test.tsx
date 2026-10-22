@@ -102,7 +102,7 @@ test("排序按产品最低价格，缺价产品始终放最后", () => {
   assert(ascending.indexOf('单人福地地段 · W区') < ascending.indexOf('家庭福地 · W区'));
 });
 
-test("三种展示模式存在，殡仪列表保留预购即用，网格只显示最低起价", () => {
+test("两种展示模式存在，殡仪列表保留预购即用，网格只显示最低起价", () => {
   const grid = render('/nirvana?category=4');
   assert.match(grid, /fgp-view-grid/);
   assert.match(grid, /RM 10,888<em>起<\/em>/);
@@ -110,6 +110,15 @@ test("三种展示模式存在，殡仪列表保留预购即用，网格只显�
   const list = render('/nirvana?category=4&view=list');
   assert.match(list,/fgp-view-list/);
   assert.match(list,/预购价格/); assert.match(list,/即用价格/);
-  assert.match(render('/nirvana?view=large'),/fgp-view-large/);
+  assert.match(render('/nirvana?view=large'),/fgp-view-grid/);
+  assert.doesNotMatch(grid, /单列大图/);
   assert.match(render('/nirvana?view=invalid'),/fgp-view-grid/);
+});
+
+test("公开卡片及价格区不展示编辑核实提示", () => {
+  const html = render('/nirvana?category=3');
+  assert.doesNotMatch(html,/参考起价待核实|宣传参考起价|fgp-card-reference/);
+  const detail = render('/nirvana/products/item/juxian-1');
+  assert.doesNotMatch(detail,/参考起价待核实|宣传参考起价/);
+  assert.match(detail,/RM 19,800/);
 });

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List, Rows3 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List } from "lucide-react";
 import { prototypeProducts } from "./products";
 import { categories, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct } from "./model";
 import "./prototype.css";
@@ -51,14 +51,16 @@ function ProductTags({ product }: { product: PrototypeProduct }) {
   </div>;
 }
 export function PrototypePrices({ product, detailed = false }: { product: PrototypeProduct; detailed?: boolean }) {
+  const { website } = useContext(ProductNavigationContext);
+  const unavailablePrice = website ? "欢迎咨询" : "价格待核实";
   const funeral = product.category === 4;
   return <div className={`fgp-prices${funeral ? " fgp-dual-prices" : ""}${detailed ? " fgp-prices-detail" : ""}`}>
     {funeral ? <>
-      <div><span>预购价格</span><strong>{product.preNeed !== undefined ? formatMoney(product.preNeed) : "价格待核实"}</strong></div>
-      <div><span>即用价格</span><strong>{product.atNeed !== undefined ? formatMoney(product.atNeed) : "价格待核实"}</strong></div>
-    </> : product.category === 3 ? <div><span>{product.referencePrice ? "宣传参考起价 · 待核实" : "最低起价"}</span><strong>{product.offers.length ? <>{formatMoney(Math.min(...product.offers.map(o => o.amount)))}<em>起</em></> : "价格待核实"}</strong></div>
+      <div><span>预购价格</span><strong>{product.preNeed !== undefined ? formatMoney(product.preNeed) : unavailablePrice}</strong></div>
+      <div><span>即用价格</span><strong>{product.atNeed !== undefined ? formatMoney(product.atNeed) : unavailablePrice}</strong></div>
+    </> : product.category === 3 ? <div><span>{!website && product.referencePrice ? "宣传参考起价 · 待核实" : "最低起价"}</span><strong>{product.offers.length ? <>{formatMoney(Math.min(...product.offers.map(o => o.amount)))}<em>起</em></> : unavailablePrice}</strong></div>
       : product.offers.length ? product.offers.map(o => <div key={o.name}><span>{product.offers.length > 1 ? o.name : "产品售价"}</span><strong>{formatMoney(o.amount)}</strong></div>)
-      : <div><span>产品售价</span><strong>价格待核实</strong></div>}
+      : <div><span>产品售价</span><strong>{unavailablePrice}</strong></div>}
   </div>;
 }
 function ProductCard({ product, returnTo }: { product: PrototypeProduct; returnTo: string }) {
@@ -81,8 +83,7 @@ function WebsiteProductCard({ product, returnTo, view }: { product: PrototypePro
     <Link className="fgp-product-link" to={detailPath(product.id)} state={{ returnTo }} aria-label={`${product.name}，查看详情`}>
       <div className="fgp-product-visual"><ProductImage product={product}/></div>
       <div className="fgp-card-body"><ProductTags product={product}/><h3>{product.name}</h3>
-        {view !== 'grid' && product.category === 4 ? <PrototypePrices product={product}/> : <div className="fgp-card-price">{price === undefined ? <strong>价格待核实</strong> : <strong>{formatMoney(price)}<em>起</em></strong>}</div>}
-        {product.referencePrice && <p className="fgp-card-reference">参考起价待核实</p>}
+        {view !== 'grid' && product.category === 4 ? <PrototypePrices product={product}/> : <div className="fgp-card-price">{price === undefined ? <strong>欢迎咨询</strong> : <strong>{formatMoney(price)}<em>起</em></strong>}</div>}
         <ArrowRight className="fgp-card-arrow" size={16} aria-hidden="true"/>
       </div>
     </Link>
@@ -109,7 +110,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
   const religion = hasReligion(category.id) ? params.get("religion") || "" : "";
   const capacities = capacitiesFor(prototypeProducts, category.id);
   const religions = religionsFor(prototypeProducts, category.id);
-  const view = website && ['list', 'large'].includes(params.get('view') || '') ? params.get('view')! : 'grid';
+  const view = website && params.get('view') === 'list' ? 'list' : 'grid';
   const sort = website && ['price-asc', 'price-desc'].includes(params.get('sort') || '') ? params.get('sort')! : 'default';
   const products = sortProducts(filterProducts(prototypeProducts, category.id, capacity, religion), sort);
   const filtered = !!(capacity || religion);
@@ -155,9 +156,9 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
         </div></div>}
       </div>
       {website && <div className="fgp-display-controls">
-        <label className="fgp-sort">价格排序<select aria-label="价格排序" value={sort} onChange={e=>changeFilter('sort', e.target.value === 'default' ? '' : e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
+        <label className="fgp-sort"><span className="fgp-sr">价格排序</span><select aria-label="价格排序" value={sort} onChange={e=>changeFilter('sort', e.target.value === 'default' ? '' : e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
         <div className="fgp-view-toggle" role="group" aria-label="展示模式">{[
-          {id:'grid', label:'双栏网格', icon:LayoutGrid}, {id:'list', label:'左图右文列表', icon:List}, {id:'large', label:'单列大图', icon:Rows3},
+          {id:'grid', label:'双栏网格', icon:LayoutGrid}, {id:'list', label:'左图右文列表', icon:List},
         ].map(({id,label,icon:Icon})=><button type="button" key={id} aria-label={label} title={label} aria-pressed={view===id} onClick={()=>changeFilter('view',id==='grid'?'':id)}><Icon size={18} aria-hidden="true"/></button>)}</div>
       </div>}
       </div>
@@ -166,7 +167,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
       </div>
       {filtered && <div className="fgp-applied" aria-label="已选择条件">{capacity && <button onClick={()=>changeFilter("capacity","")}>{capacityLabels[capacity as keyof typeof capacityLabels] || capacity}<X size={13}/><span className="fgp-sr">清除人数筛选</span></button>}{religion && <button onClick={()=>changeFilter("religion","")}>{religions.find(r=>r.id===religion)?.name || religion}<X size={13}/><span className="fgp-sr">清除宗教筛选</span></button>}</div>}
       {products.length ? <div className={website ? `fgp-grid fgp-view-${view}` : "fgp-grid"}>{products.map(p=>website ? <WebsiteProductCard key={p.id} product={p} returnTo={returnTo} view={view}/> : <ProductCard key={p.id} product={p} returnTo={returnTo}/>)}</div> : <div className="fgp-empty"><Leaf size={32} strokeWidth={1}/><h3>暂时没有符合条件的产品</h3><p>您可以调整人数或宗教，继续浏览其他选择。</p><button className="fgp-primary" onClick={reset}>清除筛选<ArrowRight size={16}/></button></div>}
-      <p className="fgp-source-note">{website && <>以上价格未包含印花税。卡片起价为该产品已提供报价中的最低金额，详细方案与适用条件请查看产品详情。<br/></>}价格按已提供产品资料展示；聚仙楼为待核实宣传参考起价。产品实拍将在资料确认后补充。</p>
+      <p className="fgp-source-note">{website && <>以上价格未包含印花税。卡片起价为该产品已提供报价中的最低金额，详细方案与适用条件请查看产品详情。<br/></>}{website ? "价格供参考，实际售价及服务内容以咨询确认为准。产品实拍将在资料确认后补充。" : "价格按已提供产品资料展示；聚仙楼为待核实宣传参考起价。产品实拍将在资料确认后补充。"}</p>
     </section>
   </>;
 }
@@ -213,7 +214,7 @@ export function PrototypeDetail() {
       </div>}
     </section><section className="fgp-price-panel" aria-labelledby="fgp-price-heading"><h2 id="fgp-price-heading">{product.category===4 ? "殡仪服务价格" : product.category===3 ? "最低起价" : "产品价格"}</h2><PrototypePrices product={product} detailed/>
       {product.offers.length>1 && product.offers.some(o=>o.area) && <dl className="fgp-offer-specs">{product.offers.filter(o=>o.area).map(o=><div key={o.name}><dt>{o.name}</dt><dd>{o.area} sqft</dd></div>)}</dl>}
-      {product.priceNote && <p className="fgp-price-note">{product.priceNote}</p>}{product.terms && <p className="fgp-price-terms">{product.terms}</p>}
+      {product.priceNote && <p className="fgp-price-note">{product.priceNote}</p>}{product.terms && !(website && product.referencePrice) && <p className="fgp-price-terms">{product.terms}</p>}
     </section></div>
   </div>;
 }

@@ -14,7 +14,7 @@ export const budgetBounds: Record<ServiceCategory, number[]> = {
   传统土葬: [0, 30000, 60000, 100000, 200000], 殡仪服务: [0, 10000, 20000, 30000, 40000], 宠物纪念: [0, 5000, 9000],
 };
 export const referencePrices: Record<ServiceCategory, string> = {
-  骨灰位: '骨灰位最低起价：RM6,888–70,800（部分宣传起价待核实）', 火化土葬: '火化土葬配套：RM21,888–63,888',
+  骨灰位: '骨灰位最低起价：RM6,888–70,800（实际价格请咨询）', 火化土葬: '火化土葬配套：RM21,888–63,888',
   传统土葬: '传统土葬地段及配套：RM27,888–308,888', 殡仪服务: '殡仪配套：RM8,800–47,888', 宠物纪念: '宠物纪念：RM3,888–9,800',
 };
 export const money = (n: number) => `RM${n.toLocaleString('en-US')}`;
@@ -88,7 +88,7 @@ export function inquirySummary(a: Answers, selected: string[], browsing: boolean
     const items = (value: string) => value.split(/[；。\r\n]+/).map(line=>line.trim()).filter(Boolean);
     const confirmations = items(p.restriction);
     if (!prices.length) confirmations.push('参考价格需咨询确认');
-    if (productStatus(p,a)==='confirm') confirmations.push(p.referencePrice ? '宣传参考起价尚待核实，不作为已确认预算内产品' : '宗教、容量或价格等资料需进一步确认');
+    if (productStatus(p,a)==='confirm') confirmations.push(p.referencePrice ? '具体售价及服务内容请与顾问确认' : '宗教、容量或价格等资料需进一步确认');
     const basic = [`${index+1}. ${p.name}`, ...(p.provider?[`  所属机构：${p.provider}`]:[])].join('\n');
     const parts: string[] = [];
     if (prices.length) parts.push(['  参考价格：', ...prices].join('\n'));

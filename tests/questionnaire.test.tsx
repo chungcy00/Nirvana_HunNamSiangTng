@@ -94,8 +94,8 @@ test('partial answers and absent price data hide empty fields without losing not
  const text=inquirySummary(a,['juxian-1'],false);
  assert.match(text,/服务类别：骨灰位/);
  assert.doesNotMatch(text,/尚未填写|• 预算：|undefined|null/);
- assert.match(text,/宣传参考起价 · 待核实：RM19,800 起/);
- assert.match(text,/宣传参考起价尚待核实/);
+ assert.match(text,/最低起价：RM19,800 起/);
+ assert.match(text,/具体售价及服务内容请与顾问确认/);
  assert.ok(text.split('\n').every(line=>!/^\s*•\s*$/.test(line)));
 });
 test('real paragraphs survive WhatsApp redirect parameter encoding on desktop and mobile',()=>{

@@ -76,7 +76,7 @@ export default function NeedsQuestionnaire() {
       {p.placement && <p className="needs-meta">安放环境：{p.placement === 'indoor' ? '室内' : '室外'}</p>}
       <div className="needs-prices">{priced.length ? priced.map((v,i)=><p key={`${v.label}-${i}`}><span>{v.label}</span><strong>{money(v.price)}{p.startingPrice ? ' 起' : ''}</strong>{!withinBudget(v.price,answers) && <small>不符合所选预算</small>}</p>):<p>参考价格需咨询确认</p>}</div>
       {prices.length>priced.length && <p className="small muted">仅列出符合本次预算的款式及价格，其他款式价格不同。</p>}
-      {status==='confirm' && <p className="needs-confirm">{p.referencePrice ? '宣传参考起价尚待核实，不能视为已确认的预算内产品。' : answers.religion==='其他'?'宗教及仪式适用情况需咨询确认。':'宗教、容量或价格资料不足，尚不能确认为匹配或预算内产品。'}</p>}
+      {status==='confirm' && <p className="needs-confirm">{p.referencePrice ? '具体售价及服务内容请与顾问确认。' : answers.religion==='其他'?'宗教及仪式适用情况需咨询确认。':'宗教、容量或价格资料不足，尚不能确认为匹配或预算内产品。'}</p>}
       <p><strong>包含内容：</strong>{questionnaireIncludes(p,answers)}</p>
       <p className="needs-product-restriction"><strong>适用说明：</strong>{p.restriction}</p>
       <Link className="needs-detail-link" to={detailPath} state={returnState} onClick={()=>rememberResult(p.id)}>查看详情</Link>
