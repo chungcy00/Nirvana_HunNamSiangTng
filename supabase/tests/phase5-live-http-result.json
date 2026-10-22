@@ -1,0 +1,53 @@
+{
+  "host": "https://nirvana-hunnamsiangtng.vercel.app",
+  "commit": "3d9d8bc5d73f6487bd44cc438ec695ec8da2a036",
+  "asset": "/assets/index-BB9FndQ7.js",
+  "publicAnonProducts": 0,
+  "mainRoutes": 7,
+  "staticFixtureScan": "PASS",
+  "privilegedKeyScan": "PASS",
+  "realExistingDraftProbe": {
+    "status": 200,
+    "result": null
+  },
+  "deploymentId": "dpl_xF4kL12zhevD3uLoqu2mRJdypxUD",
+  "deploymentUrl": "https://nirvana-hunnamsiangtng-gyqxw53n0-mine-2c15.vercel.app",
+  "status": "Ready",
+  "browserChecks": [
+    "empty public catalogue",
+    "retired static detail unavailable",
+    "contact callback phone constraints",
+    "local real-data filters and price sorting",
+    "local questionnaire selection/detail/return restoration"
+  ],
+  "routeChecks": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/nirvana",
+      "status": 200
+    },
+    {
+      "path": "/nirvana/products/item/w-cremation",
+      "status": 200
+    },
+    {
+      "path": "/nirvana/packages/retired",
+      "status": 200
+    },
+    {
+      "path": "/contact",
+      "status": 200
+    },
+    {
+      "path": "/about",
+      "status": 200
+    },
+    {
+      "path": "/yunnan-siantang",
+      "status": 200
+    }
+  ]
+}
