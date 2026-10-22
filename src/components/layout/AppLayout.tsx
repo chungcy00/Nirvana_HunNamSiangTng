@@ -44,7 +44,7 @@ export default function AppLayout() {
       <Navbar />
       <main id="main-content" tabIndex={-1}>
         <PageLoadBoundary resetKey={pathname}>
-          <Suspense fallback={<div className="container section" role="status" aria-busy="true"><p>正在载入页面…</p></div>}>
+          <Suspense fallback={<div className="container section" style={{ minHeight: "100svh" }} role="status" aria-busy="true"><p>正在载入页面…</p></div>}>
             <Outlet />
             <RouteEffects />
           </Suspense>

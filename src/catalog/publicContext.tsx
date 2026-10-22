@@ -79,7 +79,7 @@ export function PublicCatalogNotice() {
   if (status === "ready") return null;
   const failed = status === "error";
   return (
-    <div className="fgp-empty fgp-load-notice" role={failed ? "alert" : "status"} aria-busy={!failed}>
+    <div className="fgp-empty fgp-load-notice" style={failed ? undefined : { minHeight: "100svh" }} role={failed ? "alert" : "status"} aria-busy={!failed}>
       {failed ? <RotateCcw size={28} strokeWidth={1.5} aria-hidden="true"/> : <LoaderCircle className="fgp-load-spinner" size={28} strokeWidth={1.5} aria-hidden="true"/>}
       <h3>{failed ? "产品资料暂时无法载入" : "正在载入产品资料…"}</h3>
       <p>{failed ? "请检查网络连接，再点击“重新载入”。" : "请稍候，资料载入后会显示在这里。"}</p>
