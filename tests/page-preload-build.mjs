@@ -5,6 +5,8 @@ const html = readFileSync('dist/index.html', 'utf8');
 const script = html.match(/<script id="route-resource-hints">([\s\S]*?)<\/script>/)?.[1];
 assert(script, 'production HTML contains early resource hints');
 assert(html.indexOf('route-resource-hints') < html.indexOf('type="module"'));
+assert(html.indexOf('name="viewport"') < html.indexOf('route-resource-hints'));
+assert(html.indexOf('charset="UTF-8"') < 1024);
 const manifest = JSON.parse(readFileSync('dist/.vite/manifest.json', 'utf8'));
 function hints(pathname, device = 'desktop') {
   const links = [];

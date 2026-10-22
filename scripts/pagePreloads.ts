@@ -25,11 +25,7 @@ export function pagePreloads(): Plugin {
           visit(chunk.fileName);
           pages[name] = [...files].map(file => `/${file}`);
         }
-        return [{
-          tag: "script",
-          attrs: { id: "route-resource-hints" },
-          injectTo: "head-prepend",
-          children: `(function(){
+        const hints = `(function(){
 var pages=${JSON.stringify(pages)}, path=location.pathname.replace(/\\/+$/, '')||'/';
 var names=path==='/'?['Home']:path==='/contact'?['Contact']:path==='/about'?['About']:path==='/yunnan-siantang'?['Yunnan']:path==='/nirvana'||path.indexOf('/nirvana/')===0?['NirvanaProducts','Prototype']:path.split('/').filter(Boolean).length===1?['Nirvana']:path.indexOf('/packages/')!==-1?['PackageDetail']:['Category'];
 var seen={};
@@ -39,8 +35,9 @@ var mobile=matchMedia('(orientation: portrait) and (max-width: 1024px)').matches
 var tablet=matchMedia('(orientation: landscape) and (min-width: 768px) and (max-width: 1366px) and (min-height: 561px) and (any-pointer: coarse)').matches||matchMedia('(orientation: landscape) and (min-width: 768px) and (max-width: 1024px) and (min-height: 561px)').matches;
 var hero=document.createElement('link');hero.rel='preload';hero.as='image';hero.href='/images/home-hero'+(mobile?'-mobile':tablet?'-tablet':'')+'.webp';hero.fetchPriority='high';document.head.appendChild(hero);
 }
-})();`,
-        }];
+})();`;
+        // Keep charset and viewport metadata ahead of media-query evaluation.
+        return _html.replace(/(?=<script type="module")/, `<script id="route-resource-hints">${hints}</script>\n    `);
       },
     },
   };
