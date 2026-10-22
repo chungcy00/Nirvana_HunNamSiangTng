@@ -1,1 +1,1 @@
-export { handler as default } from '../server/media';
+export { handler as default } from '../server/media.js';
