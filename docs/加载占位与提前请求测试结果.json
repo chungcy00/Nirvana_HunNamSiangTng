@@ -1,0 +1,86 @@
+{
+  "implementationCommit": "7cf0a3f",
+  "conditions": "PageSpeed Insights mobile, Moto G Power, Lighthouse 13.5.0, Slow 4G, initial navigation; no field data",
+  "baseline": [
+    {
+      "page": "home",
+      "run": 1,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app/a77ew9b0fc?form_factor=mobile",
+      "LCP": "4.1 秒",
+      "CLS": "0",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "home",
+      "run": 2,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app/kofq00s0pk?form_factor=mobile",
+      "LCP": "3.8 秒",
+      "CLS": "0.683",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "catalog",
+      "run": 1,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-nirvana/lx6ts25jvz?form_factor=mobile",
+      "LCP": "1.5 秒",
+      "CLS": "0.53",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "catalog",
+      "run": 2,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-nirvana/ebn8wxe7xc?form_factor=mobile",
+      "LCP": "1.5 秒",
+      "CLS": "0.53",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "contact",
+      "run": 1,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-contact/gl8p780yqc?form_factor=mobile",
+      "LCP": "3.6 秒",
+      "CLS": "0.683",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "contact",
+      "run": 2,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-contact/7uphff2jws?form_factor=mobile",
+      "LCP": "3.6 秒",
+      "CLS": "0.683",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    }
+  ],
+  "finalConfirmation": [
+    {
+      "page": "home",
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app/crxqah2ook?form_factor=mobile",
+      "LCP": "3.9 秒",
+      "CLS": "0",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "catalog",
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-nirvana/aas817i33a?form_factor=mobile",
+      "LCP": "2.4 秒",
+      "CLS": "0",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "contact",
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-contact/z2gbjhcncj?form_factor=mobile",
+      "LCP": "2.0 秒",
+      "CLS": "0",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    }
+  ]
+}
