@@ -1,0 +1,125 @@
+{
+  "environment": "real-browser-same-origin-iframes-with-local-Supabase",
+  "results": [
+    {
+      "case": "320px grid",
+      "width": 305,
+      "scrollWidth": 305,
+      "cards": 13,
+      "columns": "129.5px 129.5px",
+      "image": {
+        "width": 127.5,
+        "height": 127.5
+      },
+      "pass": true
+    },
+    {
+      "case": "320px list",
+      "width": 305,
+      "scrollWidth": 305,
+      "cards": 13,
+      "columns": "269px",
+      "image": {
+        "width": 144,
+        "height": 144
+      },
+      "pass": true
+    },
+    {
+      "case": "375px grid",
+      "width": 360,
+      "scrollWidth": 360,
+      "cards": 13,
+      "columns": "157px 157px",
+      "image": {
+        "width": 155,
+        "height": 155
+      },
+      "pass": true
+    },
+    {
+      "case": "375px list",
+      "width": 360,
+      "scrollWidth": 360,
+      "cards": 13,
+      "columns": "324px",
+      "image": {
+        "width": 144,
+        "height": 144
+      },
+      "pass": true
+    },
+    {
+      "case": "768px grid",
+      "width": 753,
+      "scrollWidth": 753,
+      "cards": 13,
+      "columns": "333.5px 333.5px",
+      "image": {
+        "width": 331.5,
+        "height": 331.5
+      },
+      "pass": true
+    },
+    {
+      "case": "768px list",
+      "width": 753,
+      "scrollWidth": 753,
+      "cards": 13,
+      "columns": "689px",
+      "image": {
+        "width": 190,
+        "height": 190
+      },
+      "pass": true
+    },
+    {
+      "case": "1024px grid",
+      "width": 1009,
+      "scrollWidth": 1009,
+      "cards": 13,
+      "columns": "461.5px 461.5px",
+      "image": {
+        "width": 459.5,
+        "height": 459.5
+      },
+      "pass": true
+    },
+    {
+      "case": "1024px list",
+      "width": 1009,
+      "scrollWidth": 1009,
+      "cards": 13,
+      "columns": "945px",
+      "image": {
+        "width": 190,
+        "height": 190
+      },
+      "pass": true
+    },
+    {
+      "case": "1440px grid",
+      "width": 1425,
+      "scrollWidth": 1425,
+      "cards": 13,
+      "columns": "385.328px 385.336px 385.336px",
+      "image": {
+        "width": 383.328125,
+        "height": 383.328125
+      },
+      "pass": true
+    },
+    {
+      "case": "1440px list",
+      "width": 1425,
+      "scrollWidth": 1425,
+      "cards": 13,
+      "columns": "1200px",
+      "image": {
+        "width": 190,
+        "height": 190
+      },
+      "pass": true
+    }
+  ]
+}

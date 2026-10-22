@@ -35,16 +35,9 @@ export type ServiceProduct = {
   capacityLabel?: string; placement?: 'indoor' | 'outdoor'; startingPrice?: boolean; referencePrice?: boolean;
   religiousInclusions?: Record<string, string[]>;
 };
-export const questionnaireProducts: ServiceProduct[] = [
-  {
-    id: 'yunnan', name: '云南善堂殡仪配套', category: '殡仪服务', provider: '云南善堂',
-    religions: ['佛教', '基督教'], description: '云南善堂殡仪配套',
-    variants: [{ label: '单一配套参考价', price: 8800 }],
-    includes: '具体服务清单请咨询顾问，现有资料未提供逐项内容。',
-    restriction: '佛教、基督教均适用，仪式按需求调整；不受火化或土葬方式限制，不据此推定含火化、墓地、骨灰位等安葬费用。',
-    source: '用户确认的云南善堂单一配套资料',
-  },
-];
+// No static product recommendations. Every recommendation is supplied by the
+// public database projection; Yunnan remains an informational service page.
+export const questionnaireProducts: ServiceProduct[] = [];
 export const supplyNotice = '以上为资料参考价，不代表当前可售或正式报价；实际售价、位置供应、服务细项及适用条件需进一步确认。';
 export function complete(a: Answers) {
   return !!(a.category && a.budget && (a.category === '宠物纪念' ? a.method && (a.method !== '宠物土葬' || a.size) : a.religion && (a.category === '殡仪服务' ? a.situation : a.capacity)));

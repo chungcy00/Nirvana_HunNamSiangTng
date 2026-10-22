@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 import { loadQuestionnaireSession, saveQuestionnaireSession, questionnaireReturnKey } from '../data/questionnaireSession';
 import { Check, Phone } from 'lucide-react';
 import { advisor, whatsappUrl } from '../data/site';
-import { categories, questionKeys, budgetOptions, referencePriceRange, questionnaireProducts as yunnanProducts, productStatus, applicableVariants, withinBudget, complete, inquirySummary, updateAnswers, supplyNotice, money, type Answers, type ServiceProduct } from '../data/questionnaire';
+import { categories, questionKeys, budgetOptions, referencePriceRange,  productStatus, applicableVariants, withinBudget, complete, inquirySummary, updateAnswers, supplyNotice, money, type Answers, type ServiceProduct } from '../data/questionnaire';
 
 const categoryNotes = ['火化后的骨灰安置空间','火化后，将骨灰安葬于福地','以棺木安葬的福地与配套','丧礼仪式、治丧流程与相关安排','宠物土葬或火化后的骨灰安葬'];
 export default function NeedsQuestionnaire() {
   const publicCatalog=usePublicCatalog();
-  const questionnaireProducts=useMemo(()=>[...nirvanaQuestionnaireProducts(publicCatalog.products),...yunnanProducts],[publicCatalog.products]);
+  const questionnaireProducts=useMemo(()=>[...nirvanaQuestionnaireProducts(publicCatalog.products)],[publicCatalog.products]);
   const [initial] = useState(loadQuestionnaireSession);
   const [answers,setAnswers] = useState<Answers>(initial.answers);
   const [selected,setSelected] = useState<string[]>(initial.selected);

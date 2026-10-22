@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh"><meta charset="UTF-8"><title>第五阶段响应式验收（仅本地）</title><style>body{font-family:sans-serif;margin:16px}section{margin-bottom:24px}iframe{border:1px solid #ddd;display:block}</style><h1>真实 Supabase 前台响应式验收</h1><pre id="results">正在读取真实浏览器布局…</pre><section><h2>320px grid</h2><iframe title="320px grid" width="320" height="960" src="/nirvana?category=3&view=grid"></iframe></section><section><h2>320px list</h2><iframe title="320px list" width="320" height="960" src="/nirvana?category=3&view=list"></iframe></section><section><h2>375px grid</h2><iframe title="375px grid" width="375" height="960" src="/nirvana?category=3&view=grid"></iframe></section><section><h2>375px list</h2><iframe title="375px list" width="375" height="960" src="/nirvana?category=3&view=list"></iframe></section><section><h2>768px grid</h2><iframe title="768px grid" width="768" height="960" src="/nirvana?category=3&view=grid"></iframe></section><section><h2>768px list</h2><iframe title="768px list" width="768" height="960" src="/nirvana?category=3&view=list"></iframe></section><section><h2>1024px grid</h2><iframe title="1024px grid" width="1024" height="960" src="/nirvana?category=3&view=grid"></iframe></section><section><h2>1024px list</h2><iframe title="1024px list" width="1024" height="960" src="/nirvana?category=3&view=list"></iframe></section><section><h2>1440px grid</h2><iframe title="1440px grid" width="1440" height="960" src="/nirvana?category=3&view=grid"></iframe></section><section><h2>1440px list</h2><iframe title="1440px list" width="1440" height="960" src="/nirvana?category=3&view=list"></iframe></section><script>
+const started=Date.now();const timer=setInterval(()=>{
+ const results=Array.from(document.querySelectorAll('iframe')).map(f=>{
+  const d=f.contentDocument,w=f.contentWindow;if(!d)return {case:f.title,error:'frame unavailable'};
+  const image=d.querySelector('.fgp-catalog-card .fgp-image'),grid=d.querySelector('.fgp-grid');
+  const columns=grid?w.getComputedStyle(grid).gridTemplateColumns:'';
+  const box=image?.getBoundingClientRect();
+  return {case:f.title,width:d.documentElement.clientWidth,scrollWidth:d.documentElement.scrollWidth,cards:d.querySelectorAll('.fgp-catalog-card').length,columns,image:box?{width:box.width,height:box.height}:null,pass:!!grid && d.documentElement.scrollWidth<=d.documentElement.clientWidth && !!box && Math.abs(box.width-box.height)<1};
+ });
+ document.getElementById('results').textContent=JSON.stringify(results,null,2);
+ if(results.every(r=>r.cards>0)||Date.now()-started>30000)clearInterval(timer);
+},250);
+</script>
