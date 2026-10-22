@@ -363,3 +363,7 @@
 
 .fgp-sort-icon { display: block; width: 28px; height: 28px; object-fit: contain; }
 .fgp-sort-icon-default { width: 34px; height: 34px; }
+
+.fgp-image { position: relative; }
+.fgp-real-image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.fgp-image-caption { z-index:1; }

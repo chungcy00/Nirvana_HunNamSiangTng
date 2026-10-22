@@ -1,3 +1,4 @@
+import { PublicFixture, fixtureQuestionnaireProducts } from "./publicFixtures";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -7,9 +8,9 @@ import { prototypeProducts } from "../src/prototype/products";
 import { categories, capacitiesFor, filterProducts, hasCapacity, hasReligion, listPath, religionsFor, visibleProducts } from "../src/prototype/model";
 
 function render(path: string) {
-  return renderToStaticMarkup(<MemoryRouter initialEntries={[path]}><Routes><Route path="/prototype" element={<PrototypeLayout/>}>
+  return renderToStaticMarkup(<PublicFixture><MemoryRouter initialEntries={[path]}><Routes><Route path="/prototype" element={<PrototypeLayout/>}>
     <Route index element={<PrototypeCatalog home/>}/><Route path="list/:categorySlug" element={<PrototypeCatalog/>}/><Route path="product/:productId" element={<PrototypeDetail/>}/>
-  </Route></Routes></MemoryRouter>);
+  </Route></Routes></MemoryRouter></PublicFixture>);
 }
 test("七大类别固定，三类人数与四类宗教规则准确",()=>{
   assert.equal(categories.length,7);

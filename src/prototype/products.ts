@@ -1,6 +1,6 @@
 import type { PrototypeProduct } from "./model";
 
-// Fixed review data, shared with the website frontend. Source: the supplied
+// Fixed review fixtures, used by isolated tests only; never imported by the public website. Source: the supplied
 // 富贵产品网站信息 DOCX files, checked on 2026-10-22. The user confirmed that all
 // Zone W products support Buddhism and Christianity; package inclusions differ.
 // The user confirmed Juxian niches are indoor and all other niches are outdoor.

@@ -7,7 +7,7 @@ import { NotFound } from "../components/ui";
 const navigation = {
   homePath: "/nirvana",
   listPath: (id: number) => `/nirvana/products/${categories.find(c => c.id === id)?.slug || categories[0].slug}`,
-  detailPath: (id: string) => `/nirvana/products/item/${id}`,
+  detailPath: (id: string) => `/nirvana/products/item/${encodeURIComponent(id)}`,
   website: true,
 };
 

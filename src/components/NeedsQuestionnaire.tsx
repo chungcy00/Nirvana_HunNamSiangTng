@@ -1,17 +1,21 @@
-import { useEffect, useState } from 'react';
-import { questionnaireProductPath, questionnaireIncludes } from '../data/questionnaireCatalog';
+import { usePublicCatalog, PublicCatalogNotice } from '../catalog/publicContext';
+import { useEffect, useMemo, useState } from 'react';
+import { nirvanaQuestionnaireProducts, questionnaireProductPath, questionnaireIncludes } from '../data/questionnaireCatalog';
 import { Link } from 'react-router-dom';
 import { loadQuestionnaireSession, saveQuestionnaireSession, questionnaireReturnKey } from '../data/questionnaireSession';
 import { Check, Phone } from 'lucide-react';
 import { advisor, whatsappUrl } from '../data/site';
-import { categories, questionKeys, budgetOptions, referencePrices, questionnaireProducts, productStatus, applicableVariants, withinBudget, complete, inquirySummary, updateAnswers, supplyNotice, money, type Answers, type ServiceProduct } from '../data/questionnaire';
+import { categories, questionKeys, budgetOptions, referencePriceRange, questionnaireProducts as yunnanProducts, productStatus, applicableVariants, withinBudget, complete, inquirySummary, updateAnswers, supplyNotice, money, type Answers, type ServiceProduct } from '../data/questionnaire';
 
 const categoryNotes = ['火化后的骨灰安置空间','火化后，将骨灰安葬于福地','以棺木安葬的福地与配套','丧礼仪式、治丧流程与相关安排','宠物土葬或火化后的骨灰安葬'];
 export default function NeedsQuestionnaire() {
+  const publicCatalog=usePublicCatalog();
+  const questionnaireProducts=useMemo(()=>[...nirvanaQuestionnaireProducts(publicCatalog.products),...yunnanProducts],[publicCatalog.products]);
   const [initial] = useState(loadQuestionnaireSession);
   const [answers,setAnswers] = useState<Answers>(initial.answers);
   const [selected,setSelected] = useState<string[]>(initial.selected);
   const [browsing,setBrowsing] = useState(initial.browsing);
+  useEffect(()=>{if(publicCatalog.status!=='ready')return;setSelected(old=>old.filter(id=>questionnaireProducts.some(p=>p.id===id && p.category===answers.category)));},[questionnaireProducts,publicCatalog.status,answers.category]);
   useEffect(() => { saveQuestionnaireSession({answers,selected,browsing}); }, [answers,selected,browsing]);
   function rememberResult(id: string) {
     saveQuestionnaireSession({answers,selected,browsing});
@@ -27,8 +31,9 @@ export default function NeedsQuestionnaire() {
     target?.focus({preventScroll:true});
     setScrollTarget(null);
   }, [scrollTarget]);
+  useEffect(()=>{if(publicCatalog.status==='ready' && window.location.hash.startsWith('#needs-product-')){try{document.getElementById(decodeURIComponent(window.location.hash.slice(1)))?.scrollIntoView({block:'start'});}catch{/* Ignore malformed fragments. */}}} ,[publicCatalog.status]);
   const ready = complete(answers);
-  const currentProducts = questionnaireProducts.filter(p=>p.category===answers.category);
+  const currentProducts = (publicCatalog.status==='ready' ? questionnaireProducts : []).filter(p=>p.category===answers.category);
   const matches = currentProducts.filter(p=>productStatus(p,answers)==='match');
   const uncertain = currentProducts.filter(p=>productStatus(p,answers)==='confirm');
   function change(key: keyof Answers,value: string) {
@@ -61,10 +66,10 @@ export default function NeedsQuestionnaire() {
       })}</div>
     </fieldset>;
   }
-  const summary = inquirySummary(answers,selected,browsing);
+  const summary = inquirySummary(answers,publicCatalog.status==='ready'?selected:[],browsing,questionnaireProducts);
   function card(p: ServiceProduct) {
     const detailPath = questionnaireProductPath(p);
-    const returnState = { questionnaireReturn: `/contact#needs-product-${p.id}` };
+    const returnState = { questionnaireReturn: `/contact#needs-product-${encodeURIComponent(p.id)}` };
     const status = productStatus(p,answers);
     const prices = applicableVariants(p,answers);
     const priced = browsing ? prices : prices.filter(v=>withinBudget(v.price,answers));
@@ -87,7 +92,7 @@ export default function NeedsQuestionnaire() {
     </article>;
   }
   return <section className="container needs-questionnaire section" id="needs-questionnaire" aria-labelledby="needs-title">
-    <header className="needs-intro"><h2 id="needs-title">了解您的需求</h2><p>简单选择，了解相关服务与参考价格，再与顾问进一步沟通。</p><p className="small muted">独立了解服务与参考价格，无需先填写上方咨询表单；选好需求后可直接带入 WhatsApp 咨询。</p></header>
+    {publicCatalog.status!=="ready" && <PublicCatalogNotice/>}<header className="needs-intro"><h2 id="needs-title">了解您的需求</h2><p>简单选择，了解相关服务与参考价格，再与顾问进一步沟通。</p><p className="small muted">独立了解服务与参考价格，无需先填写上方咨询表单；选好需求后可直接带入 WhatsApp 咨询。</p></header>
     <div className="needs-layout"><div className="needs-questions">
       {question('您想了解哪一类服务？','category',categories.map((c,i)=>({value:c,label:c,note:categoryNotes[i]})))}
       {!answers.category && question('您的宗教信仰是？','religion',['佛教','基督教','其他'],<p className="needs-help">选择服务类别后，本题将显示对应问题；宠物纪念将改为询问纪念方式。</p>)}
@@ -99,7 +104,7 @@ export default function NeedsQuestionnaire() {
         {answers.category==='宠物纪念' && answers.method==='宠物土葬' && question('您的宠物体型大约是？','size',['小型','中型','大型','不确定'],<p className="needs-help">体型仅供顾问了解，不用于自动决定墓地大小。实际适用情况请咨询确认。</p>)}
         {question('您希望考虑的预算范围？','budget',budgetOptions(answers.category),<>
           <p className="needs-help">请选择本次所选服务的预算，不是全部丧葬费用。预算未定也可以继续了解。</p>
-          <details className="needs-reference" key={answers.category}><summary>查看参考价格</summary><strong>{referencePrices[answers.category]}</strong><p>以上为现有资料中的参考区间。不同产品包含内容不同，地段与完整配套、预购与即时价格亦有区别，实际费用请咨询确认。</p><p>不代表市场全部产品或实时售价，也不保证每个预算档都有产品。</p></details>
+          <details className="needs-reference" key={answers.category}><summary>查看参考价格</summary><strong>{referencePriceRange(answers.category,questionnaireProducts)}</strong><p>以上为现有资料中的参考区间。不同产品包含内容不同，地段与完整配套、预购与即时价格亦有区别，实际费用请咨询确认。</p><p>不代表市场全部产品或实时售价，也不保证每个预算档都有产品。</p></details>
         </>)}
       </>}
     </div></div>

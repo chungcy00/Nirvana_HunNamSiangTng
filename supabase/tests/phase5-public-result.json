@@ -1,0 +1,22 @@
+{
+  "environment": "localhost-real-supabase",
+  "results": [
+    "Create and publish independent w-cremation",
+    "Create and publish independent aa-double-package",
+    "Create and publish independent juxian",
+    "Create and publish independent funeral-1-1",
+    "Actual anonymous list-detail adapter returns four published cases and correct prices",
+    "Actual anonymous private image download",
+    "Unpublished religion removes associated inclusions from real public detail",
+    "Hidden product disappears from actual list, detail and direct image authorization",
+    "Anonymous cannot read private tables or admin RPC"
+  ],
+  "cleaned": true,
+  "run": "2aad9b27",
+  "cleanup": {
+    "publicProducts": 0,
+    "retainedHiddenTestProducts": 4,
+    "files": 0,
+    "testUsers": 0
+  }
+}

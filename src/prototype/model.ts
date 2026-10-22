@@ -3,10 +3,11 @@ export interface ReligionContent {
   id: string; name: string; isPublished: boolean; inclusions: string[]; designs: string[];
 }
 export interface PrototypeProduct {
+  databaseId?: string; primaryImage?: import("../catalog/publicRepository").PublicImage; images?: import("../catalog/publicRepository").PublicImage[]; publicPrices?: import("../catalog/publicRepository").PublicPrice[]; description?: string; subtitle?: string; petMethod?: string;
   id: string; name: string; category: number; visible: boolean;
   capacity?: Capacity; capacityCount?: number; placement?: "indoor" | "outdoor";
   religions: ReligionContent[]; inclusions: string[];
-  offers: { name: string; amount: number; area?: number }[];
+  offers: { name: string; amount: number; area?: number; religionId?: string }[];
   facing?: string; area?: number; preNeed?: number; atNeed?: number;
   referencePrice?: boolean; priceNote?: string; terms?: string;
 }

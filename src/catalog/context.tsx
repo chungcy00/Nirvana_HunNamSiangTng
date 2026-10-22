@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
-import { catalogData } from "../data/catalog";
+import { siteCatalog as catalogData } from "../data/siteCatalog";
 import type { CatalogSnapshot } from "../types";
 import { createCatalog } from "./repository";
 

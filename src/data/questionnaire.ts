@@ -1,5 +1,5 @@
-import { nirvanaQuestionnaireProducts, questionnaireIncludes } from './questionnaireCatalog';
-// Reference data transcribed from the user-supplied product notes; never live availability.
+import { questionnaireIncludes } from './questionnaireCatalog';
+// Question flow is local; Nirvana products and prices are supplied by the public catalogue.
 export const categories = ['骨灰位', '火化土葬', '传统土葬', '殡仪服务', '宠物纪念'] as const;
 export type ServiceCategory = typeof categories[number];
 export type Answers = { category: ServiceCategory | ''; religion: string; capacity: string; situation: string; method: string; size: string; budget: string };
@@ -13,10 +13,10 @@ export const budgetBounds: Record<ServiceCategory, number[]> = {
   骨灰位: [0, 10000, 20000, 50000, 100000], 火化土葬: [0, 20000, 50000],
   传统土葬: [0, 30000, 60000, 100000, 200000], 殡仪服务: [0, 10000, 20000, 30000, 40000], 宠物纪念: [0, 5000, 9000],
 };
-export const referencePrices: Record<ServiceCategory, string> = {
-  骨灰位: '骨灰位最低起价：RM6,888–70,800（实际价格请咨询）', 火化土葬: '火化土葬配套：RM21,888–63,888',
-  传统土葬: '传统土葬地段及配套：RM27,888–308,888', 殡仪服务: '殡仪配套：RM8,800–47,888', 宠物纪念: '宠物纪念：RM3,888–9,800',
-};
+export function referencePriceRange(category: ServiceCategory, products: readonly ServiceProduct[]) {
+  const prices=products.filter(p=>p.category===category).flatMap(p=>p.variants.map(v=>v.price));
+  return prices.length ? `当前公开参考价格：${money(Math.min(...prices))}–${money(Math.max(...prices))}` : '当前暂无公开产品价格，欢迎咨询顾问。';
+}
 export const money = (n: number) => `RM${n.toLocaleString('en-US')}`;
 export function budgetOptions(category: ServiceCategory) {
   const b = budgetBounds[category];
@@ -27,7 +27,7 @@ export function withinBudget(price: number, a: Answers) {
   const b = budgetBounds[a.category], index = Number(a.budget);
   return price >= b[index] && price < (b[index + 1] ?? Infinity);
 }
-export type Variant = { label: string; price: number; timing?: 'pre' | 'now' };
+export type Variant = { label: string; price: number; timing?: 'pre' | 'now'; religion?: string };
 export type ServiceProduct = {
   id: string; name: string; category: ServiceCategory; provider: '富贵山庄' | '云南善堂';
   religions?: string[]; capacity?: string; method?: string; description: string;
@@ -36,7 +36,6 @@ export type ServiceProduct = {
   religiousInclusions?: Record<string, string[]>;
 };
 export const questionnaireProducts: ServiceProduct[] = [
-  ...nirvanaQuestionnaireProducts(),
   {
     id: 'yunnan', name: '云南善堂殡仪配套', category: '殡仪服务', provider: '云南善堂',
     religions: ['佛教', '基督教'], description: '云南善堂殡仪配套',
@@ -61,7 +60,7 @@ export function productStatus(p: ServiceProduct, a: Answers): 'match' | 'confirm
   return 'match';
 }
 export function applicableVariants(p: ServiceProduct, a: Answers) {
-  return p.variants.filter(v => !v.timing || a.situation !== '提前规划' && a.situation !== '目前需要安排' || v.timing === (a.situation === '提前规划' ? 'pre' : 'now'));
+  return p.variants.filter(v => (!v.religion || !a.religion || a.religion==='其他' || v.religion===a.religion) && (!v.timing || a.situation !== '提前规划' && a.situation !== '目前需要安排' || v.timing === (a.situation === '提前规划' ? 'pre' : 'now')));
 }
 export function answerLines(a: Answers) {
   const lines = [`服务类别：${a.category || '尚未填写'}`];
@@ -74,8 +73,8 @@ export function answerLines(a: Answers) {
   line('预算',a.category ? budgetOptions(a.category).find(x=>x.value===a.budget)?.label || '' : '');
   return lines;
 }
-export function inquirySummary(a: Answers, selected: string[], browsing: boolean) {
-  const chosen = [...new Set(selected)].map(id=>questionnaireProducts.find(p=>p.id===id)).filter((p): p is ServiceProduct=>!!p);
+export function inquirySummary(a: Answers, selected: string[], browsing: boolean, products: readonly ServiceProduct[] = questionnaireProducts) {
+  const chosen = [...new Set(selected)].map(id=>products.find(p=>p.id===id)).filter((p): p is ServiceProduct=>!!p);
   const sections = ['您好，我想了解以下服务。'];
   const needs = answerLines(a).filter(line=>!line.endsWith('：尚未填写'));
   if (needs.length) sections.push(['【咨询需求】', ...needs.map(line=>`• ${line}`)].join('\n'));

@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { PublicCatalogProvider } from "./catalog/publicContext";
 import { CatalogProvider } from "./catalog/context";
 import AppLayout from "./components/layout/AppLayout";
 import { NotFound } from "./components/ui";
@@ -10,16 +11,11 @@ import PackageDetail from "./pages/PackageDetail";
 import Yunnan from "./pages/Yunnan";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import { PrototypeCatalog, PrototypeDetail, PrototypeLayout, PrototypeNotFound } from "./prototype/Prototype";
+import { PrototypeCatalog, PrototypeDetail, PrototypeNotFound } from "./prototype/Prototype";
+function LegacyNirvanaDetail(){const {slug}=useParams();return <Navigate to={`/nirvana/products/item/${encodeURIComponent(slug || "")}`} replace/>;}
 export function WebsiteRoutes() {
   return (
     <Routes>
-      <Route path="/prototype" element={<PrototypeLayout />}>
-        <Route index element={<PrototypeCatalog home />} />
-        <Route path="list/:categorySlug" element={<PrototypeCatalog />} />
-        <Route path="product/:productId" element={<PrototypeDetail />} />
-        <Route path="*" element={<PrototypeNotFound />} />
-      </Route>
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/nirvana" element={<NirvanaProducts />}>
@@ -28,6 +24,8 @@ export function WebsiteRoutes() {
           <Route path="products/:categorySlug" element={<PrototypeCatalog />} />
           <Route path="products/*" element={<PrototypeNotFound />} />
         </Route>
+        <Route path="/nirvana/packages/:slug" element={<LegacyNirvanaDetail />} />
+        <Route path="/nirvana/:legacyCategory" element={<Navigate to="/nirvana" replace />} />
         <Route path="/:providerSlug" element={<Nirvana />} />
         <Route
           path="/:providerSlug/packages/:slug"
@@ -45,10 +43,10 @@ export function WebsiteRoutes() {
 
 export default function App() {
   return (
-    <CatalogProvider>
-      <BrowserRouter>
+    <CatalogProvider><BrowserRouter>
+      <PublicCatalogProvider>
         <WebsiteRoutes />
-      </BrowserRouter>
-    </CatalogProvider>
+      </PublicCatalogProvider>
+    </BrowserRouter></CatalogProvider>
   );
 }

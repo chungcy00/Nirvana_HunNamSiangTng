@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { catalogData } from "../src/data/catalog";
 import {
   createCatalog,
@@ -12,6 +12,9 @@ import {
 } from "../src/catalog/repository";
 import { CatalogProvider } from "../src/catalog/context";
 import { WebsiteRoutes } from "../src/App";
+import LegacyProvider from "../src/pages/Nirvana";
+import CategoryPage from "../src/pages/Category";
+import PackageDetail from "../src/pages/PackageDetail";
 import { ProductCard } from "../src/components/ui";
 import type { CatalogSnapshot, Category } from "../src/types";
 
@@ -20,7 +23,7 @@ function render(path: string, data = seed()) {
   return renderToStaticMarkup(
     <CatalogProvider data={data}>
       <MemoryRouter initialEntries={[path]}>
-        <WebsiteRoutes />
+        <Routes>{path==="/nirvana" && <Route path="/:providerSlug" element={<LegacyProvider/>}/>}<Route path="/:providerSlug/packages/:slug" element={<PackageDetail/>}/><Route path="/:providerSlug/:categorySlug" element={<CategoryPage/>}/><Route path="*" element={<WebsiteRoutes/>}/></Routes>
       </MemoryRouter>
     </CatalogProvider>,
   );
@@ -47,7 +50,7 @@ function addCategory(data: CatalogSnapshot, overrides: Partial<Category> = {}) {
   return category;
 }
 
-test("all existing products and pages retain their URLs and product content", () => {
+test("legacy reusable templates retain their configured product content in isolation", () => {
   const data = seed();
   const repo = createCatalog(data);
   assert.equal(data.products.length, 29);
@@ -118,8 +121,8 @@ test("new root, child and product appear using the existing templates", () => {
   });
   const repo = createCatalog(data);
   assert.equal(repo.getCatalogCategories("provider-001").at(-1)?.id, root.id);
-  // The Nirvana landing now follows the accepted seven-category product frontend.
-  assert(render("/nirvana", data).includes("/nirvana/products/item/w-cremation"));
+  // This isolated legacy template still supports configured category links.
+  assert(render("/nirvana", data).includes("/nirvana/fuxing-land"));
   assert(render("/nirvana/fuxing-land", data).includes("福星双人 A"));
   assert(
     render(`/nirvana/fuxing-land?filter=${child.id}`, data).includes(

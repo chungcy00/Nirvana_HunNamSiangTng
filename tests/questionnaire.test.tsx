@@ -1,9 +1,11 @@
+import { fixtureQuestionnaireProducts as products } from "./publicFixtures";
 import { whatsappUrl } from '../src/data/site';
 import { prototypeProducts } from '../src/prototype/products';
 import { questionnaireIncludes } from '../src/data/questionnaireCatalog';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { questionnaireProducts as products, emptyAnswers, productStatus, complete, updateAnswers, inquirySummary, withinBudget, applicableVariants, type Answers } from '../src/data/questionnaire';
+import { emptyAnswers, productStatus, complete, updateAnswers, inquirySummary as summary, withinBudget, applicableVariants, type Answers } from '../src/data/questionnaire';
+const inquirySummary=(a:Answers,ids:string[],browsing:boolean)=>summary(a,ids,browsing,products);
 const funeral: Answers = {...emptyAnswers, category:'殡仪服务',religion:'基督教',situation:'提前规划',budget:'0'};
 const freedom = products.find(p=>p.id==='funeral-2-1')!;
 const yunnan = products.find(p=>p.id==='yunnan')!;

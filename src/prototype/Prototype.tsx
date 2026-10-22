@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List } from "lucide-react";
-import { prototypeProducts } from "./products";
+import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext";
+import CatalogImage from "../catalog/PublicImage";
 import { categories, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct } from "./model";
 import "./prototype.css";
 
@@ -15,6 +16,7 @@ export const ProductNavigationContext = createContext({
 });
 
 export function PrototypeLayout() {
+  const {products:prototypeProducts}=usePublicCatalog();
   const { pathname } = useLocation();
   const { listPath, detailPath } = useContext(ProductNavigationContext);
   useEffect(() => {
@@ -37,9 +39,14 @@ export function PrototypeLayout() {
   </div>;
 }
 
+function galleryChoices(product: PrototypeProduct) {
+  return (product.images || []).map((image,index)=>({image,label:image.id===product.primaryImage?.id ? '共通产品图' : image.religion_id != null ? `${product.religions.find(r=>r.id===String(image.religion_id))?.name || ''} · ${image.design_name || `图片 ${index+1}`}` : `共通产品图 · ${index+1}`}));
+}
 function ProductImage({ product, large = false, caption }: { product: PrototypeProduct; large?: boolean; caption?: string }) {
-  return <div className={`fgp-image fgp-image-${product.category}${large ? " fgp-image-large" : ""}`} role="img" aria-label={`${product.name}，对应实拍图片待补充`}>
+  const image=large && caption ? galleryChoices(product).find(i=>i.label===caption)?.image || product.primaryImage : product.primaryImage;
+  return <div className={`fgp-image fgp-image-${product.category}${large ? " fgp-image-large" : ""}`} role="img" aria-label={image ? image.alt || product.name : `${product.name}，对应实拍图片待补充`}>
     <div className="fgp-image-center"><ImageIcon size={large ? 38 : 29} strokeWidth={1} aria-hidden="true"/><span>产品实拍待补充</span></div>
+    {image && <CatalogImage key={image.id} image={image}/>}
     {caption && <span className="fgp-image-caption">{caption}</span>}
   </div>;
 }
@@ -50,12 +57,13 @@ function ProductTags({ product }: { product: PrototypeProduct }) {
     {product.category === 3 && product.placement && <span className="fgp-environment">{product.placement === "indoor" ? "室内" : "室外"}</span>}
   </div>;
 }
-export function PrototypePrices({ product, detailed = false }: { product: PrototypeProduct; detailed?: boolean }) {
+export function PrototypePrices({ product, detailed = false, religion = "" }: { product: PrototypeProduct; detailed?: boolean; religion?: string }) {
   const { website } = useContext(ProductNavigationContext);
   const unavailablePrice = website ? "欢迎咨询" : "价格待核实";
   const funeral = product.category === 4;
+  const publicPrices=product.publicPrices?.filter(p=>!religion || p.religion_id==null || String(p.religion_id)===religion);
   return <div className={`fgp-prices${funeral ? " fgp-dual-prices" : ""}${detailed ? " fgp-prices-detail" : ""}`}>
-    {funeral ? <>
+    {detailed && publicPrices?.length && funeral ? publicPrices.map((price,index)=><div key={index}><span>{price.offer_name} · {price.price_type==='pre_need' ? '预购价格' : '即用价格'}</span><strong>{formatMoney(Number(price.amount))}</strong></div>) : funeral ? <>
       <div><span>预购价格</span><strong>{product.preNeed !== undefined ? formatMoney(product.preNeed) : unavailablePrice}</strong></div>
       <div><span>即用价格</span><strong>{product.atNeed !== undefined ? formatMoney(product.atNeed) : unavailablePrice}</strong></div>
     </> : product.category === 3 ? <div><span>{!website && product.referencePrice ? "宣传参考起价 · 待核实" : "最低起价"}</span><strong>{product.offers.length ? <>{formatMoney(Math.min(...product.offers.map(o => o.amount)))}<em>起</em></> : unavailablePrice}</strong></div>
@@ -91,6 +99,7 @@ function WebsiteProductCard({ product, returnTo, view }: { product: PrototypePro
 }
 
 export function PrototypeCatalog({ home = false }: { home?: boolean }) {
+  const {products:prototypeProducts,status}=usePublicCatalog();
   const { homePath, listPath, website } = useContext(ProductNavigationContext);
   const [params, setParams] = useSearchParams();
   const latestParams = useRef(params);
@@ -166,13 +175,14 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
         {filtered ? <button className="fgp-reset" onClick={reset}><RotateCcw size={14}/>清除筛选</button> : home && !website && <Link className="fgp-text-link" to={listPath(category.id)+(listParams.size ? '?'+listParams : '')}>查看完整列表<ArrowRight size={16}/></Link>}
       </div>
       {filtered && <div className="fgp-applied" aria-label="已选择条件">{capacity && <button onClick={()=>changeFilter("capacity","")}>{capacityLabels[capacity as keyof typeof capacityLabels] || capacity}<X size={13}/><span className="fgp-sr">清除人数筛选</span></button>}{religion && <button onClick={()=>changeFilter("religion","")}>{religions.find(r=>r.id===religion)?.name || religion}<X size={13}/><span className="fgp-sr">清除宗教筛选</span></button>}</div>}
-      {products.length ? <div className={website ? `fgp-grid fgp-view-${view}` : "fgp-grid"}>{products.map(p=>website ? <WebsiteProductCard key={p.id} product={p} returnTo={returnTo} view={view}/> : <ProductCard key={p.id} product={p} returnTo={returnTo}/>)}</div> : <div className="fgp-empty"><Leaf size={32} strokeWidth={1}/><h3>暂时没有符合条件的产品</h3><p>您可以调整人数或宗教，继续浏览其他选择。</p><button className="fgp-primary" onClick={reset}>清除筛选<ArrowRight size={16}/></button></div>}
+      {status!=="ready" ? <PublicCatalogNotice/> : products.length ? <div className={website ? `fgp-grid fgp-view-${view}` : "fgp-grid"}>{products.map(p=>website ? <WebsiteProductCard key={p.id} product={p} returnTo={returnTo} view={view}/> : <ProductCard key={p.id} product={p} returnTo={returnTo}/>)}</div> : <div className="fgp-empty"><Leaf size={32} strokeWidth={1}/><h3>暂时没有符合条件的产品</h3><p>您可以调整人数或宗教，继续浏览其他选择。</p><button className="fgp-primary" onClick={reset}>清除筛选<ArrowRight size={16}/></button></div>}
       {!website && <p className="fgp-source-note">价格按已提供产品资料展示；聚仙楼为待核实宣传参考起价。产品实拍将在资料确认后补充。</p>}
     </section>
   </>;
 }
 
 export function PrototypeDetail() {
+  const {products:prototypeProducts,status}=usePublicCatalog();
   const { homePath, listPath, website } = useContext(ProductNavigationContext);
   const { productId } = useParams();
   const location = useLocation();
@@ -180,6 +190,8 @@ export function PrototypeDetail() {
   const [religion,setReligion] = useState("");
   const [design,setDesign] = useState("共通产品图");
   useEffect(()=>{setReligion("");setDesign("共通产品图");},[productId]);
+  useEffect(()=>{if(website && product)document.title=`${product.name}｜身后事 · 皆可托`;},[product?.name,website]);
+  if(status!=="ready")return <PublicCatalogNotice/>;
   if (!product) return <PrototypeNotFound/>;
   const category = categories.find(c=>c.id===product.category)!;
   const requestedReturn = location.state?.returnTo;
@@ -187,9 +199,9 @@ export function PrototypeDetail() {
     ? requestedReturn.split('?')[0] === homePath || categories.some(c => requestedReturn.split('?')[0] === listPath(c.id))
     : /^\/prototype(?:\?|\/list\/|$)/.test(requestedReturn)) ? requestedReturn : listPath(category.id);
   const questionnaireReturn = location.state?.questionnaireReturn;
-  const validQuestionnaireReturn = website && typeof questionnaireReturn === 'string' && /^\/contact#needs-product-[a-zA-Z0-9-]+$/.test(questionnaireReturn) ? questionnaireReturn : null;
+  const validQuestionnaireReturn = website && typeof questionnaireReturn === 'string' && /^\/contact#needs-product-(?:[a-zA-Z0-9_-]|%[a-fA-F0-9]{2})+$/.test(questionnaireReturn) ? questionnaireReturn : null;
   const content = product.religions.filter(r=>!religion || r.id===religion);
-  const designs = ["共通产品图",...content.flatMap(r=>r.designs.map(d=>r.name+' · '+d))];
+  const designs = product.images?.length ? galleryChoices(product).filter(({image})=>image.religion_id==null || !religion || String(image.religion_id)===religion).map(i=>i.label) : ["共通产品图",...content.flatMap(r=>r.designs.map(d=>r.name+' · '+d))];
   const selectedDesign = designs.includes(design) ? design : designs[0];
   const specs = [
     ...(hasCapacity(product.category) && product.capacity ? [["使用人数",product.category===3 && product.capacity==='four_plus' && product.capacityCount ? `${product.capacityCount}人` : capacityLabels[product.capacity]]] : []),
@@ -203,7 +215,7 @@ export function PrototypeDetail() {
     <Link className="fgp-back" to={validQuestionnaireReturn || returnTo}><ArrowLeft size={15}/>{validQuestionnaireReturn ? "返回问卷结果" : "返回产品列表"}</Link>
     <div className="fgp-detail-top"><section className="fgp-gallery" aria-label="产品图片"><ProductImage product={product} large caption={selectedDesign}/>
       {designs.length>1 && <div className="fgp-designs" role="group" aria-label="设计图片选择">{designs.map(d=><button key={d} className={selectedDesign===d ? "is-selected" : ""} aria-pressed={selectedDesign===d} onClick={()=>setDesign(d)}><ImageIcon size={16}/>{d}</button>)}</div>}
-    </section><section className="fgp-product-overview"><span className="fgp-category-label">{category.name}</span><h1>{product.name}</h1><ProductTags product={product}/>
+    </section><section className="fgp-product-overview"><span className="fgp-category-label">{category.name}</span><h1>{product.name}</h1><ProductTags product={product}/>{product.subtitle && <p>{product.subtitle}</p>}{product.description && <p>{product.description}</p>}
       <dl className="fgp-specs">{specs.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
       <a className="fgp-overview-next" href="#fgp-inclusions">查看包含项目<ArrowRight size={16}/></a>
     </section></div>
@@ -212,7 +224,7 @@ export function PrototypeDetail() {
       {product.religions.some(r=>r.inclusions.length || r.designs.length) && <div className="fgp-religious-content"><h3>宗教对应内容</h3>{product.religions.length>1 && <div className="fgp-content-tabs" role="group" aria-label="宗教对应内容选择"><button className={!religion ? "is-selected" : ""} aria-pressed={!religion} onClick={()=>{setReligion("");setDesign("共通产品图");}}>全部宗教</button>{product.religions.map(r=><button key={r.id} className={religion===r.id ? "is-selected" : ""} aria-pressed={religion===r.id} onClick={()=>{setReligion(r.id);setDesign("共通产品图");}}>{r.name}</button>)}</div>}
         {content.map(r=><div key={r.id} className="fgp-religious-group"><h4>{r.name}</h4>{r.inclusions.length>0 && <ul>{r.inclusions.map((item,i)=><li key={i}><Check size={16}/>{item}</li>)}</ul>}{r.designs.length>0 && <p>对应设计：{r.designs.join("、")}。各设计沿用本产品价格。</p>}</div>)}
       </div>}
-    </section><section className="fgp-price-panel" aria-labelledby="fgp-price-heading"><h2 id="fgp-price-heading">{product.category===4 ? "殡仪服务价格" : product.category===3 ? "最低起价" : "产品价格"}</h2><PrototypePrices product={product} detailed/>
+    </section><section className="fgp-price-panel" aria-labelledby="fgp-price-heading"><h2 id="fgp-price-heading">{product.category===4 ? "殡仪服务价格" : product.category===3 ? "最低起价" : "产品价格"}</h2><PrototypePrices product={product} detailed religion={religion}/>
       {product.offers.length>1 && product.offers.some(o=>o.area) && <dl className="fgp-offer-specs">{product.offers.filter(o=>o.area).map(o=><div key={o.name}><dt>{o.name}</dt><dd>{o.area} sqft</dd></div>)}</dl>}
       {product.priceNote && <p className="fgp-price-note">{product.priceNote}</p>}{product.terms && !(website && product.referencePrice) && <p className="fgp-price-terms">{product.terms}</p>}
     </section></div>

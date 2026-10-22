@@ -1,3 +1,4 @@
+import { PublicFixture, fixtureQuestionnaireProducts } from "./publicFixtures";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -8,7 +9,7 @@ import { categories } from "../src/prototype/model";
 import { lowestPrice, sortProducts } from "../src/prototype/model";
 
 function render(path: string, state?: unknown) {
-  return renderToStaticMarkup(<MemoryRouter initialEntries={[{ pathname: path.split("?")[0], search: path.includes("?") ? "?" + path.split("?")[1] : "", state }]}><WebsiteRoutes /></MemoryRouter>);
+  return renderToStaticMarkup(<PublicFixture><MemoryRouter initialEntries={[{ pathname: path.split("?")[0], search: path.includes("?") ? "?" + path.split("?")[1] : "", state }]}><WebsiteRoutes /></MemoryRouter></PublicFixture>);
 }
 
 test("网站富贵山庄页沿用主导航，七类产品的详情与列表不跳到原型", () => {
