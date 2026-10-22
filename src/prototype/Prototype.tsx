@@ -79,7 +79,7 @@ function ProductCard({ product, returnTo }: { product: PrototypeProduct; returnT
 function WebsiteProductCard({ product, returnTo, view }: { product: PrototypeProduct; returnTo: string; view: string }) {
   const { detailPath } = useContext(ProductNavigationContext);
   const price = lowestPrice(product);
-  return <article className="fgp-card fgp-catalog-card">
+  return <article className={`fgp-card fgp-catalog-card${product.category === 4 ? " fgp-card-funeral" : ""}`}>
     <Link className="fgp-product-link" to={detailPath(product.id)} state={{ returnTo }} aria-label={`${product.name}，查看详情`}>
       <div className="fgp-product-visual"><ProductImage product={product}/></div>
       <div className="fgp-card-body"><ProductTags product={product}/><h3>{product.name}</h3>
@@ -156,7 +156,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
         </div></div>}
       </div>
       {website && <div className="fgp-display-controls">
-        <label className="fgp-sort"><span className="fgp-sr">价格排序</span><select aria-label="价格排序" value={sort} onChange={e=>changeFilter('sort', e.target.value === 'default' ? '' : e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
+        <label className="fgp-sort" title={sort === "price-asc" ? "价格从低到高" : sort === "price-desc" ? "价格从高到低" : "价格排序"}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 4h16M3 9h10M3 14h5M18 10v11m-4-4 4 4 4-4"/></svg><span className="fgp-sr">价格排序</span><select aria-label="价格排序" value={sort} onChange={e=>changeFilter('sort', e.target.value === 'default' ? '' : e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
         <div className="fgp-view-toggle" role="group" aria-label="展示模式">{[
           {id:'grid', label:'双栏网格', icon:LayoutGrid}, {id:'list', label:'左图右文列表', icon:List},
         ].map(({id,label,icon:Icon})=><button type="button" key={id} aria-label={label} title={label} aria-pressed={view===id} onClick={()=>changeFilter('view',id==='grid'?'':id)}><Icon size={18} aria-hidden="true"/></button>)}</div>
