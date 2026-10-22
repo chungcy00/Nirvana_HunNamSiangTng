@@ -1,0 +1,96 @@
+{
+  "tables": [
+    {
+      "table": "products",
+      "count": 20,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "religions",
+      "count": 2,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "audit_logs",
+      "count": 1140,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "pet_details",
+      "count": 0,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "offer_prices",
+      "count": 32,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "admin_members",
+      "count": 1,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "niche_details",
+      "count": 4,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "burial_details",
+      "count": 8,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "product_images",
+      "count": 0,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "product_offers",
+      "count": 28,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "product_series",
+      "count": 3,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "tablet_details",
+      "count": 0,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "catalog_notices",
+      "count": 1,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "funeral_details",
+      "count": 8,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "fengshui_details",
+      "count": 0,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "product_religions",
+      "count": 18,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "product_categories",
+      "count": 7,
+      "original_rows_unchanged": true
+    },
+    {
+      "table": "product_inclusions",
+      "count": 267,
+      "original_rows_unchanged": true
+    }
+  ],
+  "originalProductWrites": false,
+  "pendingMigrationExecuted": false
+}

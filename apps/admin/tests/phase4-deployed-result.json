@@ -1,0 +1,23 @@
+{
+  "tests": [
+    "Real deployed Auth and member role",
+    "/api/copy-product GET rejects with 405",
+    "/api/copy-product missing bearer rejects with 401",
+    "/api/copy-product false token rejects with 401",
+    "/api/copy-product other origin rejects with 403",
+    "/api/media-cleanup GET rejects with 405",
+    "/api/media-cleanup missing bearer rejects with 401",
+    "/api/media-cleanup false token rejects with 401",
+    "/api/media-cleanup other origin rejects with 403",
+    "Temporary independent draft with private image",
+    "Deployed copy endpoint copies draft and private bytes",
+    "Deployed stale copy returns 409",
+    "Deployed cleanup preserves referenced images",
+    "Deployed cleanup removes only independent test files"
+  ],
+  "cleaned": true,
+  "run": "463e38f5-ca46-409e-9c84-0aa609ccc79a",
+  "deployment": "https://nirvana-admin-beige.vercel.app",
+  "commit": "1e50a2710d5d177abb3e0aed350e4bc7a7c90e33",
+  "existingProductWrites": false
+}
