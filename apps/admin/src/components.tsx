@@ -252,7 +252,7 @@ export function Preview({
       </div>
       <div className="previewgrid">
         <div className="previewcard">
-          <Photo image={primary} className="preview-photo" />
+          {p.category_id !== 4 && <Photo image={primary} className="preview-photo" />}
           <article>
             <h2>{p.name || '未命名草稿'}</h2>
             <p>{p.subtitle}</p>
@@ -316,6 +316,7 @@ export function Preview({
           ) : (
             <p className="help">暂无符合当前预览条件的包含项目。</p>
           )}
+          {p.category_id !== 4 && <>
           <h3>产品与设计图片</h3>
           {images.length ? (
             <div className="preview-images">
@@ -329,6 +330,7 @@ export function Preview({
           ) : (
             <p className="help">暂无符合当前预览条件的产品与设计图片。</p>
           )}
+          </>}
           <p className="help">
             {p.price_note_override ||
               refs.notices

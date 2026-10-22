@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-CN"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>本地 UI 验收 · 独立样例资料</title><div id="root"></div><script type="module">
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {MemoryRouter} from 'react-router-dom';
+import {CatalogProvider} from '/src/catalog/context.tsx';import {WebsiteRoutes} from '/src/App.tsx';import {PublicFixture} from '/tests/publicFixtures.tsx';
+import '/src/components/NeedsQuestionnaire.css';import '/src/index.css';import '/src/styles/frontend.css';
+let lcp=0,cls=0;
+try { new PerformanceObserver(list=>{for(const e of list.getEntries()) lcp=Math.max(lcp,e.startTime);}).observe({type:'largest-contentful-paint',buffered:true}); new PerformanceObserver(list=>{for(const e of list.getEntries())if(!e.hadRecentInput)cls+=e.value;}).observe({type:'layout-shift',buffered:true}); } catch {}
+setTimeout(()=>{const result={environment:'localhost development server, browser current network; no 4G throttle',lcpMs:Math.round(lcp),cls:+cls.toFixed(4),viewport:document.documentElement.clientWidth};document.documentElement.dataset.measuredVitals=JSON.stringify(result);console.info('UI_V12_VITALS '+JSON.stringify(result));},4000);
+const route=new URLSearchParams(location.search).get('route')||'/nirvana';
+createRoot(document.getElementById('root')).render(React.createElement(CatalogProvider,null,React.createElement(MemoryRouter,{initialEntries:[route]},React.createElement(PublicFixture,null,React.createElement(WebsiteRoutes)))));
+</script></html>

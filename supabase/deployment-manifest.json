@@ -56,6 +56,11 @@
       "local": "20261022154520_funeral_optional_photos.sql",
       "remote_version": "20261022154706",
       "remote_name": "funeral_optional_photos"
+    },
+    {
+      "local": "20261022160606_funeral_without_media.sql",
+      "remote_version": "20261022160726",
+      "remote_name": "funeral_without_media"
     }
   ],
   "hosted_validation": {

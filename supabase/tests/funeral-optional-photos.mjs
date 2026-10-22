@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import {randomUUID,randomBytes} from 'node:crypto';
 import pg from 'pg';
 import {loadConfig,client,rpc,mustReject} from './support.mjs';
-const cfg=loadConfig(),db=new pg.Client({connectionString:cfg.db}),service=client(cfg,cfg.service),anon=client(cfg),admin=client(cfg),run=randomUUID().slice(0,8),ids=[],results=[];let uid;
+const cfg=loadConfig(),db=new pg.Client({connectionString:cfg.db}),service=client(cfg,cfg.service),anon=client(cfg),admin=client(cfg),run=randomUUID().slice(0,8),ids=[],files=[],results=[];let uid;
 const check=async(name,fn)=>{await fn();results.push(name);console.log('PASS '+name)};
 const save=async(p,product={},changes={})=>rpc(admin,'save_product',{p_id:p?.id??null,p_expected_updated_at:p?.updated_at??null,p_product:product,p_changes:changes});
 await db.connect();
@@ -25,6 +25,9 @@ try{
   });
   if(category!==4){await check(`Category ${category} still rejects publication without a photo`,()=>mustReject(()=>save(p,{publication_status:'published'}),/主图/));}
   else{
+   const path=p.id+'/'+randomUUID()+'.png';
+   const upload=await service.storage.from('catalog-media-private').upload(path,Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z1S4AAAAASUVORK5CYII=','base64'),{contentType:'image/png'});assert.ifError(upload.error);files.push(path);
+   await check('Funeral drafts reject actual uploaded photo attachments',()=>mustReject(()=>save(p,{}, {product_images:{upsert:[{storage_bucket:'catalog-media-private',storage_path:path,image_type:'real',is_primary:false,is_published:false}]}}),/殡仪服务不使用照片/));
    funeral=await save(p,{publication_status:'published'});
    await check('Funeral publishes with both prices and no image',async()=>{
     const detail=await rpc(anon,'catalog_product_detail',{p_slug:`optional-photo-${run}-${category}`});assert.equal(detail.category_id,4);assert.equal(detail.images.length,0);assert.equal(detail.prices.length,2);
@@ -38,7 +41,7 @@ try{
    await check('Removing the only public religion still rolls back',async()=>{
     const detail=await rpc(admin,'admin_product',{p_id:p.id});await mustReject(()=>save(funeral,{}, {product_religions:{upsert:[{id:detail.product_religions[0].id,is_published:false}]}}),/宗教/);
    });
-   await check('Missing Storage object still cannot be published as a funeral image',()=>mustReject(()=>save(funeral,{}, {product_images:{upsert:[{storage_bucket:'catalog-media-private',storage_path:p.id+'/'+randomUUID()+'.png',image_type:'real',is_primary:true,is_published:true}]}}),/23514|图片|文件|Storage/));
+   await check('Missing Storage object still cannot be published as a funeral image',()=>mustReject(()=>save(funeral,{}, {product_images:{upsert:[{storage_bucket:'catalog-media-private',storage_path:p.id+'/'+randomUUID()+'.png',image_type:'real',is_primary:true,is_published:true}]}}),/23514|图片|照片|文件|Storage/));
    await check('Photo-free funeral hides from public endpoints',async()=>{
     funeral=await save(funeral,{publication_status:'hidden'});assert.equal(await rpc(anon,'catalog_product_detail',{p_slug:`optional-photo-${run}-${category}`}),null);assert(!(await rpc(anon,'catalog_product_list')).some(x=>x.id===p.id));
    });
@@ -48,5 +51,6 @@ try{
 }finally{
  // Keep the published test's audit history; dispose drafts and temporary identity.
  for(const id of ids){const p=(await db.query('select * from private.products where id=$1',[id])).rows[0];if(!p)continue;if(!p.published_at)try{await rpc(admin,'delete_draft',{p_id:id,p_expected_updated_at:p.updated_at.toISOString()});}catch{await db.query("update private.products set publication_status='hidden' where id=$1",[id]);}}
+ for(const path of files){const removed=await service.storage.from('catalog-media-private').remove([path]);assert.ifError(removed.error);}
  await admin.auth.signOut({scope:'global'});if(uid){await db.query('delete from private.admin_members where user_id=$1',[uid]);const r=await service.auth.admin.deleteUser(uid);assert.ifError(r.error);}await db.end();
 }

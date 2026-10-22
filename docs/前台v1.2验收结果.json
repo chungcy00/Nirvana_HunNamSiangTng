@@ -1,0 +1,322 @@
+{
+  "date": "2026-10-23",
+  "scope": "localhost browser with isolated fixtures; no hosted product publication",
+  "layout": [
+    {
+      "case": "390px /",
+      "ready": true,
+      "width": 375,
+      "scrollWidth": 375,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "归于土，化于风，安于心"
+    },
+    {
+      "case": "390px /nirvana?category=2",
+      "ready": true,
+      "width": 375,
+      "scrollWidth": 375,
+      "overflow": false,
+      "offenders": [
+        {
+          "tag": "BUTTON",
+          "cls": "",
+          "right": 436
+        },
+        {
+          "tag": "BUTTON",
+          "cls": "",
+          "right": 524
+        }
+      ],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵山庄"
+    },
+    {
+      "case": "390px /nirvana?category=4&view=list",
+      "ready": true,
+      "width": 375,
+      "scrollWidth": 375,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵山庄"
+    },
+    {
+      "case": "390px /nirvana/products/item/w-family-lot",
+      "ready": true,
+      "width": 375,
+      "scrollWidth": 375,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "家庭福地 · W区"
+    },
+    {
+      "case": "390px /nirvana/products/item/funeral-1-1",
+      "ready": true,
+      "width": 375,
+      "scrollWidth": 375,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵自由｜佛教殡仪"
+    },
+    {
+      "case": "390px /contact",
+      "ready": true,
+      "width": 375,
+      "scrollWidth": 375,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "让我们，从一次对话开始"
+    },
+    {
+      "case": "390px /yunnan-siantang",
+      "ready": true,
+      "width": 375,
+      "scrollWidth": 375,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "砂拉越云南善堂"
+    },
+    {
+      "case": "768px /",
+      "ready": true,
+      "width": 753,
+      "scrollWidth": 753,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "归于土，化于风，安于心"
+    },
+    {
+      "case": "768px /nirvana?category=2",
+      "ready": true,
+      "width": 753,
+      "scrollWidth": 753,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵山庄"
+    },
+    {
+      "case": "768px /nirvana?category=4&view=list",
+      "ready": true,
+      "width": 753,
+      "scrollWidth": 753,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵山庄"
+    },
+    {
+      "case": "768px /nirvana/products/item/w-family-lot",
+      "ready": true,
+      "width": 753,
+      "scrollWidth": 753,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "家庭福地 · W区"
+    },
+    {
+      "case": "768px /nirvana/products/item/funeral-1-1",
+      "ready": true,
+      "width": 753,
+      "scrollWidth": 753,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵自由｜佛教殡仪"
+    },
+    {
+      "case": "768px /contact",
+      "ready": true,
+      "width": 753,
+      "scrollWidth": 753,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "让我们，从一次对话开始"
+    },
+    {
+      "case": "768px /yunnan-siantang",
+      "ready": true,
+      "width": 753,
+      "scrollWidth": 753,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "砂拉越云南善堂"
+    },
+    {
+      "case": "1440px /",
+      "ready": true,
+      "width": 1425,
+      "scrollWidth": 1425,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "归于土，化于风，安于心"
+    },
+    {
+      "case": "1440px /nirvana?category=2",
+      "ready": true,
+      "width": 1425,
+      "scrollWidth": 1425,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵山庄"
+    },
+    {
+      "case": "1440px /nirvana?category=4&view=list",
+      "ready": true,
+      "width": 1425,
+      "scrollWidth": 1425,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵山庄"
+    },
+    {
+      "case": "1440px /nirvana/products/item/w-family-lot",
+      "ready": true,
+      "width": 1425,
+      "scrollWidth": 1425,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "家庭福地 · W区"
+    },
+    {
+      "case": "1440px /nirvana/products/item/funeral-1-1",
+      "ready": true,
+      "width": 1425,
+      "scrollWidth": 1425,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "富贵自由｜佛教殡仪"
+    },
+    {
+      "case": "1440px /contact",
+      "ready": true,
+      "width": 1425,
+      "scrollWidth": 1425,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "让我们，从一次对话开始"
+    },
+    {
+      "case": "1440px /yunnan-siantang",
+      "ready": true,
+      "width": 1425,
+      "scrollWidth": 1425,
+      "overflow": false,
+      "offenders": [],
+      "font": "\"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+      "photos": 0,
+      "mainHeading": "砂拉越云南善堂"
+    }
+  ],
+  "foundation": {
+    "fontChecks": [
+      {
+        "file": "src/index.css",
+        "familiesUnchanged": true
+      },
+      {
+        "file": "src/prototype/prototype.css",
+        "familiesUnchanged": true
+      },
+      {
+        "file": "src/pages/About.css",
+        "familiesUnchanged": true
+      },
+      {
+        "file": "src/components/NeedsQuestionnaire.css",
+        "familiesUnchanged": true
+      }
+    ],
+    "contrast": [
+      {
+        "label": "primary/surface",
+        "ratio": 10.25,
+        "pass": true
+      },
+      {
+        "label": "text/bg",
+        "ratio": 13.96,
+        "pass": true
+      },
+      {
+        "label": "muted/bg",
+        "ratio": 4.98,
+        "pass": true
+      },
+      {
+        "label": "muted/tint",
+        "ratio": 4.87,
+        "pass": true
+      },
+      {
+        "label": "error/surface",
+        "ratio": 7.07,
+        "pass": true
+      },
+      {
+        "label": "success/surface",
+        "ratio": 6.21,
+        "pass": true
+      },
+      {
+        "label": "accent-ink/surface",
+        "ratio": 5.31,
+        "pass": true
+      }
+    ]
+  },
+  "detector": [],
+  "tests": {
+    "frontend": 75,
+    "admin": 13,
+    "local_supabase": 12
+  },
+  "performance": {
+    "environment": "localhost development server, browser current connection, no 4G throttle",
+    "LCP": "browser did not report LCP entries; no timing assertion",
+    "observed_CLS": 0,
+    "production_4G_pass_claimed": false
+  },
+  "functional": {
+    "mobile_menu_open_close_and_focus": true,
+    "contact_phone_inline_error": true,
+    "whatsapp_sent": false
+  }
+}

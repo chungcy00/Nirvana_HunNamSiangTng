@@ -385,7 +385,7 @@ export default function Editor() {
       {!editable && <p className="permission">当前为只读预览。编辑员仅能修改从未发布的草稿。</p>}
       <div className="editor">
         <nav className="sections" aria-label="编辑分区">
-          {sections.map((s, i) => (
+          {sections.map((s, i) => p.category_id === 4 && i === 5 ? null : (
             <button
               key={s}
               aria-current={section === i ? 'step' : undefined}
@@ -407,6 +407,10 @@ export default function Editor() {
                     label="产品类别"
                     value={p.category_id}
                     onChange={(v) => {
+                      if (Number(v) === 4 && bundle.product_images.length) {
+                        setErrors(['殡仪服务不使用照片，请先移除当前产品图片再切换类别。']);
+                        return;
+                      }
                       if (window.confirm('切换类别将清除不适用的属性及价格，是否继续？'))
                         setBundle(reclassify(bundle, Number(v)));
                     }}
@@ -639,7 +643,7 @@ export default function Editor() {
                             onChange={(v) => update('product_religions', r.id, 'is_published', v)}
                           />
                         </div>
-                        <button onClick={() => setSection(5)}>管理设计图片</button>
+                        {p.category_id !== 4 && <button onClick={() => setSection(5)}>管理设计图片</button>}
                       </div>
                     ))}
                   </>
@@ -798,12 +802,9 @@ export default function Editor() {
                 {field('产品专属价格备注', 'price_note_override', 'textarea')}
               </section>
             )}
-            {section === 5 && (
+            {section === 5 && p.category_id !== 4 && (
               <section className="panel">
-                <h2>图片管理{p.category_id === 4 ? '（选填）' : ''}</h2>
-                {p.category_id === 4 && (
-                  <p className="notice">殡仪服务无需上传照片即可发布；如有相关图片，可选择添加。</p>
-                )}
+                <h2>图片管理</h2>
                 <p className="help">
                   JPEG / PNG / WebP，单张 ≤10
                   MiB。先上传私有文件，再随产品保存图片引用。替换使用新路径。

@@ -1,10 +1,11 @@
 {
   "environment": "localhost-real-supabase",
-  "passed": 11,
+  "passed": 12,
   "results": [
     "Category 1 still rejects publication without a photo",
     "Category 2 still rejects publication without a photo",
     "Category 3 still rejects publication without a photo",
+    "Funeral drafts reject actual uploaded photo attachments",
     "Funeral publishes with both prices and no image",
     "Removing one funeral price still rolls back",
     "Removing the only public religion still rolls back",

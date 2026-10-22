@@ -147,6 +147,8 @@ export function validate(bundle: Bundle, publishing: boolean) {
   for (const price of bundle.offer_prices || [])
     if (!Number.isFinite(Number(price.price_amount)) || Number(price.price_amount) <= 0)
       errors.push('已填写的价格必须大于零；未有报价时请移除该价格行。');
+  if (p.category_id === 4 && bundle.product_images.length)
+    errors.push('殡仪服务不使用照片，请移除图片资料。');
   const placement = bundle.niche_details?.[0]?.placement_type;
   if (p.category_id === 3 && placement != null && !['indoor', 'outdoor'].includes(placement))
     errors.push('安放环境仅可选择室内或室外。');

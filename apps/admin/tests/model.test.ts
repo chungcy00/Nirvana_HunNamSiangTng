@@ -111,3 +111,10 @@ test('funeral photos are optional while other categories retain the primary imag
   b.offer_prices.pop();
   assert(validate(b, true).some((x) => x.includes('价格')));
 });
+
+test('funeral rejects photo references in drafts as well as publication', () => {
+  const b = structuredClone(base); b.product.category_id = 4;
+  b.product_images = [{id: 'unexpected', is_primary: false, is_published: false}];
+  assert(validate(b, false).some(x => x.includes('殡仪服务不使用照片')));
+  assert(validate(b, true).some(x => x.includes('殡仪服务不使用照片')));
+});

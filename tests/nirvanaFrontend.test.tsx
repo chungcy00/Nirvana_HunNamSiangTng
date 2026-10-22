@@ -103,11 +103,11 @@ test("排序按产品最低价格，缺价产品始终放最后", () => {
   assert(ascending.indexOf('单人福地地段 · W区') < ascending.indexOf('家庭福地 · W区'));
 });
 
-test("两种展示模式存在，殡仪列表保留预购即用，网格只显示最低起价", () => {
+test("两种展示模式保持可用，殡仪网格和列表均显示预购即用双价", () => {
   const grid = render('/nirvana?category=4');
   assert.match(grid, /fgp-view-grid/);
-  assert.match(grid, /RM 10,888<em>起<\/em>/);
-  assert.doesNotMatch(grid, /预购价格|即用价格/);
+  assert.match(grid, /预购价格/); assert.match(grid, /即用价格/); assert.doesNotMatch(grid, /fgp-product-visual/);
+  assert.doesNotMatch(grid, /fgp-product-visual|fgp-gallery/);
   const list = render('/nirvana?category=4&view=list');
   assert.match(list,/fgp-view-list/);
   assert.match(list,/预购价格/); assert.match(list,/即用价格/);
@@ -122,4 +122,10 @@ test("公开卡片及价格区不展示编辑核实提示", () => {
   const detail = render('/nirvana/products/item/juxian-1');
   assert.doesNotMatch(detail,/参考起价待核实|宣传参考起价/);
   assert.match(detail,/RM 19,800/);
+});
+
+test("殡仪服务完全不展示照片或画廊，其他类别保留图片", () => {
+  const funeral = render('/nirvana/products/item/funeral-1-1');
+  assert.doesNotMatch(funeral, /class="fgp-gallery"|aria-label="产品图片"|fgp-image-large|设计图片选择/);
+  assert.match(render('/nirvana/products/item/w-family-lot'), /class="fgp-gallery"/);
 });

@@ -164,9 +164,9 @@ export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
     preNeed: min("pre_need"),
     atNeed: min("at_need"),
     publicPrices: prices,
-    images,
+    images: raw.category_id === 4 ? [] : images,
     primaryImage:
-      raw.primary_image &&
+      raw.category_id !== 4 && raw.primary_image &&
       (raw.primary_image.religion_id == null ||
         allowed.has(raw.primary_image.religion_id))
         ? raw.primary_image

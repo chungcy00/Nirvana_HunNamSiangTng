@@ -77,7 +77,7 @@ test("AA不同宗教设计共用产品与价格，无额外设计产品",()=>{
 });
 test("骨灰位最低起价与殡仪双价格准确，价格备注不计入金额",()=>{
   const j=render('/prototype/product/juxian-1');assert.match(j,/RM 19,800/);assert.match(j,/待核实/);
-  const f=render('/prototype/product/funeral-1-1');assert.match(f,/RM 10,888/);assert.match(f,/RM 12,888/);assert.match(f,/以上价格未包含印花税。/);
+  const f=render('/prototype/product/funeral-1-1');assert.match(f,/RM 10,888/);assert.match(f,/RM 12,888/);assert.match(f,/以上价格未包含印花税/);
 });
 test("未知分类与未知产品有返回入口，不意外显示其他产品",()=>{
   assert.match(render('/prototype/list/unknown'),/没有找到这个产品页面/);

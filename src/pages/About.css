@@ -1,5 +1,5 @@
 .advisor-profile {
-  --advisor-gold: #ad8540;
+  --advisor-gold: var(--accent-ink);
   color: var(--muted);
 }
 .advisor-introduction {
@@ -15,7 +15,7 @@
   align-self: center;
   border-radius: 16px;
   overflow: hidden;
-  background: #e9ede5;
+  background: var(--surface-tint);
 }
 .advisor-photo img {
   display: block;
@@ -73,7 +73,7 @@
   margin-inline: 4px;
 }
 .advisor-beliefs {
-  background: #eef0e9;
+  background: var(--surface-tint);
 }
 .advisor-beliefs-inner {
   display: grid;
