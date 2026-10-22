@@ -7,9 +7,9 @@
 .needs-question legend { display: flex; gap: 14px; padding: 0; margin-bottom: 18px; color: var(--green); font-size: 19px; font-weight: 600; line-height: 1.6; }
 .needs-number { font-size: 14px; font-variant-numeric: tabular-nums; padding-top: 4px; color: var(--muted); }
 .needs-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
-.needs-option { display: flex; align-items: center; gap: 12px; border: 1px solid var(--accent); border-radius: 12px; padding: 16px; min-height: 56px; cursor: pointer; background: var(--surface); }
+.needs-option { display: flex; align-items: center; gap: 12px; border: 1px solid var(--accent); border-radius: 12px; padding: 16px; min-height: 56px; cursor: pointer; background: #fff; }
 .needs-option:hover { border-color: var(--green); }
-.needs-option.is-selected { background: var(--surface-tint); border-color: var(--green); }
+.needs-option.is-selected { background: #edf1eb; border-color: var(--green); }
 .needs-option:focus-within { outline: 2px solid var(--green); outline-offset: 3px; }
 .needs-option input { flex: 0 0 auto; width: 18px; height: 18px; margin: 0; accent-color: var(--green); }
 .needs-option strong { display: block; font-weight: 500; color: var(--green); line-height: 1.5; }
@@ -32,12 +32,12 @@
 .needs-product h4 { font-size: 18px; color: var(--green); margin: 5px 0 0; line-height: 1.6; }
 .needs-product p { font-size: 14px; line-height: 1.8; }
 .needs-meta, .needs-supply { color: var(--muted); }
-.needs-status { font-size: 12px; color: var(--green); flex-shrink: 0; background: var(--surface-tint); padding: 5px 8px; border-radius: 6px; }
+.needs-status { font-size: 12px; color: var(--green); flex-shrink: 0; background: #edf0e9; padding: 5px 8px; border-radius: 6px; }
 .needs-prices { margin: 18px 0; }
 .needs-prices p { display: flex; flex-wrap: wrap; column-gap: 12px; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--line); }
 .needs-prices strong { color: var(--green); font-size: 17px; font-variant-numeric: tabular-nums; }
 .needs-prices small { flex-basis: 100%; }
-.needs-confirm, .needs-urgent { padding: 16px; background: var(--surface-tint); border-radius: 10px; line-height: 1.8; margin: 16px 0; color: var(--green); }
+.needs-confirm, .needs-urgent { padding: 16px; background: #edf0e9; border-radius: 10px; line-height: 1.8; margin: 16px 0; color: var(--green); }
 .needs-urgent a { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; text-decoration: underline; }
 .needs-limit { font-weight: 700; color: var(--green); margin: 8px 0; }
 .needs-details { font-size: 14px; line-height: 1.8; }
@@ -51,7 +51,7 @@
 @media (max-width: 640px) { .needs-products { grid-template-columns: 1fr; } .needs-question legend { font-size: 17px; gap: 10px; } .needs-options { grid-template-columns: 1fr; } .needs-option { padding: 14px; } .needs-product { padding: 22px; } .needs-product-heading { display: block; } .needs-status { display: inline-block; margin-top: 10px; } .needs-intro { margin-bottom: 30px; } }
 .needs-product-restriction { margin-top: 10px; }
 #inquiry-form { scroll-margin-top: 112px; }
-.needs-question.is-pending .needs-option { background: var(--surface); cursor: default; }
+.needs-question.is-pending .needs-option { background: #fff; cursor: default; }
 .needs-question.is-pending .needs-option:hover { border-color: var(--accent); }
 .needs-detail-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--green); text-decoration: underline; text-underline-offset: 4px; }
 .needs-product { scroll-margin-top: 112px; }
@@ -68,17 +68,17 @@
 
 /* Question focus is expressed through type and control color, not a tinted panel. */
 .needs-question .needs-option,
-.needs-question .needs-option.is-selected { background: var(--surface); }
+.needs-question .needs-option.is-selected { background: #fff; }
 .needs-question.is-pending legend,
 .needs-question.is-pending .needs-option strong,
 .needs-question.is-pending .needs-option small,
 .needs-question.is-pending .needs-help,
-.needs-question.is-pending .needs-number { color: var(--support); }
-.needs-question.is-pending .needs-option { border-color: var(--line); }
+.needs-question.is-pending .needs-number { color: #9aa39d; }
+.needs-question.is-pending .needs-option { border-color: #dce1da; }
 .needs-question.is-enabled legend,
 .needs-question.is-enabled .needs-option strong,
-.needs-question.is-enabled .needs-number { color: var(--primary); }
+.needs-question.is-enabled .needs-number { color: #284c3d; }
 .needs-question.is-enabled .needs-option small,
-.needs-question.is-enabled .needs-help { color: var(--text-muted); }
-.needs-question.is-enabled .needs-option { border-color: var(--support); }
+.needs-question.is-enabled .needs-help { color: #53675a; }
+.needs-question.is-enabled .needs-option { border-color: #8fa394; }
 .needs-question .needs-option.is-selected { border-color: var(--green); }

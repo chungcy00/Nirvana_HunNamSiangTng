@@ -7,7 +7,7 @@ import {
   ListChecks,
 } from "lucide-react";
 import { principles } from "../data/site";
-import { ConsultButton, SectionHeading, Placeholder } from "../components/ui";
+import { ConsultButton, SectionHeading } from "../components/ui";
 
 const icons = [HeartHandshake, Leaf, ListChecks, CheckCircle2];
 
@@ -84,7 +84,13 @@ export default function Home() {
           {servicePortals.map((portal) => (
             <Link className="portal-card" key={portal.title} to={portal.to} aria-label={`进入${portal.title}`}>
               <div className="portal-visual">
-                <Placeholder label={portal.title} variant={portal.to === '/nirvana' ? 'landscape' : 'hall'} className={`portal-identity ${portal.to === '/nirvana' ? 'portal-park' : 'portal-hall'}`} />
+                <img
+                  src="/images/home-hero.webp"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  style={{ objectPosition: portal.imagePosition }}
+                />
                 <span className="portal-shade" aria-hidden="true" />
                 <span className="portal-summary-copy">
                   <small>{portal.english}</small>

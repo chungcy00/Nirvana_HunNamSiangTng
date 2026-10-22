@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ArrowRight, Mountain, Landmark, MessageCircle, UserRound } from "lucide-react";
+import { ArrowRight, Image, MessageCircle, UserRound } from "lucide-react";
 import { Link } from "react-router-dom";
 import { whatsappUrl } from "../data/site";
 import { useCatalog } from "../catalog/context";
@@ -11,25 +11,24 @@ export function Placeholder({
   label = "图片预留",
   portrait = false,
   className = "",
-  variant = "landscape",
 }: {
   label?: string;
-  variant?: "landscape" | "hall";
   portrait?: boolean;
   className?: string;
 }) {
-  const Icon = portrait ? UserRound : variant === "hall" ? Landmark : Mountain;
-  const neutralLabel = label.replace(/(?: · )?(?:产品图片预留|主图预留|图片预留|预留|待补充)/g, "").trim() || "服务资料";
+  const Icon = portrait ? UserRound : Image;
   return (
     <div
       className={`placeholder ${portrait ? "portrait" : ""} ${className}`}
       role="img"
-      aria-label={neutralLabel}
+      aria-label={label}
     >
-
+      <span className="placeholder-corner">
+        {portrait ? "PORTRAIT" : "IMAGE SPACE"}
+      </span>
       <div className="placeholder-center">
-        <Icon size={portrait ? 42 : 30} strokeWidth={2} aria-hidden="true" />
-        <span>{neutralLabel}</span>
+        <Icon size={portrait ? 42 : 30} strokeWidth={1} aria-hidden="true" />
+        <span>{label}</span>
       </div>
       <span className="placeholder-line" aria-hidden="true" />
     </div>

@@ -3,7 +3,7 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {MemoryRouter} from 'react-router-dom';
 import {CatalogProvider} from '/src/catalog/context.tsx';import {WebsiteRoutes} from '/src/App.tsx';import {PublicFixture} from '/tests/publicFixtures.tsx';
-import '/src/components/NeedsQuestionnaire.css';import '/src/index.css';import '/src/styles/frontend.css';
+import '/src/components/NeedsQuestionnaire.css';import '/src/index.css';
 let lcp=0,cls=0;
 try { new PerformanceObserver(list=>{for(const e of list.getEntries()) lcp=Math.max(lcp,e.startTime);}).observe({type:'largest-contentful-paint',buffered:true}); new PerformanceObserver(list=>{for(const e of list.getEntries())if(!e.hadRecentInput)cls+=e.value;}).observe({type:'layout-shift',buffered:true}); } catch {}
 setTimeout(()=>{const result={environment:'localhost development server, browser current network; no 4G throttle',lcpMs:Math.round(lcp),cls:+cls.toFixed(4),viewport:document.documentElement.clientWidth};document.documentElement.dataset.measuredVitals=JSON.stringify(result);console.info('UI_V12_VITALS '+JSON.stringify(result));},4000);

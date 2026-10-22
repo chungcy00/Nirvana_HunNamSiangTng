@@ -103,10 +103,10 @@ test("排序按产品最低价格，缺价产品始终放最后", () => {
   assert(ascending.indexOf('单人福地地段 · W区') < ascending.indexOf('家庭福地 · W区'));
 });
 
-test("两种展示模式保持可用，殡仪网格和列表均显示预购即用双价", () => {
+test("两种展示模式保持指定版本价格展示且殡仪无照片", () => {
   const grid = render('/nirvana?category=4');
   assert.match(grid, /fgp-view-grid/);
-  assert.match(grid, /预购价格/); assert.match(grid, /即用价格/); assert.doesNotMatch(grid, /fgp-product-visual/);
+  assert.doesNotMatch(grid, /预购价格|即用价格/); assert.match(grid, /起/); assert.doesNotMatch(grid, /fgp-product-visual/);
   assert.doesNotMatch(grid, /fgp-product-visual|fgp-gallery/);
   const list = render('/nirvana?category=4&view=list');
   assert.match(list,/fgp-view-list/);

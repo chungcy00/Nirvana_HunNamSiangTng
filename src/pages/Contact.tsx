@@ -30,8 +30,6 @@ export default function Contact() {
   const [name, setName] = useState("");
   const [callback, setCallback] = useState(false);
   const [phone, setPhone] = useState("");
-  const [formError, setFormError] = useState("");
-  const [submitted, setSubmitted] = useState(false);
   useEffect(() => { setService(requestedCategory); }, [requestedCategory]);
   const inquiry = contactInquiryMessage({ name, service, message, callback, phone });
   const whatsappAction = whatsappUrl("")?.split("?")[0];
@@ -93,10 +91,7 @@ export default function Contact() {
           <p className="eyebrow">MAKE THE FIRST STEP</p>
           <h2 id="inquiry-title">直接咨询顾问</h2>
           <p className="muted small">简单说说您的需要，即可联系顾问，无需先填写下方问卷。</p>
-          <form action={whatsappAction} method="get" target="_blank" rel="noopener noreferrer"
-            onInvalid={(event) => { const input = event.target as HTMLInputElement; if (input.id === 'phone') setFormError('请输入包含 7 至 15 个数字的联系电话。'); }}
-            onSubmit={() => { setFormError(''); setSubmitted(true); }}>
-
+          <form action={whatsappAction} method="get" target="_blank" rel="noopener noreferrer">
             <input type="hidden" name="text" value={inquiry} />
             <div className="form-row">
               <label htmlFor="name">
@@ -115,9 +110,7 @@ export default function Contact() {
                 <input
                   id="phone"
                   value={phone}
-                  onChange={(event) => { setPhone(event.target.value); setFormError(""); setSubmitted(false); }}
-                  aria-invalid={Boolean(formError)}
-                  aria-describedby={formError ? "phone-error" : undefined}
+                  onChange={(event) => setPhone(event.target.value)}
                   type="tel"
                   required
                   pattern={callbackPhonePattern}
@@ -126,7 +119,6 @@ export default function Contact() {
                   autoComplete="tel"
                   placeholder="您的手机号码"
                 />
-                {formError && <span id="phone-error" className="field-error" role="alert">{formError}</span>}
               </label>}
             </div>
             <label className="callback-choice">
@@ -163,7 +155,6 @@ export default function Contact() {
               前往 WhatsApp 咨询 <ArrowRight size={17} />
             </button>
             <p className="small muted">咨询内容将带入对话框，由您确认后发送。</p>
-            {submitted && <p role="status" className="form-success">咨询内容已准备好，请在打开的 WhatsApp 对话中确认后发送。</p>}
           </form>
         </div>
       </section>
