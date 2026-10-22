@@ -107,5 +107,132 @@
       "unchanged": true
     }
   ],
-  "scope": "Hosted schema and read-only preservation checks; write/publication/image lifecycle tests run on isolated localhost Supabase."
+  "scope": "Hosted schema and read-only preservation checks; write/publication/image lifecycle tests run on isolated localhost Supabase.",
+  "public_http": [
+    {
+      "method": "catalog_product_list",
+      "status": 200,
+      "empty": true,
+      "denied": false
+    },
+    {
+      "method": "catalog_product_detail",
+      "status": 200,
+      "empty": true,
+      "denied": false
+    },
+    {
+      "method": "catalog_product_prices",
+      "status": 200,
+      "empty": true,
+      "denied": false
+    },
+    {
+      "method": "admin_product",
+      "status": 401,
+      "empty": false,
+      "denied": true
+    }
+  ],
+  "vercel_http": [
+    {
+      "url": "https://nirvana-hunnamsiangtng.vercel.app/",
+      "status": 200,
+      "nosniff": "nosniff",
+      "robots": "noindex, nofollow",
+      "script": "/assets/index-CkqKIz6q.js"
+    },
+    {
+      "url": "https://nirvana-hunnamsiangtng.vercel.app/nirvana",
+      "status": 200,
+      "nosniff": "nosniff",
+      "robots": "noindex, nofollow",
+      "script": "/assets/index-CkqKIz6q.js"
+    },
+    {
+      "url": "https://nirvana-hunnamsiangtng.vercel.app/nirvana?category=3&view=list",
+      "status": 200,
+      "nosniff": "nosniff",
+      "robots": "noindex, nofollow",
+      "script": "/assets/index-CkqKIz6q.js"
+    },
+    {
+      "url": "https://nirvana-hunnamsiangtng.vercel.app/contact",
+      "status": 200,
+      "nosniff": "nosniff",
+      "robots": "noindex, nofollow",
+      "script": "/assets/index-CkqKIz6q.js"
+    },
+    {
+      "url": "https://nirvana-hunnamsiangtng.vercel.app/about",
+      "status": 200,
+      "nosniff": "nosniff",
+      "robots": "noindex, nofollow",
+      "script": "/assets/index-CkqKIz6q.js"
+    },
+    {
+      "url": "https://nirvana-hunnamsiangtng.vercel.app/yunnan",
+      "status": 200,
+      "nosniff": "nosniff",
+      "robots": "noindex, nofollow",
+      "script": "/assets/index-CkqKIz6q.js"
+    },
+    {
+      "url": "https://nirvana-admin-beige.vercel.app/login",
+      "status": 200,
+      "nosniff": "nosniff",
+      "robots": "noindex, nofollow",
+      "script": "/assets/index-Dbm4hXTc.js"
+    },
+    {
+      "url": "https://nirvana-admin-beige.vercel.app/products",
+      "status": 200,
+      "nosniff": "nosniff",
+      "robots": "noindex, nofollow",
+      "script": "/assets/index-Dbm4hXTc.js"
+    },
+    {
+      "api": "copy-product",
+      "method": "GET",
+      "externalOrigin": false,
+      "status": 405
+    },
+    {
+      "api": "copy-product",
+      "method": "POST",
+      "externalOrigin": false,
+      "status": 401
+    },
+    {
+      "api": "copy-product",
+      "method": "POST",
+      "externalOrigin": true,
+      "status": 403
+    },
+    {
+      "api": "media-cleanup",
+      "method": "GET",
+      "externalOrigin": false,
+      "status": 405
+    },
+    {
+      "api": "media-cleanup",
+      "method": "POST",
+      "externalOrigin": false,
+      "status": 401
+    },
+    {
+      "api": "media-cleanup",
+      "method": "POST",
+      "externalOrigin": true,
+      "status": 403
+    }
+  ],
+  "runtime_commit": "246b5f00a419dbb67c53008654c79a1bebac11fe",
+  "browser_admin_readonly": {
+    "authenticated_admin": true,
+    "placement_selector": true,
+    "selected": "draft-null",
+    "saved": false
+  }
 }
