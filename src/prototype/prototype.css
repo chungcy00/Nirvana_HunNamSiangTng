@@ -271,3 +271,71 @@
   .fgp-website .fgp-dual-prices { grid-template-columns: 1fr; gap: 10px; }
   .fgp-website .fgp-dual-prices > div + div { border-left: 0; padding-left: 0; border-top: 1px solid var(--p-line); padding-top: 10px; }
 }
+
+/* Catalogue display controls and concise, fully clickable product cards. */
+.fgp-website .fgp-browse-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--p-line); }
+.fgp-website .fgp-browse-toolbar .fgp-filters { flex: 1; border: 0; }
+.fgp-display-controls { display: flex; align-items: flex-end; justify-content: flex-end; gap: 16px; padding-block: 16px; margin-left: auto; }
+.fgp-sort { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--p-muted); }
+.fgp-sort select { min-height: 44px; padding: 8px 28px 8px 12px; border: 1px solid #aebcab; border-radius: 5px; background: white; font-size: 13px; max-width: 100%; }
+.fgp-view-toggle { display: flex; border: 1px solid #aebcab; border-radius: 5px; overflow: hidden; flex-shrink: 0; }
+.fgp-view-toggle button { display: grid; place-items: center; width: 44px; min-height: 44px; border: 0; background: transparent; }
+.fgp-view-toggle button + button { border-left: 1px solid #aebcab; }
+.fgp-view-toggle button[aria-pressed="true"], .fgp-view-toggle button[aria-pressed="true"]:hover { background: var(--p-green); color: white; }
+.fgp-view-toggle button:hover { background: var(--p-soft); color: var(--p-ink); }
+.fgp-view-toggle:has(:focus-visible) { outline: 3px solid #688259; outline-offset: 3px; }
+.fgp-website .fgp-catalog-card { position: relative; }
+.fgp-product-link { display: flex; flex-direction: column; height: 100%; }
+.fgp-website .fgp-catalog-card:focus-within { outline: 3px solid #688259; outline-offset: 3px; }
+.fgp-website .fgp-product-link:focus-visible { outline: none; }
+.fgp-product-visual { min-width: 0; }
+.fgp-website .fgp-catalog-card .fgp-image { aspect-ratio: 4 / 3; }
+.fgp-website .fgp-catalog-card .fgp-card-body { position: relative; padding: 18px 20px 24px; gap: 0; }
+.fgp-website .fgp-catalog-card h3 { font-size: 18px; margin: 12px 0 20px; }
+.fgp-card-price { margin-top: auto; padding-right: 16px; font-variant-numeric: tabular-nums; }
+.fgp-card-price strong { display: block; font-size: 23px; line-height: 1.5; font-weight: 500; color: var(--p-green); }
+.fgp-card-price em { font-size: 12px; margin-left: 5px; font-style: normal; white-space: nowrap; }
+.fgp-card-arrow { position: absolute; right: 16px; bottom: 29px; color: var(--p-green); }
+.fgp-card-reference { font-size: 12px; color: var(--p-muted); margin-top: 6px; }
+.fgp-website .fgp-catalog-card .fgp-tags > span:nth-child(n+4) { display: none; }
+.fgp-website .fgp-view-list, .fgp-website .fgp-view-large { grid-template-columns: 1fr; }
+.fgp-view-list .fgp-product-link { flex-direction: row; }
+.fgp-view-list .fgp-product-visual { width: 190px; flex-shrink: 0; }
+.fgp-website .fgp-view-list .fgp-image { height: 100%; min-height: 180px; aspect-ratio: auto; border-bottom: 0; }
+.fgp-website .fgp-view-list .fgp-card-body { flex: 1; min-width: 0; padding: 20px 28px; }
+.fgp-website .fgp-view-list h3 { margin-bottom: 12px; }
+.fgp-website .fgp-view-list .fgp-prices strong { font-size: 22px; }
+.fgp-website .fgp-view-large .fgp-catalog-card { width: 100%; max-width: 780px; margin-inline: auto; }
+.fgp-website .fgp-view-large .fgp-image { aspect-ratio: 16 / 9; }
+@media (max-width: 1100px) {
+  .fgp-website .fgp-browse-toolbar { flex-wrap: wrap; gap: 0 20px; }
+  .fgp-website .fgp-browse-toolbar .fgp-filters { flex-basis: 100%; padding-bottom: 0; }
+  .fgp-display-controls { padding-top: 12px; }
+}
+@media (max-width: 650px) {
+  .fgp-website .fgp-view-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; }
+  .fgp-display-controls { width: 100%; justify-content: space-between; gap: 12px; align-items: flex-end; }
+  .fgp-sort { flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; gap: 5px; font-size: 12px; }
+  .fgp-sort select { width: 100%; font-size: 12px; padding-left: 9px; }
+  .fgp-website .fgp-view-grid .fgp-card-body { padding: 12px 10px 18px; }
+  .fgp-website .fgp-view-grid h3 { font-size: 15px; line-height: 1.6; margin: 9px 0 12px; }
+  .fgp-website .fgp-catalog-card .fgp-tags { gap: 4px; }
+  .fgp-website .fgp-catalog-card .fgp-tags > span { font-size: 10px; min-height: 22px; padding: 1px 4px; }
+  .fgp-website .fgp-view-grid .fgp-image::after { inset: 8px; }
+  .fgp-website .fgp-view-grid .fgp-image-center { gap: 7px; font-size: 10px; letter-spacing: 0; }
+  .fgp-website .fgp-view-grid .fgp-image-center svg { width: 22px; height: 22px; }
+  .fgp-view-grid .fgp-card-price { padding-right: 0; }
+  .fgp-view-grid .fgp-card-price strong { font-size: clamp(15px, 4.3vw, 19px); }
+  .fgp-view-grid .fgp-card-price em { font-size: 10px; margin-left: 3px; }
+  .fgp-view-grid .fgp-card-arrow { display: none; }
+  .fgp-view-grid .fgp-card-reference { font-size: 10px; }
+  .fgp-view-list .fgp-product-visual { width: 92px; }
+  .fgp-website .fgp-view-list .fgp-image { min-height: 145px; }
+  .fgp-website .fgp-view-list .fgp-image-center span { display: none; }
+  .fgp-website .fgp-view-list .fgp-image::after { inset: 7px; }
+  .fgp-website .fgp-view-list .fgp-card-body { padding: 14px 14px 20px; }
+  .fgp-website .fgp-view-list h3 { font-size: 16px; line-height: 1.6; margin: 8px 0 12px; }
+  .fgp-view-list .fgp-card-price strong, .fgp-website .fgp-view-list .fgp-prices strong { font-size: 18px; }
+  .fgp-view-list .fgp-card-arrow { right: 10px; bottom: 24px; width: 13px; }
+  .fgp-view-list .fgp-card-price { padding-right: 8px; }
+}

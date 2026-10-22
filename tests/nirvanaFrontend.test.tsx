@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { WebsiteRoutes } from "../src/App";
 import { prototypeProducts } from "../src/prototype/products";
 import { categories } from "../src/prototype/model";
+import { lowestPrice, sortProducts } from "../src/prototype/model";
 
 function render(path: string, state?: unknown) {
   return renderToStaticMarkup(<MemoryRouter initialEntries={[{ pathname: path.split("?")[0], search: path.includes("?") ? "?" + path.split("?")[1] : "", state }]}><WebsiteRoutes /></MemoryRouter>);
@@ -72,4 +73,43 @@ test("仁爱园按已确认宗教进入单人佛教筛选，详情保留最低�
   assert.match(detail, /<dt>安放环境<\/dt><dd>室外<\/dd>/);
   for (const item of ["单人骨灰位", "骨灰瓮", "火化费用", "永久管理费"]) assert(detail.includes(item));
   assert.doesNotMatch(detail, /<dt>(朝向|面积|楼层|层位)<\/dt>/);
+});
+
+test("网格卡片只显示最低起价，地段报价和印花税备注留在详情", () => {
+  const html = render('/nirvana?category=2');
+  const cards = html.match(/<article class="fgp-card fgp-catalog-card">.*?<\/article>/g)!;
+  assert.equal(cards.length, 6);
+  assert(cards[0].includes('RM 238,888<em>起</em>'));
+  for(const card of cards) {
+    assert.doesNotMatch(card, /产品售价|普通地段|角头地段|印花税|fgp-card-link/);
+    assert.equal((card.match(/<a /g) || []).length, 1);
+  }
+  assert.match(html, /以上价格未包含印花税/);
+  const detail = render('/nirvana/products/item/w-family-lot');
+  assert.match(detail, /普通地段 864 sqft/);
+  assert.match(detail, /RM 258,888/);
+  assert.match(detail, /RM 308,888/);
+});
+
+test("排序按产品最低价格，缺价产品始终放最后", () => {
+  const family = prototypeProducts.find(p=>p.id==='w-family-lot')!;
+  const aa = prototypeProducts.find(p=>p.id==='aa-double-package')!;
+  const missing = { ...aa, id:'missing', offers:[] };
+  assert.equal(lowestPrice(family),238888);
+  assert.deepEqual(sortProducts([missing,family,aa],'price-asc').map(p=>p.id),[aa.id,family.id,'missing']);
+  assert.deepEqual(sortProducts([missing,aa,family],'price-desc').map(p=>p.id),[family.id,aa.id,'missing']);
+  const ascending = render('/nirvana?category=2&sort=price-asc');
+  assert(ascending.indexOf('单人福地地段 · W区') < ascending.indexOf('家庭福地 · W区'));
+});
+
+test("三种展示模式存在，殡仪列表保留预购即用，网格只显示最低起价", () => {
+  const grid = render('/nirvana?category=4');
+  assert.match(grid, /fgp-view-grid/);
+  assert.match(grid, /RM 10,888<em>起<\/em>/);
+  assert.doesNotMatch(grid, /预购价格|即用价格/);
+  const list = render('/nirvana?category=4&view=list');
+  assert.match(list,/fgp-view-list/);
+  assert.match(list,/预购价格/); assert.match(list,/即用价格/);
+  assert.match(render('/nirvana?view=large'),/fgp-view-large/);
+  assert.match(render('/nirvana?view=invalid'),/fgp-view-grid/);
 });

@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List, Rows3 } from "lucide-react";
 import { prototypeProducts } from "./products";
-import { categories, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, visibleProducts, type PrototypeProduct } from "./model";
+import { categories, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct } from "./model";
 import "./prototype.css";
 
 // The accepted prototype and the website share presentation and filter behavior.
@@ -74,6 +74,21 @@ function ProductCard({ product, returnTo }: { product: PrototypeProduct; returnT
   </article>;
 }
 
+function WebsiteProductCard({ product, returnTo, view }: { product: PrototypeProduct; returnTo: string; view: string }) {
+  const { detailPath } = useContext(ProductNavigationContext);
+  const price = lowestPrice(product);
+  return <article className="fgp-card fgp-catalog-card">
+    <Link className="fgp-product-link" to={detailPath(product.id)} state={{ returnTo }} aria-label={`${product.name}，查看详情`}>
+      <div className="fgp-product-visual"><ProductImage product={product}/></div>
+      <div className="fgp-card-body"><ProductTags product={product}/><h3>{product.name}</h3>
+        {view !== 'grid' && product.category === 4 ? <PrototypePrices product={product}/> : <div className="fgp-card-price">{price === undefined ? <strong>价格待核实</strong> : <strong>{formatMoney(price)}<em>起</em></strong>}</div>}
+        {product.referencePrice && <p className="fgp-card-reference">参考起价待核实</p>}
+        <ArrowRight className="fgp-card-arrow" size={16} aria-hidden="true"/>
+      </div>
+    </Link>
+  </article>;
+}
+
 export function PrototypeCatalog({ home = false }: { home?: boolean }) {
   const { homePath, listPath, website } = useContext(ProductNavigationContext);
   const [params, setParams] = useSearchParams();
@@ -94,11 +109,16 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
   const religion = hasReligion(category.id) ? params.get("religion") || "" : "";
   const capacities = capacitiesFor(prototypeProducts, category.id);
   const religions = religionsFor(prototypeProducts, category.id);
-  const products = filterProducts(prototypeProducts, category.id, capacity, religion);
+  const view = website && ['list', 'large'].includes(params.get('view') || '') ? params.get('view')! : 'grid';
+  const sort = website && ['price-asc', 'price-desc'].includes(params.get('sort') || '') ? params.get('sort')! : 'default';
+  const products = sortProducts(filterProducts(prototypeProducts, category.id, capacity, religion), sort);
   const filtered = !!(capacity || religion);
   function switchCategory(id: number) {
-    if (home) { latestParams.current = new URLSearchParams({category:String(id)}); setParams(latestParams.current); }
-    else navigate(listPath(id));
+    const next = new URLSearchParams();
+    if (website && view !== 'grid') next.set('view', view);
+    if (website && sort !== 'default') next.set('sort', sort);
+    if (home) { next.set('category', String(id)); latestParams.current = next; setParams(next); }
+    else navigate(listPath(id) + (next.size ? '?' + next : ''));
   }
   function changeFilter(key: string, value: string) {
     const next = new URLSearchParams(latestParams.current);
@@ -107,8 +127,10 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
     setParams(next);
   }
   const reset = () => {
-    latestParams.current = new URLSearchParams(home ? {category:String(category.id)} : {});
-    setParams(latestParams.current);
+    const next = new URLSearchParams(latestParams.current);
+    next.delete('capacity'); next.delete('religion');
+    latestParams.current = next;
+    setParams(next);
   };
   const returnTo = location.pathname + location.search;
   const listParams = new URLSearchParams(params); listParams.delete("category");
@@ -124,7 +146,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
       <div className="fgp-category-nav" ref={navRef} role="navigation" aria-label="产品类别">
         {categories.map(c => <button type="button" key={c.id} onClick={() => switchCategory(c.id)} aria-current={category.id === c.id ? "page" : undefined} className={category.id===c.id ? "is-active" : ""}>{c.name}</button>)}
       </div>
-      <div className="fgp-filters">
+      <div className="fgp-browse-toolbar"><div className="fgp-filters">
         {hasCapacity(category.id) && <div className="fgp-filter-row"><span className="fgp-filter-label">使用人数</span><div className="fgp-capacities" role="group" aria-label="使用人数筛选">
           {[{id:"",name:"全部"}, ...capacities.map(c=>({id:c,name:capacityLabels[c]}))].map(c=><button type="button" key={c.id} aria-pressed={capacity===c.id} className={capacity===c.id ? "is-selected" : ""} onClick={()=>changeFilter("capacity",c.id)}>{c.name}</button>)}
         </div></div>}
@@ -132,12 +154,19 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
           {[{id:"",name:"全部宗教"}, ...religions].map(r=><button type="button" key={r.id} aria-pressed={religion===r.id} className={religion===r.id ? "is-selected" : ""} onClick={()=>changeFilter("religion",r.id)}>{r.name}</button>)}
         </div></div>}
       </div>
+      {website && <div className="fgp-display-controls">
+        <label className="fgp-sort">价格排序<select aria-label="价格排序" value={sort} onChange={e=>changeFilter('sort', e.target.value === 'default' ? '' : e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
+        <div className="fgp-view-toggle" role="group" aria-label="展示模式">{[
+          {id:'grid', label:'双栏网格', icon:LayoutGrid}, {id:'list', label:'左图右文列表', icon:List}, {id:'large', label:'单列大图', icon:Rows3},
+        ].map(({id,label,icon:Icon})=><button type="button" key={id} aria-label={label} title={label} aria-pressed={view===id} onClick={()=>changeFilter('view',id==='grid'?'':id)}><Icon size={18} aria-hidden="true"/></button>)}</div>
+      </div>}
+      </div>
       <div className="fgp-results-heading"><div><h2>{category.name}</h2><span role="status" aria-live="polite">共 {products.length} 项产品</span></div>
         {filtered ? <button className="fgp-reset" onClick={reset}><RotateCcw size={14}/>清除筛选</button> : home && !website && <Link className="fgp-text-link" to={listPath(category.id)+(listParams.size ? '?'+listParams : '')}>查看完整列表<ArrowRight size={16}/></Link>}
       </div>
       {filtered && <div className="fgp-applied" aria-label="已选择条件">{capacity && <button onClick={()=>changeFilter("capacity","")}>{capacityLabels[capacity as keyof typeof capacityLabels] || capacity}<X size={13}/><span className="fgp-sr">清除人数筛选</span></button>}{religion && <button onClick={()=>changeFilter("religion","")}>{religions.find(r=>r.id===religion)?.name || religion}<X size={13}/><span className="fgp-sr">清除宗教筛选</span></button>}</div>}
-      {products.length ? <div className="fgp-grid">{products.map(p=><ProductCard key={p.id} product={p} returnTo={returnTo}/>)}</div> : <div className="fgp-empty"><Leaf size={32} strokeWidth={1}/><h3>暂时没有符合条件的产品</h3><p>您可以调整人数或宗教，继续浏览其他选择。</p><button className="fgp-primary" onClick={reset}>清除筛选<ArrowRight size={16}/></button></div>}
-      <p className="fgp-source-note">价格按已提供产品资料展示；聚仙楼为待核实宣传参考起价。产品实拍将在资料确认后补充。</p>
+      {products.length ? <div className={website ? `fgp-grid fgp-view-${view}` : "fgp-grid"}>{products.map(p=>website ? <WebsiteProductCard key={p.id} product={p} returnTo={returnTo} view={view}/> : <ProductCard key={p.id} product={p} returnTo={returnTo}/>)}</div> : <div className="fgp-empty"><Leaf size={32} strokeWidth={1}/><h3>暂时没有符合条件的产品</h3><p>您可以调整人数或宗教，继续浏览其他选择。</p><button className="fgp-primary" onClick={reset}>清除筛选<ArrowRight size={16}/></button></div>}
+      <p className="fgp-source-note">{website && <>以上价格未包含印花税。卡片起价为该产品已提供报价中的最低金额，详细方案与适用条件请查看产品详情。<br/></>}价格按已提供产品资料展示；聚仙楼为待核实宣传参考起价。产品实拍将在资料确认后补充。</p>
     </section>
   </>;
 }

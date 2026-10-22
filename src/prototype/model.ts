@@ -45,5 +45,20 @@ export function filterProducts(products: readonly PrototypeProduct[], category: 
     && (!hasReligion(category) || !religion || p.religions.some(r => r.id === religion)));
 }
 export const formatMoney = (value: number) => `RM ${value.toLocaleString("en-MY")}`;
+export function lowestPrice(product: PrototypeProduct): number | undefined {
+  const prices = product.category === 4
+    ? [product.preNeed, product.atNeed].filter((price): price is number => price !== undefined)
+    : product.offers.map(offer => offer.amount);
+  return prices.length ? Math.min(...prices) : undefined;
+}
+export function sortProducts(products: PrototypeProduct[], sort: string) {
+  if (sort !== 'price-asc' && sort !== 'price-desc') return products;
+  return [...products].sort((a, b) => {
+    const left = lowestPrice(a), right = lowestPrice(b);
+    if (left === undefined) return right === undefined ? 0 : 1;
+    if (right === undefined) return -1;
+    return sort === 'price-asc' ? left - right : right - left;
+  });
+}
 export const listPath = (id: number) => `/prototype/list/${categories.find(c => c.id === id)?.slug || categories[0].slug}`;
 export const detailPath = (id: string) => `/prototype/product/${id}`;
