@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-22",
+  "passed": 19,
+  "results": [
+    {
+      "url": "https://nirvana-hnst.vercel.app/",
+      "status": 200
+    },
+    {
+      "url": "https://nirvana-hnst.vercel.app/nirvana?category=3&view=list",
+      "status": 200
+    },
+    {
+      "url": "https://nirvana-hnst.vercel.app/contact",
+      "status": 200
+    },
+    {
+      "url": "https://nirvana-hnst.vercel.app/yunnan-siantang",
+      "status": 200
+    },
+    {
+      "url": "https://admin-nirvana-hnst.vercel.app/login",
+      "status": 200
+    },
+    {
+      "url": "https://admin-nirvana-hnst.vercel.app/products",
+      "status": 200
+    },
+    {
+      "url": "https://admin-nirvana-hnst.vercel.app/auth/callback",
+      "status": 200
+    },
+    {
+      "url": "https://admin-nirvana-hnst.vercel.app/reset-password",
+      "status": 200
+    },
+    {
+      "url": "https://nirvana-hunnamsiangtng.vercel.app/nirvana?category=3&view=list",
+      "status": 308,
+      "location": "https://nirvana-hnst.vercel.app/nirvana?category=3&view=list"
+    },
+    {
+      "url": "https://nirvana-admin-beige.vercel.app/login?next=%2Fproducts",
+      "status": 308,
+      "location": "https://admin-nirvana-hnst.vercel.app/login?next=%2Fproducts"
+    },
+    {
+      "test": "Auth redirect matching using deliberately invalid non-secret token; no login session or email",
+      "target": "https://admin-nirvana-hnst.vercel.app/reset-password",
+      "status": 303,
+      "redirect": "https://admin-nirvana-hnst.vercel.app/reset-password"
+    },
+    {
+      "test": "Auth redirect matching using deliberately invalid non-secret token; no login session or email",
+      "target": "https://admin-nirvana-hnst.vercel.app/auth/callback",
+      "status": 303,
+      "redirect": "https://admin-nirvana-hnst.vercel.app/auth/callback"
+    },
+    {
+      "test": "Auth redirect matching using deliberately invalid non-secret token; no login session or email",
+      "target": "https://example.invalid/reset-password",
+      "status": 303,
+      "redirect": "https://admin-nirvana-hnst.vercel.app/"
+    },
+    {
+      "api": "copy-product",
+      "method": "GET",
+      "externalOrigin": false,
+      "status": 405
+    },
+    {
+      "api": "copy-product",
+      "method": "POST",
+      "externalOrigin": false,
+      "status": 401
+    },
+    {
+      "api": "copy-product",
+      "method": "POST",
+      "externalOrigin": true,
+      "status": 403
+    },
+    {
+      "api": "media-cleanup",
+      "method": "GET",
+      "externalOrigin": false,
+      "status": 405
+    },
+    {
+      "api": "media-cleanup",
+      "method": "POST",
+      "externalOrigin": false,
+      "status": 401
+    },
+    {
+      "api": "media-cleanup",
+      "method": "POST",
+      "externalOrigin": true,
+      "status": 403
+    }
+  ],
+  "scope": "HTTP, callback allow-list and UI entry verification; no real password sign-in or password update performed"
+}
