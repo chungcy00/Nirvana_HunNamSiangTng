@@ -3,21 +3,19 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef,
   type ReactNode,
 } from "react";
 import { LoaderCircle, RotateCcw } from "lucide-react";
-import type { PrototypeProduct } from "../prototype/model";
+import { createPublicRefresh, type PublicSnapshot } from "./publicRefresh";
 import { useLocation } from "react-router-dom";
 import {
   loadPublicProducts,
   publicConfig,
   type PublicConfig,
 } from "./publicRepository";
-export type PublicCatalogState = {
-  products: readonly PrototypeProduct[];
-  status: "loading" | "ready" | "error";
+export type PublicCatalogState = PublicSnapshot & {
   retry: () => void;
-  config?: PublicConfig;
 };
 export const PublicCatalogContext = createContext<PublicCatalogState>({
   products: [],
@@ -27,14 +25,9 @@ export const PublicCatalogContext = createContext<PublicCatalogState>({
 export const usePublicCatalog = () => useContext(PublicCatalogContext);
 export function PublicCatalogProvider({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
-  const [version, setVersion] = useState(0);
-  const [state, setState] = useState<Omit<PublicCatalogState, "retry">>({
-    products: [],
-    status: "loading",
-  });
+  const refreshRef = useRef<ReturnType<typeof createPublicRefresh> | null>(null);
+  const [state, setState] = useState<PublicSnapshot>({ products: [], status: "loading" });
   useEffect(() => {
-    const abort = new AbortController();
-    setState({ products: [], status: "loading" });
     let config: PublicConfig;
     try {
       config = publicConfig(
@@ -46,25 +39,14 @@ export function PublicCatalogProvider({ children }: { children: ReactNode }) {
       setState({ products: [], status: "error" });
       return;
     }
-    const timeout = setTimeout(() => abort.abort(), 20000);
-    loadPublicProducts(config, abort.signal)
-      .then((products) => {
-        if (!abort.signal.aborted)
-          setState({ products, status: "ready", config });
-      })
-      .catch(() => {
-        if (!cancelled) setState({ products: [], status: "error", config });
-      })
-      .finally(() => clearTimeout(timeout));
-    let cancelled = false;
-    return () => {
-      cancelled = true;
-      clearTimeout(timeout);
-      abort.abort();
-    };
-  }, [version, pathname]);
-  useEffect(() => {
-    const reload = () => setVersion((v) => v + 1);
+    const refresh = createPublicRefresh({
+      config,
+      load: signal => loadPublicProducts(config, signal),
+      publish: setState,
+    });
+    refreshRef.current = refresh;
+    void refresh.refresh();
+    const reload = () => { void refresh.refresh(); };
     const visible = () => {
       if (document.visibilityState === "visible") reload();
     };
@@ -75,15 +57,18 @@ export function PublicCatalogProvider({ children }: { children: ReactNode }) {
       if (document.visibilityState === "visible") reload();
     }, 60000);
     return () => {
+      refreshRef.current = null;
+      refresh.dispose();
       window.removeEventListener("focus", reload);
       window.removeEventListener("pageshow", reload);
       document.removeEventListener("visibilitychange", visible);
       clearInterval(interval);
     };
   }, []);
+  useEffect(() => { void refreshRef.current?.refresh({ force: true, foreground: true }); }, [pathname]);
   return (
     <PublicCatalogContext.Provider
-      value={{ ...state, retry: () => setVersion((v) => v + 1) }}
+      value={{ ...state, retry: () => { void refreshRef.current?.refresh({ force: true }); } }}
     >
       {children}
     </PublicCatalogContext.Provider>

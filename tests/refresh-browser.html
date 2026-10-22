@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>后台刷新独立验收</title>
+<aside style="padding:12px;background:#eee;position:fixed;bottom:0;z-index:99999;font:12px sans-serif">
+  独立测试，未连接正式数据库
+  <button id="slow">成功刷新（3秒）</button><button id="fail">失败刷新（3秒）</button>
+  <button id="events">组合事件</button><button id="recover">恢复服务</button><button id="empty">返回空列表</button>
+  <output id="observations"></output>
+</aside><div id="root"></div><script type="module">
+import React from 'react';import {createRoot} from 'react-dom/client';import App from '/src/App.tsx';
+import '/src/components/NeedsQuestionnaire.css';import '/src/index.css';
+const endpoint='http://127.0.0.1:3026';
+let cardRemovals=0,loadingPanels=0;
+new MutationObserver(records=>{
+  for(const record of records){
+    for(const n of record.removedNodes)if(n.nodeType===1)cardRemovals+=(n.matches('.fgp-card')?1:0)+(n.querySelectorAll?.('.fgp-card').length||0);
+    for(const n of record.addedNodes)if(n.nodeType===1)loadingPanels+=(n.matches('.fgp-load-notice')?1:0)+(n.querySelectorAll?.('.fgp-load-notice').length||0);
+  }
+  document.getElementById('observations').textContent=JSON.stringify({cardRemovals,loadingPanels});
+}).observe(document.getElementById('root'),{childList:true,subtree:true});
+const control=async(mode,delayMs=0)=>{await fetch(endpoint+'/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode,delayMs})});};
+const events=()=>{window.dispatchEvent(new Event('focus'));window.dispatchEvent(new Event('pageshow'));document.dispatchEvent(new Event('visibilitychange'));};
+const reset=()=>{cardRemovals=0;loadingPanels=0;document.getElementById('observations').textContent=JSON.stringify({cardRemovals,loadingPanels});};
+document.getElementById('slow').onclick=async()=>{reset();await control('ready',3000);events();};
+document.getElementById('fail').onclick=async()=>{reset();await control('error',3000);events();};
+document.getElementById('events').onclick=events;
+document.getElementById('recover').onclick=()=>control('ready');
+document.getElementById('empty').onclick=async()=>{reset();await control('empty',500);events();};
+history.replaceState(null,'','/nirvana?category=1');
+createRoot(document.getElementById('root')).render(React.createElement(App));
+</script></html>
