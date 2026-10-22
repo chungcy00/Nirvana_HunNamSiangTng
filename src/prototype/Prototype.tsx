@@ -109,6 +109,25 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
   useEffect(() => { latestParams.current = params; }, [location.search, params]);
   const category = categories.find(c => home ? c.id === Number(params.get("category") || 1) : c.slug === categorySlug);
   const navRef = useRef<HTMLDivElement>(null);
+  const [navEdges, setNavEdges] = useState({ before: false, after: false });
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const measure = () => setNavEdges({
+      before: nav.scrollLeft > 2,
+      after: nav.scrollWidth - nav.clientWidth - nav.scrollLeft > 2,
+    });
+    measure();
+    nav.addEventListener("scroll", measure, { passive: true });
+    const observer = new ResizeObserver(measure);
+    observer.observe(nav);
+    window.addEventListener("resize", measure);
+    return () => {
+      nav.removeEventListener("scroll", measure);
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [category?.id]);
   useEffect(() => {
     const nav = navRef.current;
     const active = nav?.querySelector<HTMLElement>('[aria-current="page"]');
@@ -153,9 +172,14 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
       </section>
     </div>
     <section className="fgp-catalog fgp-wrap" aria-label="产品目录">
-      <div className="fgp-category-nav" ref={navRef} role="navigation" aria-label="产品类别">
+      <div className="fgp-category-nav" ref={navRef} role="navigation" aria-label="产品类别" aria-describedby={website && (navEdges.before || navEdges.after) ? "fgp-category-scroll-hint" : undefined}>
         {categories.map(c => <button type="button" key={c.id} onClick={() => switchCategory(c.id)} aria-current={category.id === c.id ? "page" : undefined} className={category.id===c.id ? "is-active" : ""}>{c.name}</button>)}
       </div>
+      {website && (navEdges.before || navEdges.after) && <p className="fgp-scroll-hint" id="fgp-category-scroll-hint">
+        {navEdges.before && <ArrowLeft size={14} aria-hidden="true"/>}
+        <span>左右滑动查看更多分类</span>
+        {navEdges.after && <ArrowRight size={14} aria-hidden="true"/>}
+      </p>}
       <div className="fgp-browse-toolbar"><div className="fgp-filters">
         {hasCapacity(category.id) && <div className="fgp-filter-row"><span className="fgp-filter-label">使用人数</span><div className="fgp-capacities" role="group" aria-label="使用人数筛选">
           {[{id:"",name:"全部"}, ...capacities.map(c=>({id:c,name:capacityLabels[c]}))].map(c=><button type="button" key={c.id} aria-pressed={capacity===c.id} className={capacity===c.id ? "is-selected" : ""} onClick={()=>changeFilter("capacity",c.id)}>{c.name}</button>)}
@@ -171,7 +195,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
         ].map(({id,label,icon:Icon})=><button type="button" key={id} aria-label={label} title={label} aria-pressed={view===id} onClick={()=>changeFilter('view',id==='grid'?'':id)}><Icon size={18} aria-hidden="true"/></button>)}</div>
       </div>}
       </div>
-      <div className="fgp-results-heading"><div><h2>{category.name}</h2><span role="status" aria-live="polite">共 {products.length} 项产品</span></div>
+      <div className="fgp-results-heading"><div><h2>{category.name}</h2><span role={status === "ready" ? "status" : undefined} aria-live={status === "ready" ? "polite" : undefined}>{status === "loading" ? "正在读取…" : status === "error" ? "暂时无法读取" : `共 ${products.length} 项产品`}</span></div>
         {filtered ? <button className="fgp-reset" onClick={reset}><RotateCcw size={14}/>清除筛选</button> : home && !website && <Link className="fgp-text-link" to={listPath(category.id)+(listParams.size ? '?'+listParams : '')}>查看完整列表<ArrowRight size={16}/></Link>}
       </div>
       {filtered && <div className="fgp-applied" aria-label="已选择条件">{capacity && <button onClick={()=>changeFilter("capacity","")}>{capacityLabels[capacity as keyof typeof capacityLabels] || capacity}<X size={13}/><span className="fgp-sr">清除人数筛选</span></button>}{religion && <button onClick={()=>changeFilter("religion","")}>{religions.find(r=>r.id===religion)?.name || religion}<X size={13}/><span className="fgp-sr">清除宗教筛选</span></button>}</div>}

@@ -267,3 +267,17 @@ test("published funeral service needs no photo in grid, list or detail", () => {
   assert.match(filtered, /清除筛选/);
   assert.doesNotMatch(filtered, /当前分类暂无产品/);
 });
+
+test("transport feedback is distinct from an empty result and never shows a zero count", () => {
+  for (const status of ["loading", "error"] as const) {
+    const html = render(status);
+    assert.doesNotMatch(html, /共 0 项产品|当前分类暂无产品|清除筛选/);
+    assert.match(html, status === "loading" ? /aria-busy="true"/ : /role="alert"/);
+    assert.match(html, status === "loading" ? /请稍候/ : /请检查网络连接/);
+    if (status === "loading") assert.doesNotMatch(html, />重新载入/);
+    else assert.match(html, /type="button" class="fgp-primary"/);
+  }
+  const empty = render("ready", "/nirvana", []);
+  assert.match(empty, /当前分类暂无产品/);
+  assert.doesNotMatch(empty, /fgp-load-notice/);
+});

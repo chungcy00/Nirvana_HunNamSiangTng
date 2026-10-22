@@ -5,6 +5,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { LoaderCircle, RotateCcw } from "lucide-react";
 import type { PrototypeProduct } from "../prototype/model";
 import { useLocation } from "react-router-dom";
 import {
@@ -90,18 +91,16 @@ export function PublicCatalogProvider({ children }: { children: ReactNode }) {
 }
 export function PublicCatalogNotice() {
   const { status, retry } = usePublicCatalog();
+  if (status === "ready") return null;
+  const failed = status === "error";
   return (
-    <div className="fgp-empty" role={status === "error" ? "alert" : "status"}>
-      <p>
-        {status === "error"
-          ? "产品资料暂时无法载入，请稍后重试。"
-          : "正在载入产品资料…"}
-      </p>
-      {status === "error" && (
-        <button className="fgp-primary" onClick={retry}>
-          重新载入
-        </button>
-      )}
+    <div className="fgp-empty fgp-load-notice" role={failed ? "alert" : "status"} aria-busy={!failed}>
+      {failed ? <RotateCcw size={28} strokeWidth={1.5} aria-hidden="true"/> : <LoaderCircle className="fgp-load-spinner" size={28} strokeWidth={1.5} aria-hidden="true"/>}
+      <h3>{failed ? "产品资料暂时无法载入" : "正在载入产品资料…"}</h3>
+      <p>{failed ? "请检查网络连接，再点击“重新载入”。" : "请稍候，资料载入后会显示在这里。"}</p>
+      {failed && <button type="button" className="fgp-primary" onClick={retry}>
+        <RotateCcw size={16} aria-hidden="true"/>重新载入
+      </button>}
     </div>
   );
 }

@@ -384,3 +384,11 @@
   .fgp-website .fgp-capacities { flex: 1 1 200px; gap: 6px; }
   .fgp-website .fgp-display-controls { flex-wrap: wrap; row-gap: 8px; }
 }
+
+/* Category overflow and transport feedback, in the existing palette. */
+.fgp-scroll-hint { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin: 8px 0 0; color: var(--p-muted); font-size: 12px; line-height: 1.6; }
+.fgp-scroll-hint svg { flex-shrink: 0; }
+.fgp-load-notice > svg { display: block; margin: 0 auto 16px; color: var(--p-green); }
+.fgp-load-spinner { animation: fgp-loading-spin 1.2s linear infinite; }
+@keyframes fgp-loading-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .fgp-load-spinner { animation: none; } }
