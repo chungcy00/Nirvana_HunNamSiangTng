@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
 import { placementLabel, readNichePlacement, nichePlacementChanges } from "../src/catalog/nichePlacement";
 import { NichePlacementField } from "../src/components/NichePlacementField";
-import { ProductCard } from "../src/components/ui";
+import { ProductCard } from "../src/components/catalog/ui";
 import PackageDetail from "../src/pages/PackageDetail";
 import { Routes, Route } from "react-router-dom";
 import { CatalogProvider } from "../src/catalog/context";

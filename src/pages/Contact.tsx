@@ -9,7 +9,7 @@ import {
 import { advisor, whatsappUrl } from "../data/site";
 import { callbackPhonePattern, contactInquiryMessage } from "../data/contactInquiry";
 import NeedsQuestionnaire from "../components/NeedsQuestionnaire";
-import { PageHero } from "../components/ui";
+import { PageHero } from "../components/PageHero";
 
 const serviceChoices = [
   "骨灰位",

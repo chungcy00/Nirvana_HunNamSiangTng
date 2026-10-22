@@ -2,13 +2,9 @@ import { useParams } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useCatalog } from "../catalog/context";
 import CatalogueSection from "../components/CatalogueSection";
-import {
-  PageHero,
-  SectionHeading,
-  Placeholder,
-  ContactCTA,
-  NotFound,
-} from "../components/ui";
+import { PageHero } from "../components/PageHero";
+import { SectionHeading, ContactCTA, NotFound } from "../components/ui";
+import { Placeholder } from "../components/Placeholder";
 
 // Shared provider catalogue template; new providers do not need a new page component.
 export default function Nirvana() {

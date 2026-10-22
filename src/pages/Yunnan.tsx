@@ -4,12 +4,8 @@ import { useCatalog } from "../catalog/context";
 import CatalogueSection from "../components/CatalogueSection";
 import { NotFound } from "../components/ui";
 import { assistance } from "../data/site";
-import {
-  PageHero,
-  SectionHeading,
-  ConsultButton,
-  ContactCTA,
-} from "../components/ui";
+import { PageHero } from "../components/PageHero";
+import { SectionHeading, ConsultButton, ContactCTA } from "../components/ui";
 export default function Yunnan() {
   const catalog = useCatalog();
   const location = useLocation();

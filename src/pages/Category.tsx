@@ -2,13 +2,8 @@ import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Search, ArrowRight } from "lucide-react";
 import { useCatalog } from "../catalog/context";
 import { categoryPath, productPath } from "../catalog/repository";
-import {
-  Breadcrumb,
-  ProductCard,
-  ConsultButton,
-  NotFound,
-  money,
-} from "../components/ui";
+import { Breadcrumb, ProductCard, money } from "../components/catalog/ui";
+import { ConsultButton, NotFound } from "../components/ui";
 import type { Product } from "../types";
 function Comparison({
   items,

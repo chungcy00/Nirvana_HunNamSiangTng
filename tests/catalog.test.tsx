@@ -15,7 +15,7 @@ import { WebsiteRoutes } from "./eagerWebsiteRoutes";
 import LegacyProvider from "../src/pages/Nirvana";
 import CategoryPage from "../src/pages/Category";
 import PackageDetail from "../src/pages/PackageDetail";
-import { ProductCard } from "../src/components/ui";
+import { ProductCard } from "../src/components/catalog/ui";
 import type { CatalogSnapshot, Category } from "../src/types";
 
 const seed = () => structuredClone(catalogData);

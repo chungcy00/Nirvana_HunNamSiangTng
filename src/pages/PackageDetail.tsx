@@ -3,15 +3,9 @@ import { Check, Plus } from "lucide-react";
 import { useCatalog } from "../catalog/context";
 import { categoryPath } from "../catalog/repository";
 import { placementLabel } from "../catalog/nichePlacement";
-import {
-  Breadcrumb,
-  Placeholder,
-  ConsultButton,
-  NotFound,
-  ProductCard,
-  SectionHeading,
-  money,
-} from "../components/ui";
+import { Breadcrumb, ProductCard, money } from "../components/catalog/ui";
+import { Placeholder } from "../components/Placeholder";
+import { ConsultButton, NotFound, SectionHeading } from "../components/ui";
 export default function PackageDetail() {
   const location = useLocation();
   const requestedReturn = location.state?.questionnaireReturn;

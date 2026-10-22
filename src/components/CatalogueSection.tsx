@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useCatalog } from "../catalog/context";
 import { categoryPath } from "../catalog/repository";
-import { Placeholder, SectionHeading } from "./ui";
+import { Placeholder } from "./Placeholder";
+import { SectionHeading } from "./ui";
 import type { Provider } from "../types";
 
 export default function CatalogueSection({ provider }: { provider: Provider }) {
