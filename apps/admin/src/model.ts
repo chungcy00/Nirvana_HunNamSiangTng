@@ -158,11 +158,12 @@ export function validate(bundle: Bundle, publishing: boolean) {
   if (p.category_id <= 2 && !p.product_form) errors.push('发布前请选择地段、配套或其他产品类型。');
   if (p.category_id <= 4 && !bundle.product_religions.some((r: Row) => r.is_published))
     errors.push('发布前至少公开一项适用宗教配置。');
-  if (
-    bundle.product_images.filter((r: Row) => r.is_primary && r.is_published && !r.religion_id)
-      .length !== 1
-  )
+  const primaryCount = bundle.product_images.filter(
+    (r: Row) => r.is_primary && r.is_published && !r.religion_id,
+  ).length;
+  if (p.category_id !== 4 && primaryCount !== 1)
     errors.push('发布前须有一张已上传并批准公开的共通主图。');
+  if (p.category_id === 4 && primaryCount > 1) errors.push('共通公开主图最多只能有一张。');
   const offers = bundle.product_offers.filter((r: Row) => r.is_active);
   if (!offers.length) errors.push('请启用至少一个价格方案。');
   for (const offer of offers) {

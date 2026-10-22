@@ -90,3 +90,24 @@ test('niche placement is optional in drafts and required to publish without infe
   b.niche_details[0].placement_type = 'both';
   assert(validate(b, false).some((x) => x.includes('安放环境')));
 });
+
+test('funeral photos are optional while other categories retain the primary image requirement', () => {
+  const b = structuredClone(base);
+  b.product.category_id = 4;
+  b.product.name = '测试殡仪';
+  b.product_religions = [{ religion_id: 1, is_published: true }];
+  b.offer_prices = ['pre_need', 'at_need'].map((price_type) => ({
+    offer_id: 'o',
+    price_type,
+    price_amount: 10,
+    is_published: true,
+  }));
+  assert.deepEqual(validate(b, true), []);
+  for (const category of [1, 2, 3, 5, 6, 7]) {
+    b.product.category_id = category;
+    assert(validate(b, true).some((x) => x.includes('主图')));
+  }
+  b.product.category_id = 4;
+  b.offer_prices.pop();
+  assert(validate(b, true).some((x) => x.includes('价格')));
+});

@@ -223,3 +223,36 @@ test("approved niche placement maps explicit list/detail values only", () => {
     undefined,
   );
 });
+
+test("published funeral service needs no photo in grid, list or detail", () => {
+  const service = mapPublicProduct({
+    ...raw,
+    category_id: 4,
+    primary_image: undefined,
+    images: [],
+    prices: [
+      {
+        offer_id: "o1",
+        offer_name: "默认",
+        price_type: "pre_need",
+        amount: 100,
+      },
+      {
+        offer_id: "o1",
+        offer_name: "默认",
+        price_type: "at_need",
+        amount: 200,
+      },
+    ],
+  });
+  for (const path of [
+    "/nirvana?category=4",
+    "/nirvana?category=4&view=list",
+    "/nirvana/products/item/live-w",
+  ]) {
+    const html = render("ready", path, [service]);
+    assert.match(html, /已公开产品/);
+    assert.doesNotMatch(html, /实拍.*待补充/);
+    assert.match(html, /殡仪服务/);
+  }
+});

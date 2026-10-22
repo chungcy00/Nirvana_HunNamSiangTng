@@ -44,8 +44,8 @@ function galleryChoices(product: PrototypeProduct) {
 }
 function ProductImage({ product, large = false, caption }: { product: PrototypeProduct; large?: boolean; caption?: string }) {
   const image=large && caption ? galleryChoices(product).find(i=>i.label===caption)?.image || product.primaryImage : product.primaryImage;
-  return <div className={`fgp-image fgp-image-${product.category}${large ? " fgp-image-large" : ""}`} role="img" aria-label={image ? image.alt || product.name : `${product.name}，对应实拍图片待补充`}>
-    <div className="fgp-image-center"><ImageIcon size={large ? 38 : 29} strokeWidth={1} aria-hidden="true"/><span>产品实拍待补充</span></div>
+  return <div className={`fgp-image fgp-image-${product.category}${large ? " fgp-image-large" : ""}`} role="img" aria-label={image ? image.alt || product.name : (product.category === 4 ? product.name : `${product.name}，对应实拍图片待补充`)}>
+    <div className="fgp-image-center"><ImageIcon size={large ? 38 : 29} strokeWidth={1} aria-hidden="true"/><span>{product.category === 4 ? "殡仪服务" : "产品实拍待补充"}</span></div>
     {image && <CatalogImage key={image.id} image={image}/>}
     {caption && <span className="fgp-image-caption">{caption}</span>}
   </div>;

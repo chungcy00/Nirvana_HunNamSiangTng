@@ -800,7 +800,10 @@ export default function Editor() {
             )}
             {section === 5 && (
               <section className="panel">
-                <h2>图片管理</h2>
+                <h2>图片管理{p.category_id === 4 ? '（选填）' : ''}</h2>
+                {p.category_id === 4 && (
+                  <p className="notice">殡仪服务无需上传照片即可发布；如有相关图片，可选择添加。</p>
+                )}
                 <p className="help">
                   JPEG / PNG / WebP，单张 ≤10
                   MiB。先上传私有文件，再随产品保存图片引用。替换使用新路径。

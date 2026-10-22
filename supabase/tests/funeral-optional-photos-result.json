@@ -1,0 +1,17 @@
+{
+  "environment": "localhost-real-supabase",
+  "passed": 11,
+  "results": [
+    "Category 1 still rejects publication without a photo",
+    "Category 2 still rejects publication without a photo",
+    "Category 3 still rejects publication without a photo",
+    "Funeral publishes with both prices and no image",
+    "Removing one funeral price still rolls back",
+    "Removing the only public religion still rolls back",
+    "Missing Storage object still cannot be published as a funeral image",
+    "Photo-free funeral hides from public endpoints",
+    "Category 5 still rejects publication without a photo",
+    "Category 6 still rejects publication without a photo",
+    "Category 7 still rejects publication without a photo"
+  ]
+}
