@@ -33,7 +33,7 @@ catch{execFileSync('docker',['network','create','--driver','bridge','--opt','com
 const log=fs.openSync(path.join(work,'start.log'),'w',0o600);
 try{
   await new Promise((resolve,reject)=>{
-    const child=spawn(cli,['start','--workdir',stack,'--network-id','nirvana-catalog-test-local','-x','realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor'],
+    const child=spawn(cli,['start','--workdir',stack,'--network-id','nirvana-catalog-test-local','-x','realtime,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor'],
       {cwd:root,env,stdio:['ignore',log,log]});
     child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(new Error('Local start failed; see ignored work/catalog-security/start.log')));
   });

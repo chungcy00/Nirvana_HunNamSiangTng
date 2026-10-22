@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { NavLink, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, Building2 } from 'lucide-react';
 import { AuthProvider, Login, useAuth } from './auth';
+import AuthReturn from './AuthReturn';
+import AuthVerification from './AuthVerification';
 import { AdminContext, useAdmin } from './context';
 import { supabase, readReferences, errorText, rpc } from './client';
 import { emptyReferences, type References, type DictionaryKind, type Row } from './types';
@@ -355,12 +357,18 @@ function Shell() {
 }
 function Gate() {
   const { session, member, loading } = useAuth();
+  const { pathname } = useLocation();
+  if (pathname === '/auth/callback' || pathname === '/reset-password') return <AuthReturn />;
   return loading ? (
     <main className="login panel" role="status">
       正在验证登录身份…
     </main>
   ) : session && member ? (
-    <Shell />
+    import.meta.env.VITE_AUTH_VERIFICATION_ONLY === 'true' ? (
+      <AuthVerification />
+    ) : (
+      <Shell />
+    )
   ) : (
     <Login />
   );

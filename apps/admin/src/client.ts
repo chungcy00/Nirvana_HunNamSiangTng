@@ -1,12 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Bundle, References, Row } from './types';
+import { preservePendingRecovery } from './auth-flow';
 const url = import.meta.env.VITE_SUPABASE_URL,
   key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 export const configured = !!url && !!key;
+const authStorageKey = url ? `sb-${new URL(url).hostname.split('.')[0]}-auth-token` : '';
 export const supabase = configured
   ? createClient(url, key, {
       db: { schema: 'api' },
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+      auth: {
+        storageKey: authStorageKey,
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: false,
+        flowType: 'pkce',
+      },
     })
   : null;
 export async function rpc<T = any>(name: string, args: Record<string, unknown> = {}): Promise<T> {
@@ -27,6 +35,13 @@ export async function readProduct(id: string) {
 }
 export const readReferences = () => rpc<References>('admin_reference_data');
 export function errorText(error: any) {
+  if (
+    error?.code === 'over_email_send_rate_limit' ||
+    /email rate limit exceeded/i.test(error?.message || '')
+  )
+    return '邮件发送已达到平台限额，请等待额度恢复后再试。不要重复发送；若有尚未使用的最新邮件，请在原浏览器打开。';
+  if (error?.code === 'over_request_rate_limit' || error?.status === 429)
+    return '操作过于频繁，请稍后再试。';
   if (error?.code === 'PT409' || error?.status === 409)
     return '资料已被其他操作修改，本次未覆盖。请保留当前修改并重新载入核对。';
   if (error?.code === '42501') return '当前账号无权执行此操作。请确认账号仍为有效后台成员。';
@@ -65,4 +80,13 @@ export async function copyProduct(id: string, version: string) {
   if (!response.ok)
     throw Object.assign(new Error(body.message || '复制失败'), { status: response.status });
   return body as Bundle;
+}
+
+export function sendPasswordRecovery(email: string) {
+  if (!supabase) throw new Error('尚未配置 Supabase 连接。');
+  return preservePendingRecovery(window.localStorage, authStorageKey + '-code-verifier', () =>
+    supabase!.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/reset-password',
+    }),
+  );
 }

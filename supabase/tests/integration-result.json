@@ -1,7 +1,7 @@
 {
   "environment": "local-supabase-real-services",
   "host": "127.0.0.1",
-  "run_id": "38b7f7c4-be09-4486-b10a-e60e69a6badd",
+  "run_id": "31a84570-4e71-443d-9d8c-1da6e9ca03ef",
   "tests": [
     {
       "name": "文档③：18张表、22个外键、执行角色和RPC授权与安全契约一致",
@@ -541,5 +541,5 @@
   ],
   "passed": 89,
   "failed": 0,
-  "finished_at": "2026-10-22T10:25:35.953Z"
+  "finished_at": "2026-10-22T10:39:35.968Z"
 }

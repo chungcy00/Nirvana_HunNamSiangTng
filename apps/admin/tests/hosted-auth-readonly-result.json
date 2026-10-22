@@ -1,0 +1,75 @@
+{
+  "environment": "hosted-public-key-only-read-only",
+  "checks": [
+    {
+      "name": "Hosted Auth enables email, disables public signup and anonymous login",
+      "status": "PASS",
+      "http_status": 200
+    },
+    {
+      "name": "Anonymous denied current_catalog_member",
+      "status": "PASS",
+      "http_status": 401
+    },
+    {
+      "name": "Anonymous denied admin_reference_data",
+      "status": "PASS",
+      "http_status": 401
+    },
+    {
+      "name": "Anonymous denied admin_product_list",
+      "status": "PASS",
+      "http_status": 401
+    },
+    {
+      "name": "Anonymous denied admin_category_order",
+      "status": "PASS",
+      "http_status": 401
+    },
+    {
+      "name": "Anonymous denied admin_audit_logs",
+      "status": "PASS",
+      "http_status": 401
+    },
+    {
+      "name": "Anonymous denied admin_product",
+      "status": "PASS",
+      "http_status": 401
+    },
+    {
+      "name": "Private schema not exposed: products",
+      "status": "PASS",
+      "http_status": 406
+    },
+    {
+      "name": "Private schema not exposed: admin_members",
+      "status": "PASS",
+      "http_status": 406
+    },
+    {
+      "name": "Private schema not exposed: audit_logs",
+      "status": "PASS",
+      "http_status": 406
+    },
+    {
+      "name": "Private bucket is not publicly addressable: catalog-media-private",
+      "status": "PASS",
+      "http_status": 400
+    },
+    {
+      "name": "Private bucket is not publicly addressable: catalog-media-restricted",
+      "status": "PASS",
+      "http_status": 400
+    },
+    {
+      "name": "Public catalogue reads only published eligible products",
+      "status": "PASS",
+      "http_status": 200,
+      "published_count": 0
+    }
+  ],
+  "product_writes": false,
+  "passed": 13,
+  "failed": 0,
+  "finished_at": "2026-10-22T10:49:27.838Z"
+}

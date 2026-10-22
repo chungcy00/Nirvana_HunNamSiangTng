@@ -1,0 +1,57 @@
+{
+  "environment": "local-real-auth-rls-storage",
+  "tests": [
+    {
+      "name": "Public signup disabled and anonymous login disabled in actual Auth configuration",
+      "status": "PASS"
+    },
+    {
+      "name": "Real administrator password login validates getUser and DB membership, wrong password rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual refresh rotates a valid session; logout rejects its refresh token",
+      "status": "PASS"
+    },
+    {
+      "name": "Anonymous and forged JWT cannot call admin RPC, ordinary authenticated user cannot self-promote",
+      "status": "PASS"
+    },
+    {
+      "name": "Even a real admin JWT has no direct private-table REST access",
+      "status": "PASS"
+    },
+    {
+      "name": "Downgrading DB role applies immediately to existing JWT without token refresh",
+      "status": "PASS"
+    },
+    {
+      "name": "Private and restricted file uploads, reads and signed URL denial use actual Storage",
+      "status": "PASS"
+    },
+    {
+      "name": "Disabled member JWT loses all admin APIs and restricted bytes immediately",
+      "status": "PASS"
+    },
+    {
+      "name": "Real recovery token opens password form, clears URL secrets and submits password through Auth",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual recovery email and PKCE code exchange complete in the same browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Missing, expired and forged callback parameters show failure, never expose admin shell",
+      "status": "PASS"
+    },
+    {
+      "name": "Deleting Auth user cascades membership; cached JWT no longer authorizes data",
+      "status": "PASS"
+    }
+  ],
+  "production_product_writes": false,
+  "passed": 12,
+  "failed": 0,
+  "finished_at": "2026-10-22T10:39:34.067Z"
+}
