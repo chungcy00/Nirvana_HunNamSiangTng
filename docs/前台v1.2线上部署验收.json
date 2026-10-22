@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-23",
+  "implementationCommit": "d8fc746",
+  "http": [
+    {
+      "base": "https://nirvana-hnst.vercel.app",
+      "path": "/nirvana",
+      "status": 200,
+      "js": "/assets/index-Bg8wLWMp.js",
+      "css": "/assets/index-DIyQ_cuO.css"
+    },
+    {
+      "base": "https://admin-nirvana-hnst.vercel.app",
+      "path": "/login",
+      "status": 200,
+      "js": "/assets/index-CETQyhOF.js",
+      "css": "/assets/index-D6AUb_xP.css"
+    }
+  ],
+  "browser": {
+    "adminFuneralImageSectionAbsent": true,
+    "frontendLoadedPublicEmptyState": true,
+    "productSaveOrPublishPerformed": false
+  },
+  "screenshots": "本机 work/catalog-security/ui-v12-live-admin.png 与 ui-v12-live-front.png"
+}
