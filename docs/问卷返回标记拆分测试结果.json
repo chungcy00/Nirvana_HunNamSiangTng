@@ -1,0 +1,143 @@
+{
+  "commit": "ede2672",
+  "baseline": [
+    {
+      "page": "home",
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app/crxqah2ook?form_factor=mobile",
+      "LCP": "3.9 秒",
+      "CLS": "0",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "catalog",
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-nirvana/aas817i33a?form_factor=mobile",
+      "LCP": "2.4 秒",
+      "CLS": "0",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    },
+    {
+      "page": "contact",
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-contact/z2gbjhcncj?form_factor=mobile",
+      "LCP": "2.0 秒",
+      "CLS": "0",
+      "FCP": "1.5 秒",
+      "TBT": "0 毫秒"
+    }
+  ],
+  "after": [
+    {
+      "page": "home",
+      "run": 1,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app/m6lacqixxf?form_factor=mobile",
+      "LCP": "3.8 秒",
+      "CLS": "0",
+      "conditions": [
+        "102 text 模拟了 Moto G 电源 with Lighthouse 13.5.0",
+        "105 text 低速 4G 节流",
+        "106 text Using HeadlessChromium 153.0.8010.36 with lr"
+      ]
+    },
+    {
+      "page": "home",
+      "run": 2,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app/wnkrlf1wga?form_factor=mobile",
+      "LCP": "3.8 秒",
+      "CLS": "0",
+      "conditions": [
+        "104 text 模拟了 Moto G 电源 with Lighthouse 13.5.0",
+        "107 text 低速 4G 节流",
+        "108 text Using HeadlessChromium 153.0.8010.36 with lr"
+      ]
+    },
+    {
+      "page": "catalog",
+      "run": 1,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-nirvana/cojrfh0yl8?form_factor=mobile",
+      "LCP": "2.3 秒",
+      "CLS": "0.022",
+      "conditions": [
+        "102 text 模拟了 Moto G 电源 with Lighthouse 13.5.0",
+        "105 text 低速 4G 节流",
+        "106 text Using HeadlessChromium 153.0.8010.36 with lr"
+      ]
+    },
+    {
+      "page": "catalog",
+      "run": 2,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-nirvana/e17e95q6i8?form_factor=mobile",
+      "LCP": "2.3 秒",
+      "CLS": "0.022",
+      "conditions": [
+        "109 text 模拟了 Moto G 电源 with Lighthouse 13.5.0",
+        "112 text 低速 4G 节流",
+        "113 text Using HeadlessChromium 153.0.8010.36 with lr"
+      ]
+    },
+    {
+      "page": "contact",
+      "run": 1,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-contact/0qa89e5qob?form_factor=mobile",
+      "LCP": "2.3 秒",
+      "CLS": "0",
+      "conditions": [
+        "102 text 模拟了 Moto G 电源 with Lighthouse 13.5.0",
+        "105 text 低速 4G 节流",
+        "106 text Using HeadlessChromium 153.0.8010.36 with lr"
+      ]
+    },
+    {
+      "page": "contact",
+      "run": 2,
+      "report": "https://pagespeed.web.dev/analysis/https-nirvana-hnst-vercel-app-contact/39cb5yg185?form_factor=mobile",
+      "LCP": "2.3 秒",
+      "CLS": "0",
+      "conditions": [
+        "109 text 模拟了 Moto G 电源 with Lighthouse 13.5.0",
+        "112 text 低速 4G 节流",
+        "113 text Using HeadlessChromium 153.0.8010.36 with lr"
+      ]
+    }
+  ],
+  "gzipBytes": {
+    "before": {
+      "entry": 101254,
+      "home": 104027,
+      "catalog": 109368,
+      "contact": 108397
+    },
+    "after": {
+      "entry": 97449,
+      "home": 100224,
+      "catalog": 106830,
+      "contact": 108493
+    }
+  },
+  "localReturnProof": {
+    "fixture": "local HTTP fixture, no production data",
+    "reloadRestored": true,
+    "explicitReturnTop": 111.9375,
+    "browserBack": {
+      "checked": [
+        "火化土葬",
+        "佛教",
+        "双人",
+        "any"
+      ],
+      "chosen": "已加入咨询 · 点击取消",
+      "headerBottom": 89,
+      "resultTop": 72.9375
+    }
+  },
+  "baselineReturnProof": {
+    "checked": [
+      "火化土葬",
+      "佛教",
+      "双人",
+      "any"
+    ],
+    "headerBottom": 89,
+    "resultTop": 71.4375
+  }
+}
