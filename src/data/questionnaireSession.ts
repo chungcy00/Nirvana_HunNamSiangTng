@@ -1,6 +1,5 @@
 import { categories, emptyAnswers, budgetOptions, type ServiceProduct, type Answers } from './questionnaire';
 export const questionnaireSessionKey = 'service-needs-v1';
-export const questionnaireReturnKey = 'service-needs-return';
 export type QuestionnaireSession = { answers: Answers; selected: string[]; browsing: boolean };
 const fresh = (): QuestionnaireSession => ({ answers: {...emptyAnswers}, selected: [], browsing: false });
 export function parseQuestionnaireSession(raw: string | null, products?: readonly ServiceProduct[]): QuestionnaireSession {

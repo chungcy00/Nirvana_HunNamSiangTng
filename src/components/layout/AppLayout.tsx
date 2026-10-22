@@ -1,7 +1,7 @@
 import { useEffect, Suspense } from "react";
 import PageLoadBoundary from "./PageLoadBoundary";
 import { Outlet, useLocation, useNavigationType } from "react-router-dom";
-import { questionnaireReturnKey } from "../../data/questionnaireSession";
+import { questionnaireReturnKey } from "../../data/questionnaireReturn";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import FloatingConsult from "./FloatingConsult";

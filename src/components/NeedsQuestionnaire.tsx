@@ -2,7 +2,8 @@ import { usePublicCatalog, PublicCatalogNotice } from '../catalog/publicContext'
 import { useEffect, useMemo, useState } from 'react';
 import { nirvanaQuestionnaireProducts, questionnaireProductPath, questionnaireIncludes } from '../data/questionnaireCatalog';
 import { Link } from 'react-router-dom';
-import { loadQuestionnaireSession, saveQuestionnaireSession, questionnaireReturnKey } from '../data/questionnaireSession';
+import { loadQuestionnaireSession, saveQuestionnaireSession } from '../data/questionnaireSession';
+import { questionnaireReturnKey } from '../data/questionnaireReturn';
 import { Check, Phone } from 'lucide-react';
 import { advisor, whatsappUrl } from '../data/site';
 import { categories, questionKeys, budgetOptions, referencePriceRange,  productStatus, applicableVariants, withinBudget, complete, inquirySummary, updateAnswers, supplyNotice, money, type Answers, type ServiceProduct } from '../data/questionnaire';
