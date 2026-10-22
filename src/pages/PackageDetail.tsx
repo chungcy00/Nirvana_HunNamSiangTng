@@ -2,6 +2,7 @@ import { useParams, useLocation, Link } from "react-router-dom";
 import { Check, Plus } from "lucide-react";
 import { useCatalog } from "../catalog/context";
 import { categoryPath } from "../catalog/repository";
+import { placementLabel } from "../catalog/nichePlacement";
 import {
   Breadcrumb,
   Placeholder,
@@ -67,6 +68,7 @@ export default function PackageDetail() {
             <dl className="specifications">
               {[
                 ["产品类别", category.name],
+                ["安放环境", placementLabel(product.nicheDetails?.placementType)],
                 ["区域", product.zone],
                 ["面积", product.area],
                 ["方向", product.direction],
@@ -134,6 +136,7 @@ export default function PackageDetail() {
         <aside className="detail-sidebar">
           <div className="detail-info">
             <span className="pill">{category.name}</span>
+            {placementLabel(product.nicheDetails?.placementType) && <span className="pill placement-tag">{placementLabel(product.nicheDetails?.placementType)}</span>}
             <h1>{product.name}</h1>
             <p className="english">{product.english}</p>
             <div className="detail-prices">
@@ -158,9 +161,9 @@ export default function PackageDetail() {
                 </>
               ) : (
                 <div>
-                  <span>参考售价</span>
+                  <span>{product.nicheDetails ? "最低起价" : "参考售价"}</span>
                   <strong>
-                    {product.price != null ? money(product.price) : "欢迎咨询"}
+                    {product.price != null ? `${money(product.price)}${product.nicheDetails ? " 起" : ""}` : "欢迎咨询"}
                   </strong>
                 </div>
               )}

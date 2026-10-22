@@ -1,21 +1,47 @@
-import type { ServiceProduct } from './questionnaire';
-// Link questionnaire variants to their existing catalogue products by stable ID.
-export function questionnaireCatalogProductId(p: ServiceProduct): string | undefined {
-  const ids: Record<string,string> = {
-    'aa':'product-001','w-cremation':'product-002','w-single-package':'product-003',
-    'w-double-package':'product-004','w-premium':'product-005','w-single-lot':'product-006',
-    'w-double-lot':'product-007','w-family':'product-008','kindness':'product-014',
-    'pet-large':'product-027','pet-small':'product-027',
-  };
-  if (ids[p.id]) return ids[p.id];
-  if (p.id.startsWith('yage-')) return 'product-015';
-  if (p.id.startsWith('teng-')) return 'product-016';
-  if (p.id.startsWith('7a-')) return 'product-011';
-  if (p.id.startsWith('7b-')) return 'product-013';
-  if (p.id.startsWith('7-')) return 'product-010';
-  if (p.id.startsWith('funeral-')) {
-    const index=Number(p.id.split('-').at(-1));
-    return `product-${String((p.religions?.[0]==='佛教'?19:23)+index).padStart(3,'0')}`;
-  }
-  return undefined;
+import type { Answers, ServiceCategory, ServiceProduct, Variant } from './questionnaire';
+import { prototypeProducts } from '../prototype/products';
+import { visibleProducts } from '../prototype/model';
+
+// Project the same public records used by the Nirvana page; do not maintain
+// a second price table or position-level niche catalogue in the questionnaire.
+const categoryNames: Partial<Record<number, ServiceCategory>> = {
+  1: '火化土葬', 2: '传统土葬', 3: '骨灰位', 4: '殡仪服务', 7: '宠物纪念',
+};
+export function nirvanaQuestionnaireProducts(): ServiceProduct[] {
+  return visibleProducts(prototypeProducts).flatMap(p => {
+    const category = categoryNames[p.category];
+    if (!category) return [];
+    const variants: Variant[] = p.category === 4
+      ? [
+        ...(p.preNeed === undefined ? [] : [{ label: '预购价格', price: p.preNeed, timing: 'pre' as const }]),
+        ...(p.atNeed === undefined ? [] : [{ label: '即用价格', price: p.atNeed, timing: 'now' as const }]),
+      ]
+      : p.category === 3
+        ? p.offers.length ? [{ label: p.referencePrice ? '宣传参考起价 · 待核实' : '最低起价', price: Math.min(...p.offers.map(o => o.amount)) }] : []
+        : p.offers.map(o => ({ label: p.offers.length > 1 ? o.name : '产品售价', price: o.amount }));
+    return [{
+      id: p.id, name: p.name, category, provider: '富贵山庄' as const,
+      religions: p.religions.length ? p.religions.map(r => r.name) : undefined,
+      capacity: p.capacity ? ({ single: '单人', double: '双人', triple: '或以上', four_plus: '或以上', family: '或以上' }[p.capacity]) : undefined,
+      capacityLabel: p.capacity ? ({ single: '单人', double: '双人', triple: '三人', four_plus: p.capacityCount ? `${p.capacityCount}人` : '四人及以上', family: '家庭' }[p.capacity]) : undefined,
+      placement: p.placement,
+      method: p.category === 7 ? p.id === 'pet-urn' ? '火化后骨灰安葬' : '宠物土葬' : undefined,
+      description: p.name, variants,
+      includes: p.inclusions.join('；') || '包含项目尚待核实。',
+      religiousInclusions: Object.fromEntries(p.religions.map(r => [r.name, r.inclusions])),
+      restriction: [p.terms, p.priceNote].filter(Boolean).join(' '),
+      referencePrice: p.referencePrice, startingPrice: p.category === 3,
+      source: '富贵山庄产品目录',
+    }];
+  });
+}
+export function questionnaireProductPath(p: ServiceProduct) {
+  return p.provider === '云南善堂' ? '/yunnan-siantang' : `/nirvana/products/item/${p.id}`;
+}
+export function questionnaireIncludes(p: ServiceProduct, answers: Answers) {
+  const religious = Object.entries(p.religiousInclusions || {})
+    .filter(([name]) => !answers.religion || answers.religion === '其他' || name === answers.religion)
+    .filter(([, items]) => items.length)
+    .map(([name, items]) => `${name}：${items.join('、')}`);
+  return [p.includes, ...religious].filter(Boolean).join('；');
 }

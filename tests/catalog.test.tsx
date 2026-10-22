@@ -76,7 +76,8 @@ test("all existing products and pages retain their URLs and product content", ()
         (match) => match[1],
       );
       assert(
-        imageSources.every((source) => source === "/images/brand-logo.png"),
+        imageSources.every((source) => source === "/images/brand-logo.png" ||
+          (path === "/about" && source === "/images/advisor-zhong-yongxin.png")),
         path,
       );
     }
@@ -116,7 +117,8 @@ test("new root, child and product appear using the existing templates", () => {
   });
   const repo = createCatalog(data);
   assert.equal(repo.getCatalogCategories("provider-001").at(-1)?.id, root.id);
-  assert(render("/nirvana", data).includes("/nirvana/fuxing-land"));
+  // The Nirvana landing now follows the accepted seven-category product frontend.
+  assert(render("/nirvana", data).includes("/nirvana/products/item/w-cremation"));
   assert(render("/nirvana/fuxing-land", data).includes("福星双人 A"));
   assert(
     render(`/nirvana/fuxing-land?filter=${child.id}`, data).includes(

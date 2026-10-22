@@ -26,6 +26,7 @@ export default function AppLayout() {
       document.getElementById("main-content")?.focus({ preventScroll: true });
     }
     const page =
+      (pathname.startsWith("/nirvana/products/") ? document.querySelector("#main-content h1")?.textContent : undefined) ||
       navigation.find((item) => item.to === pathname)?.label || "配套与服务";
     document.title = `${page}｜身后事 · 皆可托`;
   }, [pathname, hash, navigationType]);

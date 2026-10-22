@@ -5,6 +5,7 @@ import { whatsappUrl } from "../data/site";
 import { useCatalog } from "../catalog/context";
 import { productPath } from "../catalog/repository";
 import type { Product } from "../types";
+import { placementLabel } from "../catalog/nichePlacement";
 
 export function Placeholder({
   label = "图片预留",
@@ -164,13 +165,14 @@ export function ProductCard({ product }: { product: Product }) {
         </h3>
         <p className="english">{product.english}</p>
         <p className="card-description">{product.description}</p>
+        {placementLabel(product.nicheDetails?.placementType) && <span className="pill placement-tag">{placementLabel(product.nicheDetails?.placementType)}</span>}
         <p className="price">
           {product.preNeedPrice != null
             ? money(product.preNeedPrice)
             : product.asNeedPrice != null
               ? money(product.asNeedPrice)
               : product.price != null
-                ? money(product.price)
+                ? `${money(product.price)}${product.nicheDetails ? " 起" : ""}`
                 : "欢迎咨询"}
           <small>
             {product.preNeedPrice != null
@@ -178,7 +180,7 @@ export function ProductCard({ product }: { product: Product }) {
               : product.asNeedPrice != null
                 ? "即时需求价（As-Need）"
                 : product.price != null
-                  ? "参考售价"
+                  ? product.nicheDetails ? "最低起价" : "参考售价"
                   : "了解价格与选择"}
           </small>
         </p>

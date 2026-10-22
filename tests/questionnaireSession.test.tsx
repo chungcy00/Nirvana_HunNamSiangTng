@@ -1,6 +1,4 @@
-import { createCatalog, productPath } from '../src/catalog/repository';
-import { catalogData } from '../src/data/catalog';
-import { questionnaireCatalogProductId } from '../src/data/questionnaireCatalog';
+import { questionnaireProductPath } from '../src/data/questionnaireCatalog';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -9,7 +7,7 @@ import { WebsiteRoutes } from '../src/App';
 import { parseQuestionnaireSession } from '../src/data/questionnaireSession';
 import { emptyAnswers, questionKeys, questionnaireProducts } from '../src/data/questionnaire';
 test('return state retains answers, selected products and other-choices mode',()=>{
- const data={answers:{...emptyAnswers,category:'骨灰位',religion:'佛教',capacity:'单人',budget:'any'},selected:['kindness'],browsing:true};
+ const data={answers:{...emptyAnswers,category:'骨灰位',religion:'佛教',capacity:'单人',budget:'any'},selected:['loving-kindness-2-single'],browsing:true};
  assert.deepEqual(parseQuestionnaireSession(JSON.stringify(data)),data);
 });
 test('damaged and obsolete browser state never creates invalid branches or products',()=>{
@@ -18,15 +16,11 @@ test('damaged and obsolete browser state never creates invalid branches or produ
  assert.equal(data.answers.religion,''); assert.equal(data.answers.capacity,''); assert.equal(data.answers.size,''); assert.equal(data.answers.budget,''); assert.deepEqual(data.selected,['pet-urn']);
 });
 test('questionnaire links resolve to published existing catalogue products',()=>{
- const repo = createCatalog(catalogData);
  for(const p of questionnaireProducts){
-   const id = questionnaireCatalogProductId(p);
-   if(id) {
-     const product=repo.getProduct(id)!; assert.ok(product);
-     const provider=repo.getProvider(product.providerId)!;
-     const html=renderToStaticMarkup(<MemoryRouter initialEntries={[productPath(provider.slug,product.slug)]}><WebsiteRoutes/></MemoryRouter>);
-     assert.ok(html.includes(product.name));
-   } else assert.ok(['yunnan','pet-urn'].includes(p.id));
+   const html=renderToStaticMarkup(<MemoryRouter initialEntries={[questionnaireProductPath(p)]}><WebsiteRoutes/></MemoryRouter>);
+   assert.ok(html.includes(p.provider === '云南善堂' ? '云南善堂' : p.name));
+   assert.ok(!html.includes('PAGE NOT FOUND'));
+   if (p.provider === '富贵山庄') assert.ok(questionnaireProductPath(p).startsWith('/nirvana/products/item/'));
  }
 });
 test('sequential question order follows the applicable branch',()=>{
@@ -35,6 +29,15 @@ test('sequential question order follows the applicable branch',()=>{
  assert.deepEqual(questionKeys({...emptyAnswers,category:'殡仪服务'}),['category','religion','situation','budget']);
  assert.deepEqual(questionKeys({...emptyAnswers,category:'宠物纪念',method:'宠物土葬'}),['category','method','size','budget']);
  assert.deepEqual(questionKeys({...emptyAnswers,category:'宠物纪念',method:'火化后骨灰安葬'}),['category','method','budget']);
+});
+
+test('new product detail returns to the originating questionnaire result',()=>{
+ const html=renderToStaticMarkup(<MemoryRouter initialEntries={[{
+   pathname:'/nirvana/products/item/loving-kindness-2-single',
+   state:{questionnaireReturn:'/contact#needs-product-loving-kindness-2-single'},
+ }]}><WebsiteRoutes/></MemoryRouter>);
+ assert.match(html,/href="\/contact#needs-product-loving-kindness-2-single"/);
+ assert.match(html,/返回问卷结果/);
 });
 
 test('first question is active while the second question is already visible and disabled',()=>{

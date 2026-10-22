@@ -2982,3 +2982,6 @@ body:has(.mobile-nav:not([hidden])) .floating-consult { visibility: hidden; }
 .needs-inquiry-action { margin-top: 32px; }
 .needs-inquiry-action p { margin-top: 12px; line-height: 1.8; }
 @media (max-width: 640px) { .needs-inquiry-action .button { width: 100%; white-space: normal; text-align: center; } }
+.placement-tag {
+  width: fit-content;
+}

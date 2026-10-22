@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useCatalog } from '../catalog/context';
-import { productPath } from '../catalog/repository';
-import { questionnaireCatalogProductId } from '../data/questionnaireCatalog';
+import { questionnaireProductPath, questionnaireIncludes } from '../data/questionnaireCatalog';
 import { Link } from 'react-router-dom';
 import { loadQuestionnaireSession, saveQuestionnaireSession, questionnaireReturnKey } from '../data/questionnaireSession';
 import { Check, Phone } from 'lucide-react';
@@ -10,7 +8,6 @@ import { categories, questionKeys, budgetOptions, referencePrices, questionnaire
 
 const categoryNotes = ['火化后的骨灰安置空间','火化后，将骨灰安葬于福地','以棺木安葬的福地与配套','丧礼仪式、治丧流程与相关安排','宠物土葬或火化后的骨灰安葬'];
 export default function NeedsQuestionnaire() {
-  const catalog = useCatalog();
   const [initial] = useState(loadQuestionnaireSession);
   const [answers,setAnswers] = useState<Answers>(initial.answers);
   const [selected,setSelected] = useState<string[]>(initial.selected);
@@ -38,7 +35,7 @@ export default function NeedsQuestionnaire() {
     const next = updateAnswers(answers,key,value);
     const keep = key==='category' ? [] : key==='size' ? selected : selected.filter(id=>{
       const p = questionnaireProducts.find(p=>p.id===id)!;
-      return complete(next) && productStatus(p,next)!=='exclude' && productStatus(p,next)===productStatus(p,answers);
+      return !!p && complete(next) && productStatus(p,next)!=='exclude' && productStatus(p,next)===productStatus(p,answers);
     });
     setNotice(key!=='category' && keep.length < selected.length ? '部分已选服务因条件变化已取消，请重新确认' : '');
     setSelected(keep); setAnswers(next);
@@ -66,10 +63,7 @@ export default function NeedsQuestionnaire() {
   }
   const summary = inquirySummary(answers,selected,browsing);
   function card(p: ServiceProduct) {
-    const productId = questionnaireCatalogProductId(p);
-    const product = productId ? catalog.getProduct(productId) : undefined;
-    const provider = product ? catalog.getProvider(product.providerId) : undefined;
-    const detailPath = product && provider ? productPath(provider.slug, product.slug) : p.provider==='云南善堂' ? '/yunnan-siantang' : '/nirvana/pet-memorial';
+    const detailPath = questionnaireProductPath(p);
     const returnState = { questionnaireReturn: `/contact#needs-product-${p.id}` };
     const status = productStatus(p,answers);
     const prices = applicableVariants(p,answers);
@@ -77,12 +71,13 @@ export default function NeedsQuestionnaire() {
     return <article className="needs-product" key={p.id} id={`needs-product-${p.id}`}>
       <div className="needs-product-heading"><div><p className="needs-meta">{p.provider} · {p.category}</p><h4><Link to={detailPath} state={returnState} onClick={()=>rememberResult(p.id)}>{p.name}</Link></h4></div>
         <span className="needs-status">{status==='exclude'?'可能不符合当前条件':status==='confirm'?'需咨询确认':'符合所选条件'}</span></div>
-      {p.restriction.startsWith('仅限火化') && <p className="needs-limit">仅限火化</p>}
-      <p>{p.method || (p.capacity ? `${p.capacity === '或以上' ? '三人及以上或家庭' : p.capacity}安置空间，具体款式与位置请进一步了解。` : '了解仪式、治丧流程及相关服务安排。')}</p>
-      <div className="needs-prices">{priced.length ? priced.map((v,i)=><p key={`${v.label}-${i}`}><span>{v.label}</span><strong>{money(v.price)}</strong>{!withinBudget(v.price,answers) && <small>不符合所选预算</small>}</p>):<p>参考价格需咨询确认</p>}</div>
+      {p.restriction.includes('仅限火化') && <p className="needs-limit">仅限火化</p>}
+      <p>{p.method || (p.capacity ? `${p.capacityLabel || p.capacity}安置空间，具体款式与位置请进一步了解。` : '了解仪式、治丧流程及相关服务安排。')}</p>
+      {p.placement && <p className="needs-meta">安放环境：{p.placement === 'indoor' ? '室内' : '室外'}</p>}
+      <div className="needs-prices">{priced.length ? priced.map((v,i)=><p key={`${v.label}-${i}`}><span>{v.label}</span><strong>{money(v.price)}{p.startingPrice ? ' 起' : ''}</strong>{!withinBudget(v.price,answers) && <small>不符合所选预算</small>}</p>):<p>参考价格需咨询确认</p>}</div>
       {prices.length>priced.length && <p className="small muted">仅列出符合本次预算的款式及价格，其他款式价格不同。</p>}
-      {status==='confirm' && <p className="needs-confirm">{answers.religion==='其他'?'宗教及仪式适用情况需咨询确认。':'宗教、容量或价格资料不足，尚不能确认为匹配或预算内产品。'}</p>}
-      <p><strong>包含内容：</strong>{p.includes}</p>
+      {status==='confirm' && <p className="needs-confirm">{p.referencePrice ? '宣传参考起价尚待核实，不能视为已确认的预算内产品。' : answers.religion==='其他'?'宗教及仪式适用情况需咨询确认。':'宗教、容量或价格资料不足，尚不能确认为匹配或预算内产品。'}</p>}
+      <p><strong>包含内容：</strong>{questionnaireIncludes(p,answers)}</p>
       <p className="needs-product-restriction"><strong>适用说明：</strong>{p.restriction}</p>
       <Link className="needs-detail-link" to={detailPath} state={returnState} onClick={()=>rememberResult(p.id)}>查看详情</Link>
       <p className="needs-supply">{supplyNotice}</p>

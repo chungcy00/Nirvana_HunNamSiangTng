@@ -1,4 +1,5 @@
 export type PublicationStatus = "draft" | "published" | "hidden";
+export type PlacementType = "indoor" | "outdoor";
 export interface OrderedRecord {
   id: string;
   sortOrder: number;
@@ -45,6 +46,8 @@ export interface Product {
   isFeatured: boolean;
   featuredOrder: number;
   ritualNote?: string;
+  // Supplied explicitly by niche data; never inferred from a name or series.
+  nicheDetails?: { placementType: PlacementType | null };
   zone?: string;
   area?: string;
   direction?: string;
