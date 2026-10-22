@@ -26,7 +26,7 @@ const childFields: Record<string, string[]> = {
     'cremation_count',
     'burial_notes',
   ],
-  niche_details: ['product_id', 'theme_name', 'niche_style', 'niche_notes'],
+  niche_details: ['product_id', 'theme_name', 'niche_style', 'niche_notes', 'placement_type'],
   funeral_details: [
     'product_id',
     'duration_days',
@@ -147,7 +147,12 @@ export function validate(bundle: Bundle, publishing: boolean) {
   for (const price of bundle.offer_prices || [])
     if (!Number.isFinite(Number(price.price_amount)) || Number(price.price_amount) <= 0)
       errors.push('已填写的价格必须大于零；未有报价时请移除该价格行。');
+  const placement = bundle.niche_details?.[0]?.placement_type;
+  if (p.category_id === 3 && placement != null && !['indoor', 'outdoor'].includes(placement))
+    errors.push('安放环境仅可选择室内或室外。');
   if (!publishing) return errors;
+  if (p.category_id === 3 && !['indoor', 'outdoor'].includes(placement))
+    errors.push('发布骨灰位前请选择安放环境。');
   if (!p.name?.trim()) errors.push('发布前请填写产品名称。');
   if (p.category_id <= 3 && !p.capacity_group) errors.push('发布前请选择使用人数。');
   if (p.category_id <= 2 && !p.product_form) errors.push('发布前请选择地段、配套或其他产品类型。');

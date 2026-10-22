@@ -140,7 +140,7 @@ try {
         .click();
       await page.getByLabel(unique[i], { exact: true }).waitFor();
       if (i === 2) {
-        await page.getByText('安放环境暂未开放编辑', { exact: false }).waitFor();
+        await page.getByLabel('安放环境（发布必选）', { exact: true }).selectOption('indoor');
         assert.equal(await page.locator('input[type=radio]').count(), 0);
         await screenshot('niche-editor-desktop');
       }

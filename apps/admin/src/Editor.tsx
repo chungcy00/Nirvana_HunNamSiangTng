@@ -511,10 +511,11 @@ export default function Editor() {
                       {attr('产品主题', 'theme_name')}
                       {attr('设计款式说明', 'niche_style', 'textarea')}
                       {attr('补充说明', 'niche_notes', 'textarea')}
-                      <div className="field wide">
-                        <span>安放环境</span>
-                        <p className="notice">安放环境暂未开放编辑，当前保存不会包含此项。</p>
-                      </div>
+                      {attr('安放环境（发布必选）', 'placement_type', 'text', [
+                        ['', '暂不选择（草稿）'],
+                        ['indoor', '室内'],
+                        ['outdoor', '室外'],
+                      ])}
                     </>
                   ) : p.category_id === 4 ? (
                     <>

@@ -120,6 +120,9 @@ try {
               is_published: true,
             })),
           },
+          ...(f.category_id === 3
+            ? { niche_details: { upsert: [{ placement_type: "indoor" }] } }
+            : {}),
           product_offers: { upsert: offers },
           offer_prices: {
             upsert: f.prices.flatMap((o, i) =>
@@ -175,7 +178,7 @@ try {
         assert(p.offers.length || p.preNeed);
         assert(p.primaryImage);
         assert(p.inclusions.includes("TEST ONLY public common"));
-        assert.equal(p.placement, undefined);
+        assert.equal(p.placement, p.category === 3 ? "indoor" : undefined);
       }
     },
   );
@@ -262,10 +265,6 @@ try {
   await db.end();
 }
 async function cleanup() {
-  for (const f of files) {
-    const r = await service.storage.from(f.bucket).remove([f.path]);
-    assert.ifError(r.error);
-  }
   await db.query(
     "update private.products set publication_status='hidden' where id=any($1::uuid[]) and name like $2",
     [ids, "TEST PHASE5 " + run + "%"],
@@ -274,6 +273,12 @@ async function cleanup() {
     "delete from private.product_images where product_id=any($1::uuid[])",
     [ids],
   );
+  // Unlink hidden test media first: the database correctly refuses deleting
+  // any Storage object still referenced by a product, even for service_role.
+  for (const f of files) {
+    const r = await service.storage.from(f.bucket).remove([f.path]);
+    assert.ifError(r.error);
+  }
   await u.auth.signOut({ scope: "global" });
   if (uid) {
     await db.query("delete from private.admin_members where user_id=$1", [uid]);

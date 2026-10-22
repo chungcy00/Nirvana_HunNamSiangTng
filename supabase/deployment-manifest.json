@@ -46,6 +46,11 @@
       "local": "20261022094712_admin_workflows.sql",
       "remote_version": "20261022101857",
       "remote_name": "admin_workflows_phase1"
+    },
+    {
+      "local": "20261021171754_niche_placement_type.sql",
+      "remote_version": "20261022145234",
+      "remote_name": "niche_placement_type"
     }
   ],
   "hosted_validation": {

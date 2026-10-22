@@ -48,7 +48,7 @@ test('deleted offers cascade prices without duplicate child deletion', () => {
   assert.deepEqual(payload.p_changes.product_offers.delete, ['o']);
   assert.equal(payload.p_changes.offer_prices, undefined);
 });
-test('placement proposal and client authority never enter write payload', () => {
+test('approved placement enters payload while client authority remains excluded', () => {
   const b = structuredClone(base);
   b.product.updated_by = 'forged';
   b.product.sort_order = 20;
@@ -56,7 +56,7 @@ test('placement proposal and client authority never enter write payload', () => 
   const payload = changesFor(base, b, 'draft');
   assert(!('updated_by' in payload.p_product));
   assert(!('sort_order' in payload.p_product));
-  assert(!('placement_type' in payload.p_changes.niche_details.upsert![0]));
+  assert.equal(payload.p_changes.niche_details.upsert![0].placement_type, 'indoor');
 });
 test('draft may lack publication data while zero prices are refused', () => {
   assert.deepEqual(validate(base, false), []);
@@ -75,4 +75,18 @@ test('reclassification clears incompatible attributes and funeral prices', () =>
   assert.deepEqual(next.product_inclusions, []);
   assert.equal(next.product.product_form, 'other');
   assert.equal(next.product.capacity_group, null);
+});
+
+test('niche placement is optional in drafts and required to publish without inference', () => {
+  const b = structuredClone(base);
+  b.product.category_id = 3;
+  b.niche_details = [{ product_id: 'a', theme_name: '聚仙楼', placement_type: null }];
+  assert(!validate(b, false).some((x) => x.includes('安放环境')));
+  assert(validate(b, true).some((x) => x.includes('安放环境')));
+  for (const value of ['indoor', 'outdoor']) {
+    b.niche_details[0].placement_type = value;
+    assert(!validate(b, true).some((x) => x.includes('安放环境')));
+  }
+  b.niche_details[0].placement_type = 'both';
+  assert(validate(b, false).some((x) => x.includes('安放环境')));
 });

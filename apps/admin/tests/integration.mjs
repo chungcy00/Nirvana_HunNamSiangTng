@@ -96,7 +96,7 @@ try {
   await test('Auth creates real local administrator, editor and ordinary user', async () => {
     for (const role of ['admin', 'editor', 'outsider']) await user(role);
   });
-  await test('18 tables and original niche columns remain unchanged', async () => {
+  await test('18 tables and approved niche placement column are present', async () => {
     assert.equal(
       (await db.query("SELECT count(*)::int AS n FROM pg_tables WHERE schemaname='private'"))
         .rows[0].n,
@@ -107,7 +107,7 @@ try {
         "SELECT column_name FROM information_schema.columns WHERE table_schema='private' AND table_name='niche_details' ORDER BY ordinal_position",
       )
     ).rows.map((r) => r.column_name);
-    assert.deepEqual(cols, ['product_id', 'theme_name', 'niche_style', 'niche_notes']);
+    assert.deepEqual(cols, ['product_id', 'theme_name', 'niche_style', 'niche_notes', 'placement_type']);
   });
   await test('All bounded admin endpoints deny anonymous and nonmembers', async () => {
     for (const [name, args] of [

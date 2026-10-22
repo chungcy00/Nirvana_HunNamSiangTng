@@ -12,11 +12,5 @@
     "Anonymous cannot read private tables or admin RPC"
   ],
   "cleaned": true,
-  "run": "2aad9b27",
-  "cleanup": {
-    "publicProducts": 0,
-    "retainedHiddenTestProducts": 4,
-    "files": 0,
-    "testUsers": 0
-  }
+  "run": "04f680aa"
 }

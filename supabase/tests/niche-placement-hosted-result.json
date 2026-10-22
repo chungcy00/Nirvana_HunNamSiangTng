@@ -1,0 +1,111 @@
+{
+  "project_ref": "iapdtipxubhulsxqnriv",
+  "migration_version": "20261022145234",
+  "checks": {
+    "tables": 18,
+    "rls_tables": 18,
+    "nullable": true,
+    "default": null,
+    "allowed_values": [
+      "indoor",
+      "outdoor"
+    ],
+    "existing_niches": 4,
+    "filled_existing_niches": 0,
+    "published_products": 0,
+    "owners_and_acl_preserved": true
+  },
+  "data_integrity": [
+    {
+      "table": "products",
+      "count": 20,
+      "unchanged": true
+    },
+    {
+      "table": "religions",
+      "count": 2,
+      "unchanged": true
+    },
+    {
+      "table": "audit_logs",
+      "count": 1166,
+      "unchanged": true
+    },
+    {
+      "table": "pet_details",
+      "count": 0,
+      "unchanged": true
+    },
+    {
+      "table": "offer_prices",
+      "count": 32,
+      "unchanged": true
+    },
+    {
+      "table": "admin_members",
+      "count": 1,
+      "unchanged": true
+    },
+    {
+      "table": "niche_details",
+      "count": 4,
+      "unchanged": true
+    },
+    {
+      "table": "burial_details",
+      "count": 8,
+      "unchanged": true
+    },
+    {
+      "table": "product_images",
+      "count": 0,
+      "unchanged": true
+    },
+    {
+      "table": "product_offers",
+      "count": 28,
+      "unchanged": true
+    },
+    {
+      "table": "product_series",
+      "count": 3,
+      "unchanged": true
+    },
+    {
+      "table": "tablet_details",
+      "count": 0,
+      "unchanged": true
+    },
+    {
+      "table": "catalog_notices",
+      "count": 1,
+      "unchanged": true
+    },
+    {
+      "table": "funeral_details",
+      "count": 8,
+      "unchanged": true
+    },
+    {
+      "table": "fengshui_details",
+      "count": 0,
+      "unchanged": true
+    },
+    {
+      "table": "product_religions",
+      "count": 18,
+      "unchanged": true
+    },
+    {
+      "table": "product_categories",
+      "count": 7,
+      "unchanged": true
+    },
+    {
+      "table": "product_inclusions",
+      "count": 267,
+      "unchanged": true
+    }
+  ],
+  "scope": "Hosted schema and read-only preservation checks; write/publication/image lifecycle tests run on isolated localhost Supabase."
+}

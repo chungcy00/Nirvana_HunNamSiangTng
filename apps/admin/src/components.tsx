@@ -194,6 +194,7 @@ export function Preview({
     area_sqft: '面积（sqft）',
     theme_name: '产品主题',
     niche_style: '款式',
+    placement_type: '安放环境',
     duration_days: '服务天数',
     duration_nights: '服务夜数',
     service_venue: '服务地点',
@@ -291,7 +292,13 @@ export function Preview({
               .map(([key, label]) => (
                 <div key={key}>
                   <dt>{label}</dt>
-                  <dd>{attributes[key]}</dd>
+                  <dd>
+                    {key === 'placement_type'
+                      ? ({ indoor: '室内', outdoor: '室外' } as Record<string, string>)[
+                          attributes[key]
+                        ]
+                      : attributes[key]}
+                  </dd>
                 </div>
               ))}
           </dl>

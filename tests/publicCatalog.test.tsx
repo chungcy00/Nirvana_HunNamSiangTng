@@ -188,3 +188,38 @@ test("detail revocation and transport errors do not resurrect a list snapshot", 
     globalThis.fetch = saved;
   }
 });
+
+test("approved niche placement maps explicit list/detail values only", () => {
+  for (const value of ["indoor", "outdoor"] as const) {
+    assert.equal(
+      mapPublicProduct({ ...raw, category_id: 3, placement_type: value })
+        .placement,
+      value,
+    );
+    assert.equal(
+      mapPublicProduct({
+        ...raw,
+        category_id: 3,
+        attributes: { placement_type: value },
+      }).placement,
+      value,
+    );
+  }
+  assert.equal(
+    mapPublicProduct({ ...raw, category_id: 3, name: "聚仙楼" }).placement,
+    undefined,
+  );
+  assert.equal(
+    mapPublicProduct({
+      ...raw,
+      category_id: 3,
+      attributes: { placement_type: "both" },
+    }).placement,
+    undefined,
+  );
+  assert.equal(
+    mapPublicProduct({ ...raw, category_id: 2, placement_type: "indoor" })
+      .placement,
+    undefined,
+  );
+});

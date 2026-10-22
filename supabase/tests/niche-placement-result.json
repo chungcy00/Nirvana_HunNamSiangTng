@@ -1,0 +1,76 @@
+{
+  "environment": "localhost-real-supabase",
+  "test_only": true,
+  "tests": [
+    {
+      "name": "18张表、七类别、placement_type为可空text且无默认值",
+      "status": "PASS"
+    },
+    {
+      "name": "编辑员通过后台RPC保存空环境草稿",
+      "status": "PASS"
+    },
+    {
+      "name": "后台保存并读取 indoor",
+      "status": "PASS"
+    },
+    {
+      "name": "后台保存并读取 outdoor",
+      "status": "PASS"
+    },
+    {
+      "name": "拒绝非法环境 \"both\"",
+      "status": "PASS"
+    },
+    {
+      "name": "拒绝非法环境 \"\"",
+      "status": "PASS"
+    },
+    {
+      "name": "拒绝非法环境 \"INDOOR\"",
+      "status": "PASS"
+    },
+    {
+      "name": "拒绝非法环境 1",
+      "status": "PASS"
+    },
+    {
+      "name": "非成员与匿名不能保存",
+      "status": "PASS"
+    },
+    {
+      "name": "其他类别不能写入骨灰位专属资料",
+      "status": "PASS"
+    },
+    {
+      "name": "管理员发布空环境草稿被拒绝",
+      "status": "PASS"
+    },
+    {
+      "name": "其他资料齐全时空环境仍禁止发布",
+      "status": "PASS"
+    },
+    {
+      "name": "室内发布成功、公开列表与详情一致且保持最低起价",
+      "status": "PASS"
+    },
+    {
+      "name": "编辑员不能修改已发布产品的环境",
+      "status": "PASS"
+    },
+    {
+      "name": "已发布环境不可清空，失败保留室内值",
+      "status": "PASS"
+    },
+    {
+      "name": "管理员更新室外，公开读取更新且写审计",
+      "status": "PASS"
+    },
+    {
+      "name": "隐藏后公开读取和原图片下载均拒绝",
+      "status": "PASS"
+    }
+  ],
+  "passed": 17,
+  "failed": 0
+}

@@ -24,6 +24,7 @@ export type PublicRecord = {
   category_id: number;
   capacity_group?: Capacity;
   capacity_count?: number;
+  placement_type?: "indoor" | "outdoor" | null;
   religions: { id: number; name: string }[];
   prices: PublicPrice[];
   primary_image?: PublicImage;
@@ -172,7 +173,14 @@ export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
         : undefined,
     facing: typeof a.facing === "string" ? a.facing : undefined,
     area: a.area_sqft == null ? undefined : Number(a.area_sqft),
-    // No placement inference: the indoor/outdoor migration is still unapproved.
+    placement:
+      raw.category_id === 3
+        ? ["indoor", "outdoor"].includes(
+            String(raw.placement_type ?? a.placement_type),
+          )
+          ? ((raw.placement_type ?? a.placement_type) as "indoor" | "outdoor")
+          : undefined
+        : undefined,
     petMethod:
       typeof a.pet_burial_method === "string" ? a.pet_burial_method : undefined,
     description: raw.description,
