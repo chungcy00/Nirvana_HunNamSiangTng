@@ -1,0 +1,19 @@
+{
+  "method": "gzipSync of production JS; static dependency closures, not a measured browser load time",
+  "beforeEntryGzipBytes": 116808,
+  "afterEntryGzipBytes": 101211,
+  "afterHomeTotalGzipBytes": 103987,
+  "afterCatalogTotalGzipBytes": 109332,
+  "afterContactTotalGzipBytes": 108360,
+  "unchangedStylesheet": "assets/index-DvXrRKQF.css",
+  "routeChunks": [
+    "assets/Home-sLD4xnW2.js",
+    "assets/Nirvana-C9Wgn52n.js",
+    "assets/NirvanaProducts-Dl2FS6CQ.js",
+    "assets/Category-9Kjq4Vr7.js",
+    "assets/PackageDetail-Y1v8w7-s.js",
+    "assets/Yunnan-Ye0oMjck.js",
+    "assets/About-BoJt3PCE.js",
+    "assets/Contact-CCr5BHKO.js"
+  ]
+}

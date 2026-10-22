@@ -1,11 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
+import PageLoadBoundary from "./PageLoadBoundary";
 import { Outlet, useLocation, useNavigationType } from "react-router-dom";
 import { questionnaireReturnKey } from "../../data/questionnaireSession";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import FloatingConsult from "./FloatingConsult";
 import { navigation } from "../../data/site";
-export default function AppLayout() {
+function RouteEffects() {
   const { pathname, hash } = useLocation();
   const navigationType = useNavigationType();
   useEffect(() => {
@@ -30,6 +31,11 @@ export default function AppLayout() {
       navigation.find((item) => item.to === pathname)?.label || "配套与服务";
     document.title = `${page}｜身后事 · 皆可托`;
   }, [pathname, hash, navigationType]);
+  return null;
+}
+
+export default function AppLayout() {
+  const { pathname } = useLocation();
   return (
     <>
       <a className="skip-link" href="#main-content">
@@ -37,7 +43,12 @@ export default function AppLayout() {
       </a>
       <Navbar />
       <main id="main-content" tabIndex={-1}>
-        <Outlet />
+        <PageLoadBoundary resetKey={pathname}>
+          <Suspense fallback={<div className="container section" role="status" aria-busy="true"><p>正在载入页面…</p></div>}>
+            <Outlet />
+            <RouteEffects />
+          </Suspense>
+        </PageLoadBoundary>
       </main>
       <Footer />
       <FloatingConsult />

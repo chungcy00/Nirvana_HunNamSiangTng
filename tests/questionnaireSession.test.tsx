@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
-import { WebsiteRoutes } from '../src/App';
+import { WebsiteRoutes } from './eagerWebsiteRoutes';
 import { parseQuestionnaireSession } from '../src/data/questionnaireSession';
 import { emptyAnswers, questionKeys } from '../src/data/questionnaire';
 test('return state retains answers, selected products and other-choices mode',()=>{

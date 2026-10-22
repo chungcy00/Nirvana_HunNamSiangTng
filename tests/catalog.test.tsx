@@ -11,7 +11,7 @@ import {
   productPath,
 } from "../src/catalog/repository";
 import { CatalogProvider } from "../src/catalog/context";
-import { WebsiteRoutes } from "../src/App";
+import { WebsiteRoutes } from "./eagerWebsiteRoutes";
 import LegacyProvider from "../src/pages/Nirvana";
 import CategoryPage from "../src/pages/Category";
 import PackageDetail from "../src/pages/PackageDetail";

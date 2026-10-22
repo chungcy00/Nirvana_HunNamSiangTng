@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
 import { PublicCatalogContext } from "../src/catalog/publicContext";
-import { WebsiteRoutes } from "../src/App";
+import { WebsiteRoutes } from "./eagerWebsiteRoutes";
 import {
   publicConfig,
   mapPublicProduct,

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
-import { WebsiteRoutes } from "../src/App";
+import { WebsiteRoutes } from "./eagerWebsiteRoutes";
 import { prototypeProducts } from "../src/prototype/products";
 import { categories } from "../src/prototype/model";
 import { lowestPrice, sortProducts } from "../src/prototype/model";

@@ -21,9 +21,10 @@ export default function FloatingConsult() {
   useEffect(() => {
     if (isMobile) return;
     let frame = 0;
-    const targets = Array.from(document.querySelectorAll<HTMLElement>(
+    const collectTargets = () => Array.from(document.querySelectorAll<HTMLElement>(
       "main a, main button, main input, main select, main textarea, main h1, main h2, main h3, main p, .site-footer",
     ));
+    let targets = collectTargets();
     const measure = () => {
       frame = 0;
       const floating = container.current?.getBoundingClientRect();
@@ -39,6 +40,10 @@ export default function FloatingConsult() {
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(measure);
     };
+    // Page chunks can commit after this shared layout has mounted.
+    const content = document.querySelector("main");
+    const changes = new MutationObserver(() => { targets = collectTargets(); schedule(); });
+    if (content) changes.observe(content, { childList: true, subtree: true });
     const observer = new ResizeObserver(schedule);
     if (container.current) observer.observe(container.current);
     observer.observe(document.body);
@@ -49,6 +54,7 @@ export default function FloatingConsult() {
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      changes.disconnect();
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
       window.visualViewport?.removeEventListener("resize", schedule);
