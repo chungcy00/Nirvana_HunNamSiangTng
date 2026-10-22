@@ -212,9 +212,12 @@ try {
     await page.getByLabel('邮箱', { exact: true }).fill(email);
     await page.getByRole('button', { name: '发送恢复邮件', exact: true }).click();
     await page
-      .getByText('如果此邮箱属于可恢复的账号，将收到恢复邮件。请在当前浏览器打开最新邮件链接。', {
-        exact: true,
-      })
+      .getByText(
+        '如果此邮箱属于可恢复的账号，将收到恢复邮件。请复制邮件中恢复按钮的链接，在下方验证页面粘贴；先不要打开邮件链接。',
+        {
+          exact: true,
+        },
+      )
       .waitFor();
     let message;
     for (let n = 0; n < 20; n++) {

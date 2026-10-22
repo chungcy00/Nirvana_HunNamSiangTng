@@ -1,0 +1,29 @@
+{
+  "environment": "actual-local-supabase-auth-mail-and-isolated-browser-contexts",
+  "production_product_writes": false,
+  "tests": [
+    {
+      "name": "No session or pasted link cannot expose password form",
+      "status": "PASS"
+    },
+    {
+      "name": "Real PKCE recovery email works in a fresh browser context without sender verifier",
+      "status": "PASS"
+    },
+    {
+      "name": "Consumed recovery link is rejected in another browser context",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual password update, logout and new password login succeed for local test admin",
+      "status": "PASS"
+    },
+    {
+      "name": "Valid recovery email for non-member cannot enable admin password form",
+      "status": "PASS"
+    }
+  ],
+  "passed": 5,
+  "failed": 0,
+  "finished_at": "2026-10-22T12:58:11.327Z"
+}

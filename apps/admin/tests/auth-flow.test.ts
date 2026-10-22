@@ -71,3 +71,20 @@ test('Failed recovery resend preserves an earlier usable verifier; successful re
   });
   assert.equal(value, 'new-valid');
 });
+
+test('Pasted recovery links accept only this project and recovery type, never redirect', async () => {
+  const { recoveryTokenHash } = await import('../src/auth-flow');
+  const origin = 'https://example.supabase.co';
+  const token = 'pkce_' + 'a'.repeat(64);
+  const link = origin + '/auth/v1/verify?type=recovery&token=' + token;
+  assert.equal(recoveryTokenHash(link + '&redirect_to=https://evil.test', origin), token);
+  for (const invalid of [
+    link.replace(origin, 'https://evil.test'),
+    link.replace('recovery', 'invite'),
+    link + '&token=' + token,
+    link.replace('/verify', '/other'),
+    link + '#access_token=bad',
+  ]) {
+    assert.throws(() => recoveryTokenHash(invalid, origin));
+  }
+});

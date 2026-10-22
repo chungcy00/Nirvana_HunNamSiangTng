@@ -53,7 +53,9 @@ Vercel 后台项目根目录为 `apps/admin`，安装 `npm ci`，构建 `npm run
 
 ## 第二阶段：认证验收与回调
 
-登录、邀请／恢复链接支持固定 `/auth/callback` 与 `/reset-password`。密码恢复使用 PKCE，必须在发起请求的同一浏览器打开邮件；原有邀请的 implicit token 也兼容。回调立即移除地址中的凭据、验证实际用户和数据库成员，禁止外部 `next` 跳转。设置密码后退出并重新登录。
+登录、邀请／恢复链接支持固定 `/auth/callback` 与 `/reset-password`。保留 PKCE 回调，并提供“粘贴邮件链接验证”：复制尚未打开的最新恢复邮件按钮链接，使用官方 `verifyOtp({token_hash,type:'recovery'})` 验证，可跨浏览器存储使用。只接受当前项目 recovery 链接，不访问其地址或 redirect 参数，不记录链接；已消费的旧链接不能重用。原有邀请的 implicit token 也兼容。回调立即移除地址中的凭据、验证实际用户和数据库成员，禁止外部 `next` 跳转。设置密码后退出并重新登录。
+
+跨浏览器恢复回归测试：`node apps/admin/tests/recovery-cross-browser.mjs`。依赖本地真实 Supabase、Mailpit，以及 3003 端口、使用本地公开连接且 `VITE_AUTH_VERIFICATION_ONLY=true` 的独立后台。不要更改 3002 云端验收预览的连接。测试账号只在本地创建并清理。
 
 开发回调精确登记 `http://127.0.0.1:3002/auth/callback`、`http://127.0.0.1:3002/reset-password`，及对应 `localhost` 两项，不使用通配符。正式后台域名需在第四阶段取得后另行登记与复验。
 

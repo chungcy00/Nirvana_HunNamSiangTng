@@ -90,7 +90,7 @@ export function Login() {
       <h1>{recover ? '恢复后台密码' : '后台登录'}</h1>
       {sent && (
         <p className="notice" role="status">
-          如果此邮箱属于可恢复的账号，将收到恢复邮件。请在当前浏览器打开最新邮件链接。
+          如果此邮箱属于可恢复的账号，将收到恢复邮件。请复制邮件中恢复按钮的链接，在下方验证页面粘贴；先不要打开邮件链接。
         </p>
       )}
       {window.location.search === '?password=updated' && (
@@ -100,11 +100,18 @@ export function Login() {
       )}
       <p className="help">使用已获授权的账号管理富贵山庄产品。</p>
       {recover && ['127.0.0.1', 'localhost'].includes(window.location.hostname) && (
-        <p className="help">请在这台电脑的同一个浏览器申请并打开邮件链接，不要使用手机。</p>
+        <p className="help">
+          请在这台电脑设置密码。使用下方“粘贴邮件链接验证”可避免浏览器不一致的问题。
+        </p>
       )}
       {(error || memberError) && (
         <p className="error" role="alert">
           {errorText({ message: error || memberError })}
+        </p>
+      )}
+      {recover && (
+        <p className="help">
+          <a href="/reset-password?method=link">粘贴邮件链接验证</a>
         </p>
       )}
       {session ? (

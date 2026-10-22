@@ -53,3 +53,29 @@ export async function preservePendingRecovery<T extends { error: unknown }>(
     throw error;
   }
 }
+
+// Extract only the bearer token from this project's official recovery URL.
+// Never visit a pasted address or use its redirect target.
+export function recoveryTokenHash(value: string, projectUrl: string) {
+  try {
+    const link = new URL(value.trim());
+    const project = new URL(projectUrl);
+    const token = link.searchParams.get('token');
+    if (
+      link.origin !== project.origin ||
+      link.username ||
+      link.password ||
+      link.hash ||
+      link.pathname !== '/auth/v1/verify' ||
+      link.searchParams.getAll('token').length !== 1 ||
+      link.searchParams.getAll('type').length !== 1 ||
+      link.searchParams.get('type') !== 'recovery' ||
+      !token ||
+      !/^(?:pkce_)?[a-f0-9]{40,128}$/.test(token)
+    )
+      throw new Error();
+    return token;
+  } catch {
+    throw new Error('请粘贴本项目最新恢复邮件中按钮的完整链接地址。');
+  }
+}
