@@ -19,7 +19,12 @@ function RouteEffects() {
     }
     const targetId = returnId || (hash ? decodeURIComponent(hash.slice(1)) : "");
     const target = targetId ? document.getElementById(targetId) : null;
-    if (target) {
+    // Questionnaire results can arrive after the route's publication re-check.
+    // That page owns the delayed restoration, including explicit result links.
+    const questionnaireReturn = pathname === "/contact" && targetId.startsWith("needs-product-");
+    if (questionnaireReturn) {
+      // Keep native scrolling until the result has been rendered.
+    } else if (target) {
       target.scrollIntoView({ block: "start", behavior: "instant" });
       target.focus({ preventScroll: true });
     } else {

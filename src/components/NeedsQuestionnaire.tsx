@@ -1,15 +1,31 @@
 import { usePublicCatalog, PublicCatalogNotice } from '../catalog/publicContext';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { nirvanaQuestionnaireProducts, questionnaireProductPath, questionnaireIncludes } from '../data/questionnaireCatalog';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigationType } from 'react-router-dom';
 import { loadQuestionnaireSession, saveQuestionnaireSession } from '../data/questionnaireSession';
 import { questionnaireReturnKey } from '../data/questionnaireReturn';
+import { restoreQuestionnaireResult } from './restoreQuestionnaireResult';
 import { Check, Phone } from 'lucide-react';
 import { advisor, whatsappUrl } from '../data/site';
 import { categories, questionKeys, budgetOptions, referencePriceRange,  productStatus, applicableVariants, withinBudget, complete, inquirySummary, updateAnswers, supplyNotice, money, type Answers, type ServiceProduct } from '../data/questionnaire';
 
 const categoryNotes = ['火化后的骨灰安置空间','火化后，将骨灰安葬于福地','以棺木安葬的福地与配套','丧礼仪式、治丧流程与相关安排','宠物土葬或火化后的骨灰安葬'];
 export default function NeedsQuestionnaire() {
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  const restoredNavigation = useRef<string | null>(null);
+  // Capture before the shared route effect consumes the one-use marker.
+  const returnId = useMemo(() => {
+    let remembered = '';
+    if (navigationType === 'POP') {
+      try { remembered = sessionStorage.getItem(questionnaireReturnKey) || ''; } catch { /* Optional storage. */ }
+    }
+    if (remembered.startsWith('needs-product-')) return remembered;
+    try {
+      const fragment = decodeURIComponent(location.hash.slice(1));
+      return fragment.startsWith('needs-product-') ? fragment : '';
+    } catch { return ''; }
+  }, [location.key, location.hash, navigationType]);
   const publicCatalog=usePublicCatalog();
   const questionnaireProducts=useMemo(()=>[...nirvanaQuestionnaireProducts(publicCatalog.products)],[publicCatalog.products]);
   const [initial] = useState(loadQuestionnaireSession);
@@ -32,7 +48,14 @@ export default function NeedsQuestionnaire() {
     target?.focus({preventScroll:true});
     setScrollTarget(null);
   }, [scrollTarget]);
-  useEffect(()=>{if(publicCatalog.status==='ready' && window.location.hash.startsWith('#needs-product-')){try{document.getElementById(decodeURIComponent(window.location.hash.slice(1)))?.scrollIntoView({block:'start'});}catch{/* Ignore malformed fragments. */}}} ,[publicCatalog.status]);
+  useEffect(() => {
+    if (publicCatalog.status !== 'ready' || !returnId || restoredNavigation.current === location.key) return;
+    // A product may have been hidden since it was opened; return to the live
+    // results instead of reviving an old product or scrolling on a later refresh.
+    const target = document.getElementById(returnId) || document.getElementById('needs-results');
+    if (!target) return;
+    return restoreQuestionnaireResult(target, () => { restoredNavigation.current = location.key; }, navigationType === 'POP' ? 'instant' : 'auto');
+  }, [publicCatalog.status, returnId, location.key, navigationType]);
   const ready = complete(answers);
   const currentProducts = (publicCatalog.status==='ready' ? questionnaireProducts : []).filter(p=>p.category===answers.category);
   const matches = currentProducts.filter(p=>productStatus(p,answers)==='match');
