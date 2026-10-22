@@ -1,0 +1,38 @@
+[
+  {
+    "path": "/assets/index-BvcWMJ0Q.js",
+    "status": 200,
+    "cacheControl": "public, max-age=31536000, immutable",
+    "type": "application/javascript; charset=utf-8"
+  },
+  {
+    "path": "/assets/index-DvXrRKQF.css",
+    "status": 200,
+    "cacheControl": "public, max-age=31536000, immutable",
+    "type": "text/css; charset=utf-8"
+  },
+  {
+    "path": "/nirvana",
+    "status": 200,
+    "cacheControl": "public, max-age=0, must-revalidate",
+    "type": "text/html; charset=utf-8"
+  },
+  {
+    "path": "/contact",
+    "status": 200,
+    "cacheControl": "public, max-age=0, must-revalidate",
+    "type": "text/html; charset=utf-8"
+  },
+  {
+    "path": "/images/brand-logo.png",
+    "status": 200,
+    "cacheControl": "public, max-age=0, must-revalidate",
+    "type": "image/png"
+  },
+  {
+    "path": "/images/sort-default.png",
+    "status": 200,
+    "cacheControl": "public, max-age=0, must-revalidate",
+    "type": "image/png"
+  }
+]
