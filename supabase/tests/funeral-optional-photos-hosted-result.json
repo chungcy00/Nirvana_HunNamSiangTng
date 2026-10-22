@@ -95,5 +95,23 @@
       "unchanged": true
     }
   ],
-  "scope": "Hosted DDL and read-only verification only; independent publication writes run on localhost."
+  "scope": "Hosted DDL and read-only verification only; independent publication writes run on localhost.",
+  "deployed_commit": "fe64e0720f331d3b98e247a3dc8b4367e10fd2ec",
+  "deployed_http": [
+    {
+      "base": "https://admin-nirvana-hnst.vercel.app",
+      "status": 200,
+      "entry": "index-D1nWgebC.js"
+    },
+    {
+      "base": "https://nirvana-hnst.vercel.app",
+      "status": 200,
+      "entry": "index-SB1Z-uW-.js"
+    }
+  ],
+  "browser": {
+    "actual_admin_read": true,
+    "optional_image_label": true,
+    "existing_product_saved": false
+  }
 }
