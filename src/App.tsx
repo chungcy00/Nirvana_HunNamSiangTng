@@ -3,12 +3,14 @@ import { BrowserRouter } from "react-router-dom";
 import { PublicCatalogProvider } from "./catalog/publicContext";
 import { CatalogProvider } from "./catalog/context";
 import { createWebsiteRoutes } from "./websiteRoutes";
+import Home from "./pages/Home";
 // Keep the accepted global stylesheet order while splitting page JavaScript.
 import "./prototype/prototype.css";
 import "./pages/About.css";
 
 export const WebsiteRoutes = createWebsiteRoutes({
-  Home: lazy(() => import("./pages/Home")),
+  // Render the landing page with the shell, without a second module-load wait.
+  Home,
   Nirvana: lazy(() => import("./pages/Nirvana")),
   NirvanaProducts: lazy(() => import("./pages/NirvanaProducts")),
   Category: lazy(() => import("./pages/Category")),

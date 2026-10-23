@@ -1,10 +1,23 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PassThrough } from "node:stream";
-import { renderToPipeableStream } from "react-dom/server";
+import { renderToPipeableStream, renderToString } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
 import { WebsiteRoutes } from "../src/App";
 import { PublicFixture } from "./publicFixtures";
+
+test("home content is available on the first render without a lazy-page fallback", () => {
+  const html = renderToString(
+    <PublicFixture>
+      <MemoryRouter initialEntries={["/"]}>
+        <WebsiteRoutes />
+      </MemoryRouter>
+    </PublicFixture>,
+  );
+  assert.match(html, /归于土，化于风，安于心/);
+  assert.match(html, /home-hero-mobile\.webp/);
+  assert.doesNotMatch(html, /正在载入页面|aria-busy="true"|页面暂时无法载入/);
+});
 
 function renderLoaded(path: string) {
   return new Promise<string>((resolve, reject) => {
