@@ -1,14 +1,14 @@
-import { PublicFixture, fixtureQuestionnaireProducts } from "./publicFixtures";
+import { PublicFixture } from "./publicFixtures";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { PrototypeCatalog, PrototypeDetail, PrototypeLayout } from "../src/prototype/Prototype";
+import { PrototypeCatalog, PrototypeDetail } from "../src/prototype/Prototype";
 import { prototypeProducts } from "../src/prototype/products";
 import { categories, capacitiesFor, filterProducts, hasCapacity, hasReligion, listPath, religionsFor, visibleProducts } from "../src/prototype/model";
 
 function render(path: string) {
-  return renderToStaticMarkup(<PublicFixture><MemoryRouter initialEntries={[path]}><Routes><Route path="/prototype" element={<PrototypeLayout/>}>
+  return renderToStaticMarkup(<PublicFixture><MemoryRouter initialEntries={[path]}><Routes><Route path="/prototype">
     <Route index element={<PrototypeCatalog home/>}/><Route path="list/:categorySlug" element={<PrototypeCatalog/>}/><Route path="product/:productId" element={<PrototypeDetail/>}/>
   </Route></Routes></MemoryRouter></PublicFixture>);
 }

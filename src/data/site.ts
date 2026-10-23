@@ -44,12 +44,6 @@ export const principles = [
     description: "留出商量的时间，尊重家庭决定",
   },
 ];
-export const aboutPrinciples = [
-  { title: "专业咨询", description: "把复杂的安排，解释得清楚易懂。" },
-  { title: "多元选择", description: "尊重每个家庭的信仰、文化与预算。" },
-  { title: "安心规划", description: "先了解需要，再一起考虑合适选择。" },
-  { title: "温暖陪伴", description: "从初次了解，到每一步的安排。" },
-];
 export const assistance = [
   {
     slug: "consultation",

@@ -262,7 +262,6 @@ export function createCatalog(snapshot: CatalogSnapshot) {
     },
   };
 }
-export type CatalogRepository = ReturnType<typeof createCatalog>;
 export function categoryPath(providerSlug: string, categorySlug: string) {
   return `/${encodeURIComponent(providerSlug)}/${encodeURIComponent(categorySlug)}`;
 }

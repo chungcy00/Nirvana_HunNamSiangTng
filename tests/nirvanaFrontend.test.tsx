@@ -1,4 +1,4 @@
-import { PublicFixture, fixtureQuestionnaireProducts } from "./publicFixtures";
+import { PublicFixture } from "./publicFixtures";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";

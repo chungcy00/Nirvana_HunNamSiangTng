@@ -351,18 +351,6 @@ textarea:focus-visible,
   flex: 0 0 180px;
   object-fit: cover;
 }
-.brand-mark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 43px;
-  height: 43px;
-  border: 1px dashed #af9461;
-  border-radius: 50%;
-  font: 9px var(--sans);
-  letter-spacing: 1px;
-  color: #987940;
-}
 .desktop-nav {
   display: flex;
   gap: 30px;
@@ -418,9 +406,6 @@ textarea:focus-visible,
 .mobile-nav .button {
   display: flex;
   margin-top: 18px;
-}
-.mobile-only {
-  display: none;
 }
 /* A quiet, deliberately empty image system: no third-party images. */
 .placeholder {
@@ -702,14 +687,6 @@ textarea:focus-visible,
     transform: translate(-50%, 0);
   }
 }
-.principles-bar[data-reveal].is-visible,
-.portal-card[data-reveal].is-visible,
-.steps li[data-reveal].is-visible {
-  animation: home-arrive 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.portal-card:nth-child(2)[data-reveal].is-visible {
-  animation-delay: 0.1s;
-}
 .category-card:hover {
   border-color: #a9b99c;
   box-shadow: 0 7px 24px #26472a09;
@@ -742,13 +719,6 @@ textarea:focus-visible,
 }
 .steps li:nth-child(4) {
   --step-delay: 0.24s;
-}
-.steps li[data-reveal].is-visible {
-  animation-delay: var(--step-delay, 0s);
-}
-.steps li[data-reveal].is-visible::before {
-  animation: step-line 0.58s var(--step-delay, 0s)
-    cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @keyframes step-line {
   from {
@@ -1292,19 +1262,6 @@ details[open] > summary {
 .assistance-card details .button {
   margin-bottom: 10px;
 }
-.about-hero {
-  display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: 80px;
-  align-items: center;
-}
-.about-hero .portrait {
-  border-radius: 90px 8px 8px 8px;
-  max-height: 530px;
-}
-.about-hero .portrait:before {
-  border-radius: 80px 4px 4px 4px;
-}
 .advisor-name {
   font-family: var(--serif);
   font-size: 23px;
@@ -1315,9 +1272,6 @@ details[open] > summary {
   font-size: 13px;
   color: var(--gold);
   margin-top: 3px;
-}
-.about-hero .button {
-  margin-top: 25px;
 }
 .values {
   margin-top: 40px;
@@ -1344,14 +1298,6 @@ blockquote {
   padding: 30px;
   background: #f2f4ec;
   border-block: 1px solid var(--line);
-}
-.about-links {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-}
-.cta.about-cta p:not(.eyebrow) {
-  font-size: 14px;
 }
 .contact-layout {
   display: grid;
@@ -1394,14 +1340,6 @@ blockquote {
   font-size: 15px;
   color: var(--green);
   line-height: 1.7;
-}
-.contact-note {
-  font-size: 12px;
-  line-height: 1.9;
-  color: #7b806c;
-  border-top: 1px solid var(--line);
-  padding-top: 20px;
-  margin-top: 28px;
 }
 .contact-form {
   padding: 34px;
@@ -1458,30 +1396,6 @@ blockquote {
   margin-top: 18px;
   width: 100%;
 }
-.inquiry-preview {
-  margin-top: 25px;
-  padding: 20px;
-  background: #f0f4e8;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-.inquiry-preview h3 {
-  font-size: 15px;
-}
-.inquiry-preview pre {
-  font-family: inherit;
-  font-size: 13px;
-  line-height: 1.8;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  color: #69765e;
-}
-.inquiry-preview .button-row {
-  margin-top: 15px;
-}
-.inquiry-preview .small {
-  margin-top: 12px;
-}
 /* Footer */
 .site-footer {
   background: #194b39;
@@ -1498,10 +1412,6 @@ blockquote {
 }
 .site-footer .brand small {
   color: #9cab8e;
-}
-.site-footer .brand-mark {
-  color: #d1b779;
-  border-color: #8e9f75;
 }
 .footer-grid > div:first-child > p {
   font-size: 14px;
@@ -1524,12 +1434,6 @@ blockquote {
 .footer-grid > div:not(:first-child) > p {
   font-size: 13px;
   margin-bottom: 5px;
-}
-.footer-note {
-  display: block;
-  font-size: 12px;
-  margin-top: 10px;
-  color: #a6b79d;
 }
 .footer-disclaimer {
   font-size: 12px;
@@ -1564,24 +1468,6 @@ blockquote {
   }
   .header-consult .button {
     padding: 9px 12px;
-  }
-  .home-hero-grid {
-    gap: 38px;
-  }
-  .hero-copy h1 {
-    font-size: 43px;
-  }
-  .hero-copy .eyebrow {
-    font-size: 9px;
-    letter-spacing: 1.3px;
-  }
-  .hero-portrait > .portrait {
-    min-height: 365px;
-  }
-  .portrait-caption {
-    padding: 18px 20px;
-    font-size: 14px;
-    left: -20px;
   }
   .principles-grid {
     gap: 18px;
@@ -1632,40 +1518,8 @@ blockquote {
   .grid-three {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .home-hero-grid {
-    gap: 35px;
-    grid-template-columns: 1.2fr 1fr;
-    padding-block: 45px 50px;
-  }
-  .hero-copy h1 {
-    font-size: 37px;
-  }
   .hero-description {
     font-size: 14px;
-  }
-  .hero-portrait > .portrait {
-    min-height: 355px;
-  }
-  .portrait-caption {
-    left: -12px;
-    padding: 15px 16px;
-    gap: 12px;
-    font-size: 12px;
-  }
-  .portrait-caption small {
-    font-size: 7px;
-    letter-spacing: 1.2px;
-  }
-  .hero-copy .button {
-    padding: 11px 16px;
-    font-size: 12px;
-  }
-  .hero-copy .eyebrow {
-    font-size: 8px;
-  }
-  .hero-note {
-    font-size: 10px;
-    gap: 7px;
   }
   .principles-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1685,15 +1539,6 @@ blockquote {
   }
   .intro-split {
     gap: 40px;
-  }
-  .about-hero {
-    gap: 40px;
-  }
-  .about-hero .portrait {
-    min-height: 400px;
-  }
-  .about-hero h1 {
-    font-size: 36px;
   }
   .cta h2 {
     font-size: 23px;
@@ -1755,11 +1600,6 @@ blockquote {
     height: 50px;
     flex-basis: auto;
   }
-  .brand-mark {
-    width: 36px;
-    height: 36px;
-    font-size: 8px;
-  }
   .header-consult {
     justify-self: end;
     display: block;
@@ -1778,64 +1618,14 @@ blockquote {
   .section {
     padding-block: 48px;
   }
-  .home-hero-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding-block: 35px 45px;
-  }
-  .hero-copy {
-    padding: 0;
-  }
-  .hero-copy h1 {
-    font-size: clamp(34px, 8.4vw, 48px);
-    line-height: 1.48;
-    letter-spacing: 0.02em;
-  }
-  .hero-copy .eyebrow {
-    font-size: 9px;
-    letter-spacing: 1.3px;
-  }
-  .advisor-line {
-    font-size: 11px;
-    margin: 22px 0 10px;
-  }
   .hero-description {
     font-size: 14px;
     margin-top: 18px;
     line-height: 1.95;
   }
-  .hero-copy .button {
-    font-size: 13px;
-    min-height: 46px;
-    padding: 12px 18px;
-  }
   .button-row {
     gap: 10px;
     margin-top: 24px;
-  }
-  .hero-note {
-    font-size: 10px;
-    margin-top: 23px;
-  }
-  .hero-portrait {
-    padding: 0 0 16px 13px;
-  }
-  .hero-portrait > .portrait {
-    aspect-ratio: 1.35;
-    min-height: 235px;
-    max-height: 360px;
-    border-radius: 70px 6px 6px 6px;
-  }
-  .hero-portrait > .portrait:before {
-    border-radius: 58px 4px 4px 4px;
-  }
-  .portrait-caption {
-    left: 0;
-    font-size: 13px;
-    padding: 15px 23px;
-  }
-  .portrait-caption small {
-    font-size: 8px;
   }
   .principles-grid {
     padding-block: 25px;
@@ -1911,12 +1701,6 @@ blockquote {
   }
   .cta > .button {
     margin-top: 24px;
-  }
-  .mobile-only {
-    display: block;
-  }
-  .desktop-only {
-    display: none;
   }
   .page-hero-inner {
     padding-block: 37px;
@@ -2063,23 +1847,6 @@ blockquote {
   .assistance-card {
     padding: 25px;
   }
-  .about-hero {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 35px;
-    align-items: stretch;
-  }
-  .about-hero h1 {
-    font-size: 39px;
-  }
-  .about-hero .portrait {
-    min-height: 300px;
-    max-height: 400px;
-    aspect-ratio: 1.1;
-  }
-  .about-hero .hero-description {
-    max-width: none;
-  }
   .values {
     gap: 28px 20px;
     margin-top: 28px;
@@ -2103,13 +1870,6 @@ blockquote {
   }
   blockquote br {
     display: none;
-  }
-  .about-links {
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  .about-links .text-link {
-    font-size: 12px;
   }
   .contact-layout {
     grid-template-columns: 1fr;
@@ -2136,9 +1896,6 @@ blockquote {
   .contact-item a {
     font-size: 13px;
     overflow-wrap: anywhere;
-  }
-  .contact-note {
-    font-size: 11px;
   }
   .contact-form {
     padding: 25px 20px;
@@ -2262,11 +2019,6 @@ h3,
   color: var(--muted);
 }
 
-.brand-mark {
-  color: var(--sage);
-  border-color: var(--sage);
-}
-
 .desktop-nav a.active::after {
   background: var(--sage);
 }
@@ -2346,7 +2098,6 @@ blockquote {
 }
 
 .content-slot,
-.inquiry-preview,
 .installment {
   background: #eef0e9;
   border-color: var(--line);
@@ -2404,19 +2155,13 @@ tbody th {
 }
 
 .site-footer .brand small,
-.footer-note,
 .footer-disclaimer,
 .footer-bottom {
   color: var(--footer-ink);
 }
 
-.site-footer .brand-mark,
 .footer-disclaimer {
   border-color: var(--sage);
-}
-
-.site-footer .brand-mark {
-  color: #e7eadf;
 }
 
 .site-footer .brand-logo {
@@ -2440,11 +2185,6 @@ tbody th {
   }
 
   .service-portals {
-    padding-bottom: 44px;
-  }
-
-  .journey {
-    padding-top: 40px;
     padding-bottom: 44px;
   }
 
@@ -2573,7 +2313,6 @@ tbody th {
     height: clamp(500px, calc(100svh - 76px), 760px);
   }
 }
-
 
 .home-hero-heading {
   position: absolute;

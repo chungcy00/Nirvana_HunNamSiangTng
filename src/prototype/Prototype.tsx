@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { Link, Outlet, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List } from "lucide-react";
 import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext";
 import CatalogImage from "../catalog/PublicImage";
@@ -14,30 +14,6 @@ export const ProductNavigationContext = createContext({
   detailPath: prototypeDetailPath,
   website: false,
 });
-
-export function PrototypeLayout() {
-  const {products:prototypeProducts}=usePublicCatalog();
-  const { pathname } = useLocation();
-  const { listPath, detailPath } = useContext(ProductNavigationContext);
-  useEffect(() => {
-    const previousTitle = document.title;
-    const product = prototypeProducts.find(p => pathname === detailPath(p.id));
-    const category = categories.find(c => pathname === listPath(c.id));
-    document.title = `${product?.name || category?.name || "产品首页"}｜富贵山庄产品原型`;
-    window.scrollTo(0, 0);
-    return () => { document.title = previousTitle; };
-  }, [pathname]);
-  return <div className="fgp">
-    <a className="fgp-skip" href="#fgp-main">跳到产品内容</a>
-    <div className="fgp-review">交互原型 · 固定资料预览<span>不连接数据库 · 非正式报价</span></div>
-    <header className="fgp-header"><div className="fgp-wrap fgp-header-inner">
-      <Link to="/prototype" className="fgp-brand"><Leaf size={28} strokeWidth={1.3} aria-hidden="true"/><span>富贵山庄<small>产品目录</small></span></Link>
-      <nav aria-label="页面导航"><Link to="/prototype">产品首页</Link><Link to={listPath(1)}>浏览产品<ArrowRight size={16} aria-hidden="true"/></Link></nav>
-    </div></header>
-    <main id="fgp-main" tabIndex={-1}><Outlet /></main>
-    <footer className="fgp-footer fgp-wrap"><span>富贵山庄 · 产品资料预览</span><p>资料以已提供文件为基础；图片、价格及包含项目须在正式上架前确认。</p><Link to="/prototype">返回产品首页<ArrowRight size={15} aria-hidden="true"/></Link></footer>
-  </div>;
-}
 
 function galleryChoices(product: PrototypeProduct) {
   return (product.images || []).map((image,index)=>({image,label:image.id===product.primaryImage?.id ? '共通产品图' : image.religion_id != null ? `${product.religions.find(r=>r.id===String(image.religion_id))?.name || ''} · ${image.design_name || `图片 ${index+1}`}` : `共通产品图 · ${index+1}`}));
