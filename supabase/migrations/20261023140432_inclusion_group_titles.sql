@@ -33,4 +33,3 @@ BEGIN
       FROM private.product_inclusions i WHERE i.product_id=p.id)));
 END $function$
 ;
-
