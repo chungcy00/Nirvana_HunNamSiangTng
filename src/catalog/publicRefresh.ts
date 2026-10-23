@@ -5,6 +5,9 @@ export type PublicSnapshot = {
   products: readonly PrototypeProduct[];
   status: "loading" | "ready" | "error";
   config?: PublicConfig;
+  // Safe to retain the empty catalogue presentation while its route is checked.
+  // This never retains product records or changes the validation status.
+  refreshingEmpty?: boolean;
 };
 
 /** Coalesce refresh events without persisting or serving failed/stale results. */
@@ -25,15 +28,17 @@ export function createPublicRefresh({ load, publish, config, now = Date.now, tim
   }
   function refresh({ force = false, foreground = false }: { force?: boolean; foreground?: boolean } = {}): Promise<void> {
     if (disposed) return Promise.resolve();
+    const refreshingEmpty = snapshot.refreshingEmpty ||
+      (foreground && snapshot.status === "ready" && snapshot.products.length === 0);
     // Route changes still require a foreground publication check.
-    if (foreground && snapshot.status === "ready") update({ products: [], status: "loading", config });
+    if (foreground && snapshot.status === "ready") update({ products: [], status: "loading", config, refreshingEmpty: refreshingEmpty || undefined });
     if (pending) return pending;
     // Focus, visibility and pageshow often describe the same return to a tab.
     if (!force && now() - lastStarted < 1000) return Promise.resolve();
     lastStarted = now();
     const active = new AbortController();
     controller = active;
-    if (snapshot.status !== "ready") update({ products: [], status: "loading", config });
+    if (snapshot.status !== "ready") update({ products: [], status: "loading", config, refreshingEmpty: refreshingEmpty || undefined });
     let rejectAbort: () => void;
     const aborted = new Promise<never>((_, reject) => {
       rejectAbort = () => reject(new Error("Product refresh aborted"));

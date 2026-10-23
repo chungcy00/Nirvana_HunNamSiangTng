@@ -99,7 +99,9 @@ function WebsiteProductCard({ product, returnTo, view }: { product: PrototypePro
 }
 
 export function PrototypeCatalog({ home = false }: { home?: boolean }) {
-  const {products:prototypeProducts,status}=usePublicCatalog();
+  const {products:prototypeProducts,status:publicStatus,refreshingEmpty}=usePublicCatalog();
+  // Preserve a previously validated empty view, never a previous product list.
+  const status = publicStatus === "loading" && refreshingEmpty && prototypeProducts.length === 0 ? "ready" : publicStatus;
   const { homePath, listPath, website } = useContext(ProductNavigationContext);
   const [params, setParams] = useSearchParams();
   const latestParams = useRef(params);

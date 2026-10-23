@@ -112,3 +112,49 @@ test("route changes retain a foreground publication check even during a backgrou
   assert.deepEqual(states.at(-1)?.products, []);
   refresh.dispose();
 });
+
+test("returning to a validated empty catalogue preserves only its empty presentation during revalidation", async () => {
+  const states: PublicSnapshot[] = [];
+  let next = deferred<readonly typeof product[]>();
+  const refresh = createPublicRefresh({ load: () => next.promise, publish: s => states.push(s) });
+  const initial = refresh.refresh();
+  assert.equal(states.at(-1)?.refreshingEmpty, undefined);
+  next.resolve([]); await initial;
+  next = deferred();
+  const check = refresh.refresh({ force: true, foreground: true });
+  assert.equal(states.at(-1)?.status, "loading"); // Still pending validation.
+  assert.equal(states.at(-1)?.refreshingEmpty, true);
+  assert.deepEqual(states.at(-1)?.products, []);
+  assert.strictEqual(refresh.refresh({ force: true, foreground: true }), check);
+  next.resolve([product]); await check;
+  assert.equal(states.at(-1)?.status, "ready");
+  assert.equal(states.at(-1)?.refreshingEmpty, undefined);
+  assert.deepEqual(states.at(-1)?.products, [product]); // New publications appear.
+  next = deferred();
+  const productCheck = refresh.refresh({ force: true, foreground: true });
+  assert.equal(states.at(-1)?.refreshingEmpty, undefined);
+  assert.deepEqual(states.at(-1)?.products, []); // Old products are still hidden.
+  next.reject(new Error("offline")); await productCheck;
+  assert.equal(states.at(-1)?.status, "error");
+  refresh.dispose();
+});
+
+test("failed empty-list revalidation removes the empty-view hint and permits retry", async () => {
+  const states: PublicSnapshot[] = [];
+  let next = deferred<readonly typeof product[]>();
+  const refresh = createPublicRefresh({ load: () => next.promise, publish: s => states.push(s) });
+  const initial = refresh.refresh(); next.resolve([]); await initial;
+  next = deferred();
+  const check = refresh.refresh({ force: true, foreground: true });
+  next.reject(new Error("offline")); await check;
+  assert.equal(states.at(-1)?.status, "error");
+  assert.equal(states.at(-1)?.refreshingEmpty, undefined);
+  assert.deepEqual(states.at(-1)?.products, []);
+  next = deferred();
+  const retry = refresh.refresh({ force: true });
+  assert.equal(states.at(-1)?.status, "loading");
+  assert.equal(states.at(-1)?.refreshingEmpty, undefined);
+  next.resolve([]); await retry;
+  assert.equal(states.at(-1)?.status, "ready");
+  refresh.dispose();
+});
