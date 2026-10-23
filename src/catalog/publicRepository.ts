@@ -1,3 +1,4 @@
+import { groupInclusions } from "../../shared/inclusionGroups";
 import type { PrototypeProduct, Capacity } from "../prototype/model";
 
 export type PublicImage = {
@@ -34,6 +35,7 @@ export type PublicRecord = {
   images?: PublicImage[];
   inclusions?: {
     name: string;
+    group_title?: string | null;
     quantity?: number;
     unit?: string;
     description?: string;
@@ -149,11 +151,13 @@ export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
       name: r.name,
       isPublished: true,
       inclusions: inclusions.filter((i) => i.religion_id === r.id).map(text),
+      inclusionGroups: groupInclusions(inclusions.filter(i => i.religion_id === r.id), i => i.group_title).map(g => ({title:g.title, items:g.items.map(text)})),
       designs: images
         .filter((i) => i.religion_id === r.id && i.design_name)
         .map((i) => i.design_name!),
     })),
     inclusions: inclusions.filter((i) => i.religion_id == null).map(text),
+    inclusionGroups: groupInclusions(inclusions.filter(i => i.religion_id == null), i => i.group_title).map(g => ({title:g.title, items:g.items.map(text)})),
     offers: prices
       .filter((p) => !["pre_need", "at_need"].includes(p.price_type))
       .map((p) => ({

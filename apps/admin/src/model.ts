@@ -82,6 +82,7 @@ const childFields: Record<string, string[]> = {
     'offer_id',
     'religion_id',
     'item_name',
+    'group_title',
     'quantity',
     'unit',
     'description',
@@ -103,7 +104,14 @@ const childFields: Record<string, string[]> = {
 };
 export const uuid = () => crypto.randomUUID();
 function pick(row: Row, fields: string[]) {
-  return Object.fromEntries(fields.filter((k) => row[k] !== undefined).map((k) => [k, row[k]]));
+  return Object.fromEntries(
+    fields
+      .filter((k) => row[k] !== undefined)
+      .map((k) => [
+        k,
+        k === 'group_title' && typeof row[k] === 'string' ? row[k].trim() || null : row[k],
+      ]),
+  );
 }
 export function changesFor(before: Bundle, current: Bundle, status: string) {
   const changes: Record<string, { upsert?: Row[]; delete?: string[] }> = {};
@@ -152,6 +160,12 @@ export function validate(bundle: Bundle, publishing: boolean) {
   const placement = bundle.niche_details?.[0]?.placement_type;
   if (p.category_id === 3 && placement != null && !['indoor', 'outdoor'].includes(placement))
     errors.push('安放环境仅可选择室内或室外。');
+  if (
+    (bundle.product_inclusions || []).some(
+      (r: Row) => typeof r.group_title === 'string' && r.group_title.trim().length > 120,
+    )
+  )
+    errors.push('分组标题请控制在120字以内。');
   if (!publishing) return errors;
   if (p.category_id === 3 && !['indoor', 'outdoor'].includes(placement))
     errors.push('发布骨灰位前请选择安放环境。');

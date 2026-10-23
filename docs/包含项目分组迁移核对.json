@@ -1,0 +1,51 @@
+{
+  "before": {
+    "function": {
+      "acl": "{fg_catalog_reader=X/fg_catalog_reader,authenticated=X/fg_catalog_reader,anon=X/fg_catalog_reader}",
+      "owner": "fg_catalog_reader",
+      "config": [
+        "search_path=\"\""
+      ],
+      "security_definer": true
+    },
+    "products": {
+      "count": 20,
+      "digest": "5a3f9cff24c44298d575cea638865df0"
+    },
+    "inclusions": {
+      "count": 267,
+      "digest": "b499608dc8937d704f2ee379a22c43b7"
+    },
+    "column_exists": false
+  },
+  "after": {
+    "rls": true,
+    "column": {
+      "type": "text",
+      "default": null,
+      "nullable": "YES"
+    },
+    "function": {
+      "acl": "{fg_catalog_reader=X/fg_catalog_reader,authenticated=X/fg_catalog_reader,anon=X/fg_catalog_reader}",
+      "owner": "fg_catalog_reader",
+      "config": [
+        "search_path=\"\""
+      ],
+      "security_definer": true
+    },
+    "products": {
+      "count": 20,
+      "digest": "5a3f9cff24c44298d575cea638865df0"
+    },
+    "migration": {
+      "name": "inclusion_group_titles",
+      "version": "20261023141149"
+    },
+    "inclusions": {
+      "count": 267,
+      "digest": "b499608dc8937d704f2ee379a22c43b7",
+      "assigned_groups": 0
+    }
+  },
+  "preservationPassed": true
+}

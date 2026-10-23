@@ -61,6 +61,11 @@
       "local": "20261022160606_funeral_without_media.sql",
       "remote_version": "20261022160726",
       "remote_name": "funeral_without_media"
+    },
+    {
+      "local": "20261023140432_inclusion_group_titles.sql",
+      "remote_version": "20261023141149",
+      "remote_name": "inclusion_group_titles"
     }
   ],
   "hosted_validation": {

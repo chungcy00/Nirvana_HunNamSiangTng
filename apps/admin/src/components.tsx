@@ -1,3 +1,4 @@
+import { groupInclusions } from '../../../shared/inclusionGroups';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Image as ImageIcon, X } from 'lucide-react';
 import { supabase } from './client';
@@ -304,33 +305,40 @@ export function Preview({
           </dl>
           <h3>包含项目</h3>
           {inclusions.length ? (
-            <ul>
-              {inclusions.map((r: Row) => (
-                <li key={r.id}>
-                  {r.item_name}
-                  {r.quantity ? ` × ${r.quantity}${r.unit || ''}` : ''}
-                  {r.religion_id ? `（${name(r)}）` : ''}
-                </li>
-              ))}
-            </ul>
+            groupInclusions<Row>(inclusions, (r) => r.group_title).map((group, index) => (
+              <details key={index} open={group.title ? undefined : true}>
+                <summary>{group.title || '未分组项目'}</summary>
+                <ul>
+                  {group.items.map((r: Row) => (
+                    <li key={r.id}>
+                      {r.item_name}
+                      {r.quantity ? ` × ${r.quantity}${r.unit || ''}` : ''}
+                      {r.religion_id ? `（${name(r)}）` : ''}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ))
           ) : (
             <p className="help">暂无符合当前预览条件的包含项目。</p>
           )}
-          {p.category_id !== 4 && <>
-          <h3>产品与设计图片</h3>
-          {images.length ? (
-            <div className="preview-images">
-              {images.map((r: Row) => (
-                <figure key={r.id}>
-                  <Photo image={r} className="preview-photo" />
-                  <figcaption>{r.design_name || r.alt_text}</figcaption>
-                </figure>
-              ))}
-            </div>
-          ) : (
-            <p className="help">暂无符合当前预览条件的产品与设计图片。</p>
+          {p.category_id !== 4 && (
+            <>
+              <h3>产品与设计图片</h3>
+              {images.length ? (
+                <div className="preview-images">
+                  {images.map((r: Row) => (
+                    <figure key={r.id}>
+                      <Photo image={r} className="preview-photo" />
+                      <figcaption>{r.design_name || r.alt_text}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              ) : (
+                <p className="help">暂无符合当前预览条件的产品与设计图片。</p>
+              )}
+            </>
           )}
-          </>}
           <p className="help">
             {p.price_note_override ||
               refs.notices

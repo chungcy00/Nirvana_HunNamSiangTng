@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams, useSearchParams } from "reac
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List } from "lucide-react";
 import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext";
 import CatalogImage from "../catalog/PublicImage";
-import { categories, funeralMethodLabels, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct } from "./model";
+import { categories, funeralMethodLabels, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct, type InclusionGroup } from "./model";
 import "./prototype.css";
 
 // The accepted prototype and the website share presentation and filter behavior.
@@ -184,6 +184,12 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
   </>;
 }
 
+function InclusionList({ items, groups, religious = false }: { items: string[]; groups?: InclusionGroup[]; religious?: boolean }) {
+  const list = (rows: string[]) => <ul>{rows.map((item,index)=><li key={index}><Check size={16} aria-hidden="true"/>{item}</li>)}</ul>;
+  if (!groups?.some(g => g.title)) return list(items);
+  return <>{groups.map((group,index)=>group.title ? <details className="fgp-inclusion-section" key={index}><summary>{religious ? <h5>{group.title}</h5> : <h3>{group.title}</h3>}<ChevronRight size={18} aria-hidden="true"/></summary>{list(group.items)}</details> : <div className="fgp-inclusion-section" key={index}>{list(group.items)}</div>)}</>;
+}
+
 export function PrototypeDetail() {
   const {products:prototypeProducts,status}=usePublicCatalog();
   const { homePath, listPath, website } = useContext(ProductNavigationContext);
@@ -223,9 +229,9 @@ export function PrototypeDetail() {
       <a className="fgp-overview-next" href="#fgp-inclusions">查看包含项目<ArrowRight size={16}/></a>
     </section></div>
     <div className="fgp-detail-bottom"><section className="fgp-inclusions" id="fgp-inclusions"><h2>包含项目</h2>
-      {product.inclusions.length>0 ? <ul>{product.inclusions.map((item,index)=><li key={index}><Check size={16} aria-hidden="true"/>{item}</li>)}</ul> : <p className="fgp-muted">对应产品的包含项目尚待核实，暂不列入未确认的内容。</p>}
+      {product.inclusions.length>0 ? <InclusionList items={product.inclusions} groups={product.inclusionGroups}/> : <p className="fgp-muted">对应产品的包含项目尚待核实，暂不列入未确认的内容。</p>}
       {product.religions.some(r=>r.inclusions.length || r.designs.length) && <div className="fgp-religious-content"><h3>宗教对应内容</h3>{product.religions.length>1 && <div className="fgp-content-tabs" role="group" aria-label="宗教对应内容选择"><button className={!religion ? "is-selected" : ""} aria-pressed={!religion} onClick={()=>{setReligion("");setDesign("共通产品图");}}>全部宗教</button>{product.religions.map(r=><button key={r.id} className={religion===r.id ? "is-selected" : ""} aria-pressed={religion===r.id} onClick={()=>{setReligion(r.id);setDesign("共通产品图");}}>{r.name}</button>)}</div>}
-        {content.map(r=><div key={r.id} className="fgp-religious-group"><h4>{r.name}</h4>{r.inclusions.length>0 && <ul>{r.inclusions.map((item,i)=><li key={i}><Check size={16}/>{item}</li>)}</ul>}{r.designs.length>0 && <p>对应设计：{r.designs.join("、")}。各设计沿用本产品价格。</p>}</div>)}
+        {content.map(r=><div key={r.id} className="fgp-religious-group"><h4>{r.name}</h4>{r.inclusions.length>0 && <InclusionList items={r.inclusions} groups={r.inclusionGroups} religious/>}{r.designs.length>0 && <p>对应设计：{r.designs.join("、")}。各设计沿用本产品价格。</p>}</div>)}
       </div>}
     </section><section className="fgp-price-panel" aria-labelledby="fgp-price-heading"><h2 id="fgp-price-heading">{product.category===4 ? "殡仪服务价格" : product.category===3 ? "最低起价" : "产品价格"}</h2><PrototypePrices product={product} detailed religion={religion}/>
       {product.offers.length>1 && product.offers.some(o=>o.area) && <dl className="fgp-offer-specs">{product.offers.filter(o=>o.area).map(o=><div key={o.name}><dt>{o.name}</dt><dd>{o.area} sqft</dd></div>)}</dl>}

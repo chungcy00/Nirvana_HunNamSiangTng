@@ -1077,3 +1077,7 @@ td.number {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.inclusion-editor-group { margin-top: 16px; border-top: 1px solid var(--line); }
+.inclusion-editor-group > summary { min-height: 44px; padding: 10px 0; cursor: pointer; font-weight: 600; }
+.inclusion-editor-group > .row { margin: 8px 0 12px; }

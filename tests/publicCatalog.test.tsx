@@ -297,3 +297,26 @@ test("funeral method labels follow public attributes on cards and details withou
   }
   assert.equal(mapPublicProduct({...raw, attributes:{funeral_method:'both'}}).funeralMethod, undefined);
 });
+
+test('inclusion sections preserve headings, item order, old lists and religion visibility', () => {
+  const product = mapPublicProduct({...raw, category_id:4, inclusions:[
+    {name:'服务项目一',group_title:' 服务安排 '},
+    {name:'申报死亡与领取死亡证书',group_title:'遗体护理'},
+    {name:'服务项目二',group_title:'服务安排',quantity:2,unit:'次'},
+    {name:'未分组项目'},
+    {name:'佛教专属明细',group_title:'礼仪',religion_id:1},
+    {name:'不可公开标题明细',group_title:'不可公开分组',religion_id:2},
+  ]});
+  assert.deepEqual(product.inclusionGroups?.map(g=>g.title),['服务安排','遗体护理','']);
+  assert.deepEqual(product.inclusionGroups?.[0].items,['服务项目一','服务项目二 × 2次']);
+  const html = render('ready','/nirvana/products/item/live-w',[product]);
+  assert.match(html,/<h3>服务安排<\/h3>/);
+  assert.match(html,/<h3>遗体护理<\/h3>/);
+  assert.match(html,/<h5>礼仪<\/h5>/);
+  assert.match(html,/未分组项目/);
+  assert.doesNotMatch(html,/不可公开分组|不可公开标题明细/);
+  assert(html.indexOf('服务项目一') < html.indexOf('服务项目二'));
+  const legacy = render('ready','/nirvana/products/item/live-w',[mapPublicProduct({...raw,category_id:4})]);
+  assert.match(legacy,/公开包含项目/);
+  assert.doesNotMatch(legacy,/fgp-inclusion-section/);
+});

@@ -1,3 +1,4 @@
+import { InclusionEditor } from './InclusionEditor';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useBlocker } from 'react-router-dom';
 import { ArrowDown, ArrowUp, GripVertical } from 'lucide-react';
@@ -385,16 +386,18 @@ export default function Editor() {
       {!editable && <p className="permission">当前为只读预览。编辑员仅能修改从未发布的草稿。</p>}
       <div className="editor">
         <nav className="sections" aria-label="编辑分区">
-          {sections.map((s, i) => p.category_id === 4 && i === 5 ? null : (
-            <button
-              key={s}
-              aria-current={section === i ? 'step' : undefined}
-              className={section === i ? 'active' : ''}
-              onClick={() => setSection(i)}
-            >
-              {s}
-            </button>
-          ))}
+          {sections.map((s, i) =>
+            p.category_id === 4 && i === 5 ? null : (
+              <button
+                key={s}
+                aria-current={section === i ? 'step' : undefined}
+                className={section === i ? 'active' : ''}
+                onClick={() => setSection(i)}
+              >
+                {s}
+              </button>
+            ),
+          )}
         </nav>
         <div>
           <fieldset disabled={!editable || busy}>
@@ -643,7 +646,9 @@ export default function Editor() {
                             onChange={(v) => update('product_religions', r.id, 'is_published', v)}
                           />
                         </div>
-                        {p.category_id !== 4 && <button onClick={() => setSection(5)}>管理设计图片</button>}
+                        {p.category_id !== 4 && (
+                          <button onClick={() => setSection(5)}>管理设计图片</button>
+                        )}
                       </div>
                     ))}
                   </>
@@ -651,76 +656,19 @@ export default function Editor() {
               </section>
             )}
             {section === 3 && (
-              <section className="panel">
-                <div className="row between">
-                  <h2>包含项目</h2>
-                  <button
-                    onClick={() =>
-                      setRows('product_inclusions', [
-                        ...bundle.product_inclusions,
-                        {
-                          id: uuid(),
-                          product_id: p.id,
-                          item_name: '',
-                          quantity: null,
-                          unit: '',
-                          description: '',
-                          religion_id: null,
-                          offer_id: null,
-                          sort_order: bundle.product_inclusions.length,
-                        },
-                      ])
-                    }
-                  >
-                    添加项目
-                  </button>
-                </div>
-                {bundle.product_inclusions.map((r: Row, i: number) => (
-                  <div className="entry" key={r.id}>
-                    <div className="row between">
-                      <strong>项目 {i + 1}</strong>
-                      <div className="row">
-                        <button
-                          aria-label={`项目${i + 1}上移`}
-                          disabled={!i}
-                          onClick={() => move('product_inclusions', i, i - 1)}
-                        >
-                          <ArrowUp size={16} />
-                        </button>
-                        <button
-                          aria-label={`项目${i + 1}下移`}
-                          disabled={i === bundle.product_inclusions.length - 1}
-                          onClick={() => move('product_inclusions', i, i + 1)}
-                        >
-                          <ArrowDown size={16} />
-                        </button>
-                        <button onClick={() => remove('product_inclusions', r.id)}>删除</button>
-                      </div>
-                    </div>
-                    <div className="fields">
-                      {childField('product_inclusions', r, '项目名称', 'item_name')}
-                      {childField('product_inclusions', r, '数量', 'quantity', 'number')}
-                      {childField('product_inclusions', r, '单位', 'unit')}
-                      {childField('product_inclusions', r, '说明', 'description', 'textarea')}
-                      {p.category_id <= 4 &&
-                        childField(
-                          'product_inclusions',
-                          r,
-                          '适用宗教',
-                          'religion_id',
-                          'text',
-                          relationOptions,
-                        )}
-                      {childField('product_inclusions', r, '适用方案', 'offer_id', 'text', [
-                        ['', '产品共通'],
-                        ...bundle.product_offers.map(
-                          (o: Row) => [o.id, o.name || '默认方案'] as [string, string],
-                        ),
-                      ])}
-                    </div>
-                  </div>
-                ))}
-              </section>
+              <InclusionEditor
+                rows={bundle.product_inclusions}
+                productId={p.id}
+                onChange={(rows) => setRows('product_inclusions', rows)}
+                religions={relationOptions}
+                offers={[
+                  ['', '产品共通'],
+                  ...bundle.product_offers.map(
+                    (o: Row) => [o.id, o.name || '默认方案'] as [string, string],
+                  ),
+                ]}
+                religious={p.category_id <= 4}
+              />
             )}
             {section === 4 && (
               <section className="panel">

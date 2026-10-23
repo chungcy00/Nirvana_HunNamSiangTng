@@ -113,10 +113,11 @@ test('funeral photos are optional while other categories retain the primary imag
 });
 
 test('funeral rejects photo references in drafts as well as publication', () => {
-  const b = structuredClone(base); b.product.category_id = 4;
-  b.product_images = [{id: 'unexpected', is_primary: false, is_published: false}];
-  assert(validate(b, false).some(x => x.includes('殡仪服务不使用照片')));
-  assert(validate(b, true).some(x => x.includes('殡仪服务不使用照片')));
+  const b = structuredClone(base);
+  b.product.category_id = 4;
+  b.product_images = [{ id: 'unexpected', is_primary: false, is_published: false }];
+  assert(validate(b, false).some((x) => x.includes('殡仪服务不使用照片')));
+  assert(validate(b, true).some((x) => x.includes('殡仪服务不使用照片')));
 });
 
 test('funeral method can be created, edited and cleared in the save payload', () => {
@@ -124,9 +125,35 @@ test('funeral method can be created, edited and cleared in the save payload', ()
   before.product.category_id = 4;
   let current = structuredClone(before);
   for (const method of ['cremation', 'burial', 'both', null]) {
-    current.funeral_details = [{product_id:'a', funeral_method:method}];
+    current.funeral_details = [{ product_id: 'a', funeral_method: method }];
     const payload = changesFor(before, current, 'draft');
     assert.equal(payload.p_changes.funeral_details.upsert![0].funeral_method, method);
     Object.assign(before, structuredClone(current));
   }
+});
+
+test('inclusion section title is saved, renamed, cleared and validated without losing scope/order', () => {
+  const before = structuredClone(base),
+    current = structuredClone(base);
+  for (const title of ['遗体护理', ' 临终咨询 ', '']) {
+    current.product_inclusions = [
+      {
+        id: 'i',
+        product_id: 'a',
+        item_name: '明细',
+        group_title: title,
+        sort_order: 3,
+        religion_id: 1,
+        offer_id: 'o',
+      },
+    ];
+    const row = changesFor(before, current, 'draft').p_changes.product_inclusions.upsert![0];
+    assert.equal(row.group_title, title.trim() || null);
+    assert.equal(row.sort_order, 3);
+    assert.equal(row.religion_id, 1);
+    assert.equal(row.offer_id, 'o');
+    Object.assign(before, structuredClone(current));
+  }
+  current.product_inclusions[0].group_title = '长'.repeat(121);
+  assert(validate(current, false).some((x) => x.includes('120')));
 });
