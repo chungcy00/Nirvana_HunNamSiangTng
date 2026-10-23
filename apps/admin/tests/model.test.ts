@@ -118,3 +118,15 @@ test('funeral rejects photo references in drafts as well as publication', () => 
   assert(validate(b, false).some(x => x.includes('殡仪服务不使用照片')));
   assert(validate(b, true).some(x => x.includes('殡仪服务不使用照片')));
 });
+
+test('funeral method can be created, edited and cleared in the save payload', () => {
+  const before = structuredClone(base);
+  before.product.category_id = 4;
+  let current = structuredClone(before);
+  for (const method of ['cremation', 'burial', 'both', null]) {
+    current.funeral_details = [{product_id:'a', funeral_method:method}];
+    const payload = changesFor(before, current, 'draft');
+    assert.equal(payload.p_changes.funeral_details.upsert![0].funeral_method, method);
+    Object.assign(before, structuredClone(current));
+  }
+});

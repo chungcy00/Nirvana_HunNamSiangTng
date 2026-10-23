@@ -525,11 +525,11 @@ export default function Editor() {
                     <>
                       {attr('服务天数', 'duration_days', 'number')}
                       {attr('服务夜数', 'duration_nights', 'number')}
-                      {attr('适用安葬安排', 'funeral_method', 'text', [
+                      {attr('适用安葬方式（前台标签）', 'funeral_method', 'text', [
                         ['', '暂不选择'],
                         ['cremation', '火化'],
                         ['burial', '土葬'],
-                        ['both', '两者皆可'],
+                        ['both', '火化／土葬皆适用'],
                       ])}
                       {attr('服务地点', 'service_venue')}
                       {attr('价格／服务适用条件', 'terms_summary', 'textarea')}

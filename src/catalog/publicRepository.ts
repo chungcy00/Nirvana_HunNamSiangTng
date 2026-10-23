@@ -181,6 +181,10 @@ export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
           ? ((raw.placement_type ?? a.placement_type) as "indoor" | "outdoor")
           : undefined
         : undefined,
+    funeralMethod:
+      raw.category_id === 4 && ["cremation", "burial", "both"].includes(String(a.funeral_method))
+        ? a.funeral_method as PrototypeProduct["funeralMethod"]
+        : undefined,
     petMethod:
       typeof a.pet_burial_method === "string" ? a.pet_burial_method : undefined,
     description: raw.description,

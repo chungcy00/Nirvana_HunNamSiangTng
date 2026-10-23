@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams, useSearchParams } from "reac
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List } from "lucide-react";
 import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext";
 import CatalogImage from "../catalog/PublicImage";
-import { categories, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct } from "./model";
+import { categories, funeralMethodLabels, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct } from "./model";
 import "./prototype.css";
 
 // The accepted prototype and the website share presentation and filter behavior.
@@ -29,6 +29,7 @@ function ProductImage({ product, large = false, caption }: { product: PrototypeP
 function ProductTags({ product }: { product: PrototypeProduct }) {
   return <div className="fgp-tags">
     {hasCapacity(product.category) && product.capacity && <span>{product.category === 3 && product.capacity === "four_plus" && product.capacityCount ? `${product.capacityCount}人` : capacityLabels[product.capacity]}</span>}
+    {product.category === 4 && product.funeralMethod && <span>{funeralMethodLabels[product.funeralMethod]}</span>}
     {product.religions.map(r => <span key={r.id}>{r.name}</span>)}
     {product.category === 3 && product.placement && <span className="fgp-environment">{product.placement === "indoor" ? "室内" : "室外"}</span>}
   </div>;

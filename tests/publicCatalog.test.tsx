@@ -281,3 +281,19 @@ test("transport feedback is distinct from an empty result and never shows a zero
   assert.match(empty, /当前分类暂无产品/);
   assert.doesNotMatch(empty, /fgp-load-notice/);
 });
+
+test("funeral method labels follow public attributes on cards and details without photos", () => {
+  for (const [method, label] of Object.entries({cremation: '适用火化', burial: '适用土葬', both: '火化／土葬皆适用'})) {
+    const product = mapPublicProduct({...raw, category_id: 4, attributes: {funeral_method: method}});
+    assert.equal(product.funeralMethod, method);
+    for (const path of ['/nirvana?category=4', '/nirvana?category=4&view=list', '/nirvana/products/item/live-w']) {
+      const html = render('ready', path, [product]);
+      assert.match(html, new RegExp(label));
+      assert.doesNotMatch(html, /fgp-product-visual|产品实拍待补充/);
+    }
+  }
+  for (const method of [undefined, null, 'unknown']) {
+    assert.equal(mapPublicProduct({...raw, category_id:4, attributes:{funeral_method:method}}).funeralMethod, undefined);
+  }
+  assert.equal(mapPublicProduct({...raw, attributes:{funeral_method:'both'}}).funeralMethod, undefined);
+});
