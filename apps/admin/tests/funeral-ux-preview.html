@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-CN"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>殡仪详情未保存预览 · 本地测试</title><div id="root"></div><script type="module">
+import React from 'react';
+import '/src/admin.css';
+import {createRoot} from 'react-dom/client';
+import {DetailPreviewFrame} from '/src/DetailPreviewFrame.tsx';
+import {mapAdminPreviewProduct} from '/src/previewModel.ts';
+import {record} from '../../../tests/funeral-ux/fixture.mjs';
+// In-memory form data only. No admin client, session, save or publish operation.
+const bundle = {product:{id:record.id,slug:record.slug,name:record.name,category_id:4},
+ funeral_details:[{product_id:record.id,...record.attributes}],
+ product_religions:[{religion_id:1,is_published:true}],
+ product_offers:[{id:'review',name:'默认方案',is_active:true,sort_order:0}],
+ offer_prices:record.prices.map((p,i)=>({id:'price'+i,offer_id:p.offer_id,price_type:p.price_type,price_amount:p.amount,price_note:p.price_note,is_published:true})),
+ product_inclusions:record.inclusions.map((i,n)=>({id:'item'+n,product_id:record.id,item_name:i.name,group_title:i.group_title,sort_order:n})),
+ product_images:[],burial_details:[],niche_details:[],tablet_details:[],fengshui_details:[],pet_details:[]};
+const refs={religions:[{id:1,name:'佛教',is_active:true}],notices:[]};
+const mobile=new URLSearchParams(location.search).has('mobile');
+function Fixture(){const [edited,setEdited]=React.useState(false);const current=structuredClone(bundle);if(edited){current.funeral_details[0].duration_days=5;current.offer_prices[0].price_amount=30000;current.product_inclusions[0].item_name='未保存的项目';}return React.createElement(React.Fragment,null,
+ React.createElement('button',{onClick:()=>setEdited(true)},'修改未保存表单'),
+ React.createElement(DetailPreviewFrame,{product:mapAdminPreviewProduct(current,refs),mobile}));}
+createRoot(document.getElementById('root')).render(React.createElement(Fixture));
+</script></html>

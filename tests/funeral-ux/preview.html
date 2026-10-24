@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh-CN"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>本地验收样例 · 殡仪服务详情</title><div id="root"></div><script type="module">
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {MemoryRouter} from 'react-router-dom';
+import {CatalogProvider} from '/src/catalog/context.tsx';
+import {PublicCatalogContext} from '/src/catalog/publicContext.tsx';
+import {mapPublicProduct} from '/src/catalog/publicRepository.ts';
+import {WebsiteRoutes} from '/src/App.tsx';
+import {record} from './fixture.mjs';
+import '/src/index.css';
+const product=mapPublicProduct(record);
+createRoot(document.getElementById('root')).render(React.createElement(CatalogProvider,null,
+ React.createElement(MemoryRouter,{initialEntries:['/nirvana/products/item/'+record.slug]},
+ React.createElement(PublicCatalogContext.Provider,{value:{products:[product],status:'ready',retry:()=>{}}},React.createElement(WebsiteRoutes)))));
+</script></html>

@@ -414,3 +414,42 @@
 @media (max-width: 600px) {
   .fgp-prices-compact.fgp-dual-prices > div + div { padding-left: 0; border-left: 0; }
 }
+
+/* Funeral detail only: preserve the existing type, palette and other categories. */
+.fgp-service-detail .fgp-specs > div { grid-template-columns: 100px minmax(0, 1fr); gap: 16px; }
+.fgp-service-detail .fgp-specs :is(dt, dd),
+.fgp-service-detail .fgp-duration,
+.fgp-service-content .fgp-prices span { color: #4c5e50; }
+.fgp-service-detail .fgp-specs dd { text-align: left; overflow-wrap: anywhere; }
+.fgp-service-content > section { min-width: 0; }
+.fgp-service-content .fgp-inclusions li { color: var(--p-ink); overflow-wrap: anywhere; border-bottom: 0; }
+.fgp-service-content .fgp-inclusions li svg { flex-shrink: 0; }
+.fgp-service-content .fgp-inclusion-section { padding: 0; border: 0; border-radius: 0; }
+.fgp-service-content .fgp-inclusion-section + .fgp-inclusion-section { margin-top: 16px; }
+.fgp-service-content .fgp-inclusion-section > summary { border-radius: 2px; border-bottom: 0; }
+.fgp-service-content .fgp-inclusion-section[open] > summary { border-bottom: 1px solid var(--p-line); margin-bottom: 8px; }
+.fgp-service-content .fgp-inclusion-section > summary:hover { background: var(--p-soft); }
+.fgp-service-content .fgp-inclusion-section > summary:active { background: #dce2d9; }
+.fgp-service-content .fgp-inclusion-section > summary:focus-visible { outline: 3px solid var(--p-green); outline-offset: 4px; }
+.fgp-service-content .fgp-inclusion-section > summary > :is(h3, h5) { font-weight: 500; overflow-wrap: anywhere; }
+.fgp-service-content .fgp-price-note { color: #46583e; line-height: 1.9; border-top: 0; padding-top: 0; margin: 8px 0 0; }
+.fgp-service-content .fgp-service-consult { width: 100%; margin-top: 24px; min-height: 48px; white-space: normal; }
+.fgp-service-price-summary { display: none; }
+@media (min-width: 1024px) {
+  .fgp-service-detail .fgp-specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; border-top: 1px solid var(--p-line); padding-top: 24px; }
+  .fgp-service-detail .fgp-specs > div { display: flex; flex-direction: column; gap: 6px; padding: 0; border-top: 0; }
+  .fgp-service-detail .fgp-specs dd { color: var(--p-ink); }
+  .fgp-service-content { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; margin-top: 40px; }
+  .fgp-service-content .fgp-inclusions ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; align-items: start; }
+  .fgp-service-content .fgp-price-panel[data-sticky="true"] { position: sticky; top: var(--service-sticky-top, 110px); }
+}
+@media (max-width: 1023px) {
+  .fgp-service-content { display: flex; flex-direction: column; gap: 36px; }
+  .fgp-service-content > section { width: 100%; }
+  .fgp-service-content .fgp-price-panel { position: static; }
+  .fgp-service-price-summary { display: block; margin-top: 20px; }
+  .fgp-service-price-summary .fgp-prices { gap: 8px; }
+  .fgp-service-price-summary .fgp-price-entry { display: flex; flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 8px 16px; }
+  .fgp-service-price-summary .fgp-prices span { color: #4c5e50; }
+  .fgp-service-price-summary .fgp-prices strong { font-size: 22px; }
+}

@@ -59,12 +59,14 @@ for(const c of categories)test(`${c.name}列表显示适用筛选，隐藏禁用
   assert.doesNotMatch(html,/售罄|库存|所属区域|楼层|层位|内部代码|地段编号/);
   assert.match(html,/查看详情/);
 });
-test("全部33项产品使用同一详情框架，详情无专属咨询按钮",()=>{
+test("全部33项产品使用同一详情框架，仅殡仪服务增加直接咨询",()=>{
   assert.equal(prototypeProducts.length,33);
   for(const p of prototypeProducts){
     const html=render('/prototype/product/'+p.id);
     assert(html.includes(p.name));assert.match(html,/包含项目/);
-    assert.doesNotMatch(html,/咨询此|WhatsApp|wa\.me|库存|售罄|所属区域|楼层|层位/);
+    assert.doesNotMatch(html,/咨询此|库存|售罄|所属区域|楼层|层位/);
+    if(p.category===4) assert.match(html,/直接咨询/);
+    else assert.doesNotMatch(html,/WhatsApp|wa\.me|直接咨询/);
     if(p.category===3){assert.match(html,/安放环境/);assert.match(html,/起<\/em>/);assert.doesNotMatch(html,/朝向|面积/);}
     if(p.category===4){assert.match(html,/预购价格/);assert.match(html,/即用价格/);assert.doesNotMatch(html,/总价格|使用人数|朝向|面积/);}
   }

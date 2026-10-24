@@ -6,6 +6,8 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import CatalogImage from "../catalog/PublicImage";
+import { ConsultButton } from "../components/ui";
+import { useBoundedPricePanel } from "./useBoundedPricePanel";
 import {
   categories,
   capacityLabels,
@@ -105,10 +107,12 @@ function InclusionList({
   items,
   groups,
   religious = false,
+  funeral = false,
 }: {
   items: string[];
   groups?: InclusionGroup[];
   religious?: boolean;
+  funeral?: boolean;
 }) {
   const list = (rows: string[]) => (
     <ul>
@@ -120,6 +124,29 @@ function InclusionList({
       ))}
     </ul>
   );
+  if (funeral) {
+    // Titles and membership come exclusively from the existing mapped groups.
+    const sections = groups?.length ? groups : [{ title: "", items }];
+    return (
+      <>
+        {sections
+          .filter((group) => group.items.length)
+          .map((group, index) => (
+            <details className="fgp-inclusion-section" key={index} open>
+              <summary>
+                {religious ? (
+                  <h5>{group.title || "包含项目"}</h5>
+                ) : (
+                  <h3>{group.title || "包含项目"}</h3>
+                )}
+                <ChevronRight size={18} aria-hidden="true" />
+              </summary>
+              {list(group.items)}
+            </details>
+          ))}
+      </>
+    );
+  }
   if (!groups?.some((g) => g.title)) return list(items);
   return (
     <>
@@ -153,6 +180,8 @@ export function ProductDetailContent({
 }) {
   const { website } = useContext(ProductNavigationContext);
   const category = categories.find((c) => c.id === product.category)!;
+  const funeral = product.category === 4;
+  const pricePanelRef = useBoundedPricePanel(funeral);
   const [religion, setReligion] = useState("");
   const [design, setDesign] = useState("共通产品图");
   const content = product.religions.filter(
@@ -173,8 +202,12 @@ export function ProductDetailContent({
       ];
   const selectedDesign = designs.includes(design) ? design : designs[0];
   const specs = [
-    ...(funeralDurationLabel(product) ? [["服务天数", `${product.durationDays}天${product.durationNights}夜`]] : []),
-    ...(product.category === 4 && product.serviceVenue ? [["服务地点", product.serviceVenue]] : []),
+    ...(funeralDurationLabel(product)
+      ? [["服务天数", `${product.durationDays}天${product.durationNights}夜`]]
+      : []),
+    ...(product.category === 4 && product.serviceVenue
+      ? [["服务地点", product.serviceVenue.replace(/\s*\/\s*/g, " / ")]]
+      : []),
     ...(hasCapacity(product.category) && product.capacity
       ? [
           [
@@ -190,7 +223,9 @@ export function ProductDetailContent({
     ...(hasReligion(product.category) && product.religions.length
       ? [["适用宗教", product.religions.map((r) => r.name).join("、")]]
       : []),
-    ...(product.category === 4 && product.funeralMethod ? [["适用安葬方式", funeralMethodLabels[product.funeralMethod]]] : []),
+    ...(product.category === 4 && product.funeralMethod
+      ? [["适用安葬方式", funeralMethodLabels[product.funeralMethod]]]
+      : []),
     ...(product.category === 3 && product.placement
       ? [["安放环境", product.placement === "indoor" ? "室内" : "室外"]]
       : []),
@@ -239,6 +274,18 @@ export function ProductDetailContent({
           <span className="fgp-category-label">{category.name}</span>
           <h1>{product.name}</h1>
           <ProductTags product={product} />
+          {funeral && (
+            <div
+              className="fgp-service-price-summary"
+              aria-label="殡仪服务价格摘要"
+            >
+              <ProductPrices
+                product={product}
+                religion={religion}
+                showNotes={false}
+              />
+            </div>
+          )}
           {funeralDurationLabel(product) && (
             <p className="fgp-duration">{funeralDurationLabel(product)}</p>
           )}
@@ -252,38 +299,44 @@ export function ProductDetailContent({
               </div>
             ))}
           </dl>
-          <a
-            className="fgp-overview-next"
-            href="#fgp-inclusions"
-            onClick={
-              embedded
-                ? (event) => {
-                    event.preventDefault();
-                    event.currentTarget.ownerDocument
-                      .getElementById("fgp-inclusions")
-                      ?.scrollIntoView({ block: "start" });
-                  }
-                : undefined
-            }
-          >
-            查看包含项目
-            <ArrowRight size={16} />
-          </a>
+          {!funeral && (
+            <a
+              className="fgp-overview-next"
+              href="#fgp-inclusions"
+              onClick={
+                embedded
+                  ? (event) => {
+                      event.preventDefault();
+                      event.currentTarget.ownerDocument
+                        .getElementById("fgp-inclusions")
+                        ?.scrollIntoView({ block: "start" });
+                    }
+                  : undefined
+              }
+            >
+              查看包含项目
+              <ArrowRight size={16} />
+            </a>
+          )}
         </section>
       </div>
-      <div className="fgp-detail-bottom">
+      <div
+        className={`fgp-detail-bottom${funeral ? " fgp-service-content" : ""}`}
+      >
         <section className="fgp-inclusions" id="fgp-inclusions">
           <h2>包含项目</h2>
           {product.inclusions.length > 0 ? (
             <InclusionList
               items={product.inclusions}
               groups={product.inclusionGroups}
+              funeral={funeral}
             />
-          ) : (
+          ) : !funeral ||
+            !product.religions.some((r) => r.inclusions.length) ? (
             <p className="fgp-muted">
               对应产品的包含项目尚待核实，暂不列入未确认的内容。
             </p>
-          )}
+          ) : null}
           {product.religions.some(
             (r) => r.inclusions.length || r.designs.length,
           ) && (
@@ -328,6 +381,7 @@ export function ProductDetailContent({
                       items={r.inclusions}
                       groups={r.inclusionGroups}
                       religious
+                      funeral={funeral}
                     />
                   )}
                   {r.designs.length > 0 && (
@@ -341,6 +395,7 @@ export function ProductDetailContent({
           )}
         </section>
         <section
+          ref={pricePanelRef}
           className="fgp-price-panel"
           aria-labelledby="fgp-price-heading"
         >
@@ -369,6 +424,14 @@ export function ProductDetailContent({
             !(website && product.referencePrice) && (
               <p className="fgp-price-terms">{product.terms}</p>
             )}
+          {funeral && (
+            <ConsultButton
+              subject={product.name}
+              className="fgp-service-consult"
+            >
+              直接咨询
+            </ConsultButton>
+          )}
         </section>
       </div>
     </>
@@ -380,11 +443,13 @@ export function ProductPrices({
   detailed = false,
   religion = "",
   compact = false,
+  showNotes: notesVisible = true,
 }: {
   product: PrototypeProduct;
   detailed?: boolean;
   religion?: string;
   compact?: boolean;
+  showNotes?: boolean;
 }) {
   const { website } = useContext(ProductNavigationContext);
   const funeral = product.category === 4;
@@ -437,25 +502,53 @@ export function ProductPrices({
           note: cleanPriceNote(product.priceNote),
         }));
   rows = rows.filter((r) => Number.isFinite(r.amount) && r.amount > 0);
-  if (funeral)
-    rows.sort(
-      (a, b) =>
-        (a.kind === "pre_need" ? 0 : 1) - (b.kind === "pre_need" ? 0 : 1),
-    );
   if (product.category === 3 && rows.length)
     rows = [
       rows.reduce((best, row) => (row.amount < best.amount ? row : best)),
     ];
-  const common =
-    rows.length > 1 && rows.every((r) => r.note && r.note === rows[0].note)
+  // Funeral notes can share individual lines (e.g. stamp duty) while retaining
+  // a separate pre-need condition. Keep every distinct line with its price.
+  const common = funeral
+    ? rows.some((row) => row.kind === "pre_need") &&
+      rows.some((row) => row.kind === "at_need")
+      ? rows[0].note
+          .split("\n")
+          .filter(
+            (line) =>
+              line && rows.every((row) => row.note.split("\n").includes(line)),
+          )
+          .join("\n")
+      : ""
+    : rows.length > 1 && rows.every((r) => r.note && r.note === rows[0].note)
       ? rows[0].note
       : "";
-  const showNotes = detailed || funeral;
+  if (funeral) {
+    for (const kind of ["pre_need", "at_need"]) {
+      if (!rows.some((row) => row.kind === kind))
+        rows.push({ name: "", kind, amount: 0, note: "" });
+    }
+    rows.sort(
+      (a, b) =>
+        (a.kind === "pre_need" ? 0 : 1) - (b.kind === "pre_need" ? 0 : 1),
+    );
+  }
+  const showNotes = notesVisible && (detailed || funeral);
+  const displayedRows = rows.map((row) => ({
+    ...row,
+    note: funeral
+      ? row.note
+          .split("\n")
+          .filter((line) => !common.split("\n").includes(line))
+          .join("\n")
+      : row.note === common
+        ? ""
+        : row.note,
+  }));
   return (
     <div
       className={`fgp-prices${funeral ? " fgp-dual-prices" : ""}${detailed ? " fgp-prices-detail" : ""}${compact ? " fgp-prices-compact" : ""}`}
     >
-      {rows.map((row, index) => (
+      {displayedRows.map((row, index) => (
         <div className="fgp-price-entry" key={index}>
           {(funeral || !compact || rows.length > 1) && (
             <span>
@@ -471,31 +564,19 @@ export function ProductPrices({
             </span>
           )}
           <strong>
-            {formatMoney(row.amount)}
+            {row.amount > 0 ? formatMoney(row.amount) : unavailable}
             {product.category === 3 && <em>起</em>}
           </strong>
-          {showNotes && row.note && row.note !== common && (
+          {showNotes && row.note && (
             <p className="fgp-price-note">{row.note}</p>
           )}
         </div>
       ))}
-      {!rows.length &&
-        (funeral ? (
-          <>
-            <div>
-              <span>预购价格</span>
-              <strong>{unavailable}</strong>
-            </div>
-            <div>
-              <span>即用价格</span>
-              <strong>{unavailable}</strong>
-            </div>
-          </>
-        ) : (
-          <div>
-            <strong>{unavailable}</strong>
-          </div>
-        ))}
+      {!rows.length && (
+        <div>
+          <strong>{unavailable}</strong>
+        </div>
+      )}
       {showNotes && common && (
         <p className="fgp-price-note fgp-common-price-note">{common}</p>
       )}

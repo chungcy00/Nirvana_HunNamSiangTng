@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "sticky remains below navigation, inside detail, before footer; short viewport disables it",
+    "reference layout uses two by two specs, equal lower columns and unboxed groups",
+    "oversized notes disable sticky; price note content remains accessible",
+    "few items, no grouping, no notes, missing price and empty inclusions",
+    "320, 768 and 1024px layout, wrapping, touch targets and scoped sticky",
+    "loading never shows a price; API error hides internal data and retry recovers",
+    "all six other categories preserve identical rendered detail markup",
+    "text contrast reaches WCAG AA on both service surfaces",
+    "admin iframe matches public details and updates unsaved form state without API requests"
+  ],
+  "consoleErrors": [],
+  "api": "intercepted fixtures only; no production access or publishing"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "selector": ".fgp-specs dt",
+    "ratio": 6.481650176176987
+  },
+  {
+    "selector": ".fgp-specs dd",
+    "ratio": 11.78687167225595
+  },
+  {
+    "selector": ".fgp-price-panel .fgp-prices span",
+    "ratio": 6.106369174265418
+  },
+  {
+    "selector": ".fgp-price-note",
+    "ratio": 6.774722037284623
+  },
+  {
+    "selector": ".fgp-inclusions li",
+    "ratio": 11.78687167225595
+  },
+  {
+    "selector": ".fgp-inclusions summary h3",
+    "ratio": 11.78687167225595
+  }
+]

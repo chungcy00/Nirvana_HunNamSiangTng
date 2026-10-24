@@ -302,7 +302,7 @@ test('funeral venue is mapped identically from public records and unsaved form s
     const product = mapPublicProduct(raw);
     const html = details(product);
     assert.equal(product.serviceVenue, venue);
-    assert.match(html, new RegExp(`<dt>服务地点</dt><dd>${venue}</dd>`));
+    assert.match(html, new RegExp(`<dt>服务地点</dt><dd>${venue.replace(/\s*\/\s*/g, " / ")}</dd>`));
     assert.equal(html, details(mapAdminPreviewProduct(edited, refs)));
     assert.equal(JSON.stringify(edited), original);
     assert.equal(changesFor(bundle, edited, 'draft').p_changes.funeral_details.upsert![0].service_venue, venue);
@@ -316,4 +316,39 @@ test('funeral venue is mapped identically from public records and unsaved form s
     assert.doesNotMatch(details(mapPublicProduct({ ...record, attributes: {service_venue} })), /<dt>服务地点<\/dt>/);
   }
   assert.match(details(mapPublicProduct({ ...record, attributes: {service_venue:'旧地点原文'} })), /旧地点原文/);
+});
+
+test('funeral detail defaults groups open and keeps ungrouped items and quantities without inferred categories', () => {
+  const product = mapPublicProduct({...record, inclusions:[
+    {name:'保留原名', quantity:2, unit:'套', group_title:'后台分组'},
+    {name:'未分组项目'},
+  ]});
+  const html = details(product);
+  assert.equal((html.match(/<details class="fgp-inclusion-section" open="">/g)||[]).length,2);
+  assert.match(html,/保留原名 × 2套/);
+  assert.match(html,/<h3>包含项目<\/h3>/);
+  assert.doesNotMatch(html,/全部展开|全部收起/);
+});
+
+test('partial shared note lines appear once; independent conditions stay attached to their prices', () => {
+  const html = price({...record, prices:record.prices.map((row,index)=>({...row,
+    price_note:(index === 0 ? '预购须至少提前3天购买。\n' : '')+'以上价格未包含印花税。',
+  }))});
+  assert.equal((html.match(/以上价格未包含印花税/g)||[]).length,1);
+  assert.match(html,/预购价格<\/span><strong>RM 23,888<\/strong><p[^>]*>预购须至少提前3天购买。/);
+  assert.doesNotMatch(html,/即用价格<\/span><strong>RM 26,888<\/strong><p/);
+});
+
+test('missing one or both prices retain truthful labels without zero money; summary omits notes', () => {
+  for (const prices of [[],record.prices.slice(0,1),record.prices.slice(1)]) {
+    const html = price({...record, prices});
+    assert.match(html,/预购价格/);
+    assert.match(html,/即用价格/);
+    assert.match(html,/欢迎咨询/);
+    assert.doesNotMatch(html,/RM 0|NaN|undefined/);
+  }
+  const html = renderToStaticMarkup(<ProductPrices product={mapPublicProduct(record)} showNotes={false}/>);
+  assert.match(html,/RM 23,888/);
+  assert.match(html,/RM 26,888/);
+  assert.doesNotMatch(html,/fgp-price-note|预购须/);
 });
