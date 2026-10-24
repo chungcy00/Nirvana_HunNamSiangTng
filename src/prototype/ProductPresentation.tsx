@@ -173,6 +173,8 @@ export function ProductDetailContent({
       ];
   const selectedDesign = designs.includes(design) ? design : designs[0];
   const specs = [
+    ...(funeralDurationLabel(product) ? [["服务天数", `${product.durationDays}天${product.durationNights}夜`]] : []),
+    ...(product.category === 4 && product.serviceVenue ? [["服务地点", product.serviceVenue]] : []),
     ...(hasCapacity(product.category) && product.capacity
       ? [
           [
@@ -188,6 +190,7 @@ export function ProductDetailContent({
     ...(hasReligion(product.category) && product.religions.length
       ? [["适用宗教", product.religions.map((r) => r.name).join("、")]]
       : []),
+    ...(product.category === 4 && product.funeralMethod ? [["适用安葬方式", funeralMethodLabels[product.funeralMethod]]] : []),
     ...(product.category === 3 && product.placement
       ? [["安放环境", product.placement === "indoor" ? "室内" : "室外"]]
       : []),

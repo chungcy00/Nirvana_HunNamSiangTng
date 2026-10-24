@@ -186,6 +186,17 @@ try {
       await role("authenticated");
     },
   );
+  await check("all three service venues survive save, reopen and public reads", async () => {
+    for (const service_venue of ['丧府', '殡仪礼堂', '丧府/殡仪礼堂']) {
+      p = await rpc('save_product', [p.id, p.updated_at, {}, {
+        funeral_details: {upsert: [{product_id: p.id, service_venue}]}
+      }]);
+      assert.equal((await rpc('admin_product', [p.id])).funeral_details[0].service_venue, service_venue);
+      await role('anon');
+      assert.equal((await rpc('catalog_product_detail', [slug])).attributes.service_venue, service_venue);
+      await role('authenticated');
+    }
+  });
   await check(
     "blank price note falls back to product override without overwriting counterpart",
     async () => {

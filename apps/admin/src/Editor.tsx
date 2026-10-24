@@ -1,4 +1,5 @@
 import { InclusionEditor } from './InclusionEditor';
+import { ServiceVenueField } from './ServiceVenueField';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useBlocker } from 'react-router-dom';
 import { ArrowDown, ArrowUp, GripVertical } from 'lucide-react';
@@ -537,7 +538,9 @@ export default function Editor() {
                         ['burial', '土葬'],
                         ['both', '火化／土葬皆适用'],
                       ])}
-                      {attr('服务地点', 'service_venue')}
+                      <ServiceVenueField value={attrs.service_venue} onChange={value =>
+                        setRows('funeral_details', [{ ...attrs, service_venue: value }])
+                      } />
                     </>
                   ) : p.category_id === 5 ? (
                     <>

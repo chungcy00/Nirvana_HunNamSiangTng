@@ -292,3 +292,28 @@ test("editing duration or independent price note preserves hidden legacy fields 
   assert.equal(edited.product.internal_notes, "保留内部备注");
   assert(!payload.p_changes.product_religions);
 });
+
+test('funeral venue is mapped identically from public records and unsaved form state, without appearing on other categories', () => {
+  for (const venue of ['丧府', '殡仪礼堂', '丧府/殡仪礼堂']) {
+    const raw = { ...record, attributes: { ...record.attributes, service_venue: venue } };
+    const edited = structuredClone(bundle);
+    edited.funeral_details[0].service_venue = venue;
+    const original = JSON.stringify(edited);
+    const product = mapPublicProduct(raw);
+    const html = details(product);
+    assert.equal(product.serviceVenue, venue);
+    assert.match(html, new RegExp(`<dt>服务地点</dt><dd>${venue}</dd>`));
+    assert.equal(html, details(mapAdminPreviewProduct(edited, refs)));
+    assert.equal(JSON.stringify(edited), original);
+    assert.equal(changesFor(bundle, edited, 'draft').p_changes.funeral_details.upsert![0].service_venue, venue);
+    for (const category_id of [1, 2, 3, 5, 6, 7]) {
+      const other = mapPublicProduct({ ...raw, category_id });
+      assert.equal(other.serviceVenue, undefined);
+      assert.doesNotMatch(details(other), /<dt>服务地点<\/dt>/);
+    }
+  }
+  for (const service_venue of [null, undefined, '', '   ']) {
+    assert.doesNotMatch(details(mapPublicProduct({ ...record, attributes: {service_venue} })), /<dt>服务地点<\/dt>/);
+  }
+  assert.match(details(mapPublicProduct({ ...record, attributes: {service_venue:'旧地点原文'} })), /旧地点原文/);
+});

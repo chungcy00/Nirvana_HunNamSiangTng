@@ -7,6 +7,7 @@ export interface PrototypeProduct {
   databaseId?: string; primaryImage?: import("../catalog/publicRepository").PublicImage; images?: import("../catalog/publicRepository").PublicImage[]; publicPrices?: import("../catalog/publicRepository").PublicPrice[]; description?: string; subtitle?: string; petMethod?: string;
   id: string; name: string; category: number; visible: boolean;
   durationDays?: number; durationNights?: number;
+  serviceVenue?: string;
   funeralMethod?: "cremation" | "burial" | "both";
   capacity?: Capacity; capacityCount?: number; placement?: "indoor" | "outdoor";
   religions: ReligionContent[]; inclusions: string[]; inclusionGroups?: InclusionGroup[];

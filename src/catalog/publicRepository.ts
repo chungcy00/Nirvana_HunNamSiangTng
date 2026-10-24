@@ -198,6 +198,7 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
         : undefined,
     durationDays: raw.category_id === 4 && Number.isInteger(days) && Number(days) > 0 ? Number(days) : undefined,
     durationNights: raw.category_id === 4 && Number.isInteger(nights) && Number(nights) >= 0 ? Number(nights) : undefined,
+    serviceVenue: raw.category_id === 4 && typeof a.service_venue === 'string' && a.service_venue.trim() ? a.service_venue : undefined,
     funeralMethod:
       raw.category_id === 4 && ["cremation", "burial", "both"].includes(String(a.funeral_method))
         ? a.funeral_method as PrototypeProduct["funeralMethod"]
