@@ -462,7 +462,9 @@ export default function Products() {
             if (!busy) setNewProduct(false);
           }}
         >
-          <p className="help">选择类别后建立真实草稿。名称、价格及图片可稍后填写。</p>
+          <p className="help">
+            选择类别后建立真实草稿，系统自动生成唯一产品网址。名称、价格及图片可稍后填写。
+          </p>
           <Field
             label="产品类别"
             value={newCategory}

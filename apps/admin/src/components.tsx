@@ -1,3 +1,5 @@
+import { mapAdminPreviewProduct } from './previewModel';
+import { DetailPreviewFrame } from './DetailPreviewFrame';
 import { groupInclusions } from '../../../shared/inclusionGroups';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Image as ImageIcon, X } from 'lucide-react';
@@ -93,10 +95,12 @@ export function Check({
   );
 }
 export function Modal({
+  className = '',
   title,
   children,
   onClose,
 }: {
+  className?: string;
   title: string;
   children: ReactNode;
   onClose: () => void;
@@ -112,6 +116,7 @@ export function Modal({
   }, []);
   return (
     <dialog
+      className={className}
       ref={ref}
       onCancel={(e) => {
         e.preventDefault();
@@ -128,7 +133,15 @@ export function Modal({
     </dialog>
   );
 }
-export function Photo({ image, className = 'thumb' }: { image?: Row; className?: string }) {
+export function Photo({
+  image,
+  className = 'thumb',
+  showPlaceholder = true,
+}: {
+  image?: Row;
+  className?: string;
+  showPlaceholder?: boolean;
+}) {
   const [src, setSrc] = useState('');
   useEffect(() => {
     let active = true,
@@ -151,7 +164,7 @@ export function Photo({ image, className = 'thumb' }: { image?: Row; className?:
   }, [image?.storage_bucket, image?.storage_path]);
   return src ? (
     <img className={className} src={src} alt={image?.alt_text || '产品图片'} />
-  ) : (
+  ) : !showPlaceholder ? null : (
     <div
       className={`${className} photo-empty`}
       role="img"
@@ -172,52 +185,14 @@ export function Preview({
 }) {
   const [religion, setReligion] = useState(''),
     [offer, setOffer] = useState(''),
-    [mode, setMode] = useState('public');
-  const p = bundle.product;
-  const religious = (id: number | null) =>
-    !id ||
-    (bundle.product_religions.some(
-      (x: Row) => x.religion_id === id && (mode === 'all' || x.is_published),
-    ) &&
-      (!religion || String(id) === religion));
-  const visible = (r: Row) => {
-    const offer = r.offer_id ? bundle.product_offers.find((x: Row) => x.id === r.offer_id) : null;
-    return (
-      (mode === 'all' || r.is_published !== false) &&
-      religious(r.religion_id) &&
-      (!r.offer_id ||
-        (offer && (mode === 'all' || offer.is_active) && religious(offer.religion_id)))
-    );
-  };
-  const attributes = bundle[tableFor(p.category_id)]?.[0] || {};
-  const attrLabels: Record<string, string> = {
-    facing: '朝向',
-    area_sqft: '面积（sqft）',
-    theme_name: '产品主题',
-    niche_style: '款式',
-    placement_type: '安放环境',
-    duration_days: '服务天数',
-    duration_nights: '服务夜数',
-    service_venue: '服务地点',
-    terms_summary: '适用条件',
-    tablet_type: '牌位类型',
-    fengshui_type: '生基类型',
-    pet_size_class: '宠物规格',
-  };
-  const lines = priceLines(bundle)
-    .filter(visible)
-    .filter((r: Row) => !offer || r.offer_id === offer);
-  const images = bundle.product_images
-    .filter(visible)
-    .filter((r: Row) => r.storage_bucket !== 'catalog-media-restricted');
-  const inclusions = bundle.product_inclusions.filter(
-    (r: Row) => visible(r) && (!offer || !r.offer_id || r.offer_id === offer),
-  );
-  const primary = images.find((r: Row) => r.is_primary);
-  const name = (r: Row) => refs.religions.find((x) => x.id === r.religion_id)?.name;
+    [mode, setMode] = useState('public'),
+    [width, setWidth] = useState('desktop');
+  const product = mapAdminPreviewProduct(bundle, refs, { religion, offer, mode });
   return (
-    <Modal title="预览产品" onClose={onClose}>
-      <p className="help">预览使用当前表单资料，不会自动保存或发布。</p>
+    <Modal className="product-preview-modal" title="预览产品" onClose={onClose}>
+      <p className="help">
+        预览使用当前尚未保存的表单资料，不会自动保存或发布；内容复用正式前台详情组件。
+      </p>
       <div className="row preview-filters">
         <Field
           label="预览范围"
@@ -235,7 +210,11 @@ export function Preview({
           options={[
             ['', '全部适用宗教'],
             ...bundle.product_religions.map(
-              (r: Row) => [String(r.religion_id), name(r)] as [string, string],
+              (r: Row) =>
+                [
+                  String(r.religion_id),
+                  refs.religions.find((d) => d.id === r.religion_id)?.name || '未命名宗教',
+                ] as [string, string],
             ),
           ]}
         />
@@ -250,104 +229,34 @@ export function Preview({
             ),
           ]}
         />
+        <Field
+          label="预览宽度"
+          value={width}
+          onChange={setWidth}
+          options={[
+            ['desktop', '桌面'],
+            ['mobile', '手机'],
+          ]}
+        />
       </div>
-      <div className="previewgrid">
-        <div className="previewcard">
-          {p.category_id !== 4 && <Photo image={primary} className="preview-photo" />}
-          <article>
-            <h2>{p.name || '未命名草稿'}</h2>
-            <p>{p.subtitle}</p>
-            <div className="row">
-              {p.capacity_group && <span className="badge">{capacities[p.capacity_group]}</span>}
-              {bundle.product_religions.filter(visible).map((r: Row) => (
-                <span className="badge" key={r.id}>
-                  {name(r)}
-                </span>
-              ))}
-            </div>
-            {lines.length ? (
-              lines.map((r: Row) => (
-                <p className="price" key={r.id}>
-                  <small>{r.label}</small>
-                  <br />
-                  {money(r.price_amount)}
-                  {p.category_id === 3 ? ' 起' : ''}
-                </p>
-              ))
-            ) : (
-              <p className="notice">暂无符合当前预览条件的公开价格。</p>
-            )}
-          </article>
-        </div>
-        <section className="previewdetail">
-          <h2>{p.name || '未命名草稿'}</h2>
-          <p>{p.description}</p>
-          <dl className="preview-attributes">
-            {Object.entries(attrLabels)
-              .filter(
-                ([key]) =>
-                  attributes[key] !== null &&
-                  attributes[key] !== undefined &&
-                  attributes[key] !== '',
-              )
-              .map(([key, label]) => (
-                <div key={key}>
-                  <dt>{label}</dt>
-                  <dd>
-                    {key === 'placement_type'
-                      ? ({ indoor: '室内', outdoor: '室外' } as Record<string, string>)[
-                          attributes[key]
-                        ]
-                      : attributes[key]}
-                  </dd>
-                </div>
-              ))}
-          </dl>
-          <h3>包含项目</h3>
-          {inclusions.length ? (
-            groupInclusions<Row>(inclusions, (r) => r.group_title).map((group, index) => (
-              <details key={index} open={group.title ? undefined : true}>
-                <summary>{group.title || '未分组项目'}</summary>
-                <ul>
-                  {group.items.map((r: Row) => (
-                    <li key={r.id}>
-                      {r.item_name}
-                      {r.quantity ? ` × ${r.quantity}${r.unit || ''}` : ''}
-                      {r.religion_id ? `（${name(r)}）` : ''}
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            ))
-          ) : (
-            <p className="help">暂无符合当前预览条件的包含项目。</p>
-          )}
-          {p.category_id !== 4 && (
-            <>
-              <h3>产品与设计图片</h3>
-              {images.length ? (
-                <div className="preview-images">
-                  {images.map((r: Row) => (
-                    <figure key={r.id}>
-                      <Photo image={r} className="preview-photo" />
-                      <figcaption>{r.design_name || r.alt_text}</figcaption>
-                    </figure>
-                  ))}
-                </div>
-              ) : (
-                <p className="help">暂无符合当前预览条件的产品与设计图片。</p>
-              )}
-            </>
-          )}
-          <p className="help">
-            {p.price_note_override ||
-              refs.notices
-                .filter((x) => x.is_active)
-                .map((x) => x.content)
-                .join(' ')}
-          </p>
-        </section>
-      </div>
+      <DetailPreviewFrame
+        key={`${mode}:${religion}:${offer}`}
+        product={product}
+        mobile={width === 'mobile'}
+        imageRenderer={(image) => (
+          <Photo
+            key={image.id}
+            className="fgp-real-image"
+            showPlaceholder={false}
+            image={{
+              id: image.id,
+              storage_bucket: image.bucket,
+              storage_path: image.path,
+              alt_text: image.alt,
+            }}
+          />
+        )}
+      />
     </Modal>
   );
 }

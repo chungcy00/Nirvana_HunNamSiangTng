@@ -328,7 +328,17 @@ export default function Editor() {
               value={row.is_published}
               onChange={(v) => update('offer_prices', row.id, 'is_published', v)}
             />
-            {childField('offer_prices', row, '方案专属价格备注', 'price_note', 'textarea')}
+            {childField(
+              'offer_prices',
+              row,
+              type === 'pre_need'
+                ? '预购价格备注'
+                : type === 'at_need'
+                  ? '即用价格备注'
+                  : '方案专属价格备注',
+              'price_note',
+              'textarea',
+            )}
           </>
         )}
       </div>
@@ -473,23 +483,16 @@ export default function Editor() {
                       {field('实际人数（有明确资料时填写）', 'capacity_count', 'number')}
                     </>
                   )}
-                  {field('产品网址标识', 'slug', 'text', '请保留已有网址，避免原链接失效。')}
                   {field('产品副标题', 'subtitle')}
                   {field('产品简介', 'description', 'textarea', undefined, undefined, true)}
                   {field('内部备注', 'internal_notes', 'textarea', '仅后台可见。', undefined, true)}
-                  {field(
-                    '资料来源',
-                    'source_reference',
-                    'textarea',
-                    '仅后台可见，不上传来源附件。',
-                    undefined,
-                    true,
-                  )}
                 </div>
                 <p className="help">
                   最后修改：
                   {new Date(p.updated_at).toLocaleString('zh-CN', { timeZone: 'Asia/Kuching' })} ·
                   操作人：{p.updated_by || '系统维护'}
+                  <br />
+                  产品网址由系统自动生成，修改名称不会改变已有链接。
                   <br />
                   新产品和重分类产品自动排到类别末尾；展示顺序在产品列表独立调整。
                 </p>
@@ -535,7 +538,6 @@ export default function Editor() {
                         ['both', '火化／土葬皆适用'],
                       ])}
                       {attr('服务地点', 'service_venue')}
-                      {attr('价格／服务适用条件', 'terms_summary', 'textarea')}
                     </>
                   ) : p.category_id === 5 ? (
                     <>
@@ -632,13 +634,17 @@ export default function Editor() {
                           </button>
                         </div>
                         <div className="fields">
-                          {childField('product_religions', r, '配置名称', 'configuration_name')}
-                          {childField(
-                            'product_religions',
-                            r,
-                            '配置说明',
-                            'configuration_notes',
-                            'textarea',
+                          {p.category_id !== 4 && (
+                            <>
+                              {childField('product_religions', r, '配置名称', 'configuration_name')}
+                              {childField(
+                                'product_religions',
+                                r,
+                                '配置说明',
+                                'configuration_notes',
+                                'textarea',
+                              )}
+                            </>
                           )}
                           <Check
                             label="公开此宗教配置"
@@ -667,7 +673,8 @@ export default function Editor() {
                     (o: Row) => [o.id, o.name || '默认方案'] as [string, string],
                   ),
                 ]}
-                religious={p.category_id <= 4}
+                religious={p.category_id <= 3}
+                productScoped={p.category_id === 4}
               />
             )}
             {section === 4 && (

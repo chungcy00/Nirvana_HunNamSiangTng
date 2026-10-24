@@ -40,6 +40,20 @@ test('serializer sends only changed fields, preserves omitted counterpart prices
   assert.equal(payload.p_expected_updated_at, base.product.updated_at);
   assert(!('sort_order' in payload.p_product));
 });
+test('renaming preserves the system-managed URL identifier in every save status', () => {
+  const before = structuredClone(base);
+  before.product.slug = 'existing-public-link';
+  const current = structuredClone(before);
+  current.product.name = '修改后的产品名称';
+  // Even a stale form or accidental local change must not write a different URL.
+  current.product.slug = 'do-not-save-this';
+  for (const status of ['draft', 'published', 'hidden']) {
+    const payload = changesFor(before, current, status);
+    assert.equal(payload.p_product.name, '修改后的产品名称');
+    assert(!('slug' in payload.p_product));
+    assert.equal(before.product.slug, 'existing-public-link');
+  }
+});
 test('deleted offers cascade prices without duplicate child deletion', () => {
   const b = structuredClone(base);
   b.product_offers = [];

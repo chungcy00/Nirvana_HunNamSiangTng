@@ -76,13 +76,15 @@ test("仁爱园按已确认宗教进入单人佛教筛选，详情保留最低�
   assert.doesNotMatch(detail, /<dt>(朝向|面积|楼层|层位)<\/dt>/);
 });
 
-test("网格卡片只显示最低起价，地段报价和印花税备注留在详情", () => {
+test("一般产品卡片展示实际方案售价，不加起且税务备注留在详情", () => {
   const html = render('/nirvana?category=2');
   const cards = html.match(/<article class="fgp-card fgp-catalog-card">.*?<\/article>/g)!;
   assert.equal(cards.length, 6);
-  assert(cards[0].includes('RM 238,888<em>起</em>'));
+  assert(cards[0].includes('RM 238,888'));
+  assert(cards[0].includes('RM 258,888'));
+  assert(cards[0].includes('RM 308,888'));
   for(const card of cards) {
-    assert.doesNotMatch(card, /产品售价|普通地段|角头地段|印花税|fgp-card-link/);
+    assert.doesNotMatch(card, /<em>起<\/em>|印花税|fgp-card-link/);
     assert.equal((card.match(/<a /g) || []).length, 1);
   }
   assert.doesNotMatch(html, /fgp-source-note|以上价格未包含印花税|每一份纪念/);
@@ -103,10 +105,10 @@ test("排序按产品最低价格，缺价产品始终放最后", () => {
   assert(ascending.indexOf('单人福地地段 · W区') < ascending.indexOf('家庭福地 · W区'));
 });
 
-test("两种展示模式保持指定版本价格展示且殡仪无照片", () => {
+test("两种展示模式均展示殡仪双价格且不加起、不显示照片", () => {
   const grid = render('/nirvana?category=4');
   assert.match(grid, /fgp-view-grid/);
-  assert.doesNotMatch(grid, /预购价格|即用价格/); assert.match(grid, /起/); assert.doesNotMatch(grid, /fgp-product-visual/);
+  assert.match(grid, /预购价格/); assert.match(grid, /即用价格/); assert.doesNotMatch(grid, /<em>起<\/em>/); assert.doesNotMatch(grid, /fgp-product-visual/);
   assert.doesNotMatch(grid, /fgp-product-visual|fgp-gallery/);
   const list = render('/nirvana?category=4&view=list');
   assert.match(list,/fgp-view-list/);

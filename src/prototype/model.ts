@@ -6,6 +6,7 @@ export interface ReligionContent {
 export interface PrototypeProduct {
   databaseId?: string; primaryImage?: import("../catalog/publicRepository").PublicImage; images?: import("../catalog/publicRepository").PublicImage[]; publicPrices?: import("../catalog/publicRepository").PublicPrice[]; description?: string; subtitle?: string; petMethod?: string;
   id: string; name: string; category: number; visible: boolean;
+  durationDays?: number; durationNights?: number;
   funeralMethod?: "cremation" | "burial" | "both";
   capacity?: Capacity; capacityCount?: number; placement?: "indoor" | "outdoor";
   religions: ReligionContent[]; inclusions: string[]; inclusionGroups?: InclusionGroup[];
@@ -22,6 +23,10 @@ export const categories = [
   { id: 6, slug: "feng-shui", name: "生基风水", description: "了解生基风水产品的规格、包含项目与售价。" },
   { id: 7, slug: "pet-memorial", name: "宠物安葬", description: "为家中的另一位成员，了解合适的安葬安排。" },
 ] as const;
+export function funeralDurationLabel(product: PrototypeProduct) {
+  return product.category === 4 && Number.isInteger(product.durationDays) && Number(product.durationDays) > 0 && Number.isInteger(product.durationNights) && Number(product.durationNights) >= 0
+    ? `${product.durationDays}天${product.durationNights}夜殡仪服务配套` : undefined;
+}
 export const funeralMethodLabels = { cremation: "适用火化", burial: "适用土葬", both: "火化／土葬皆适用" } as const;
 export const capacityLabels: Record<Capacity, string> = {
   single: "单人", double: "双人", triple: "三人", four_plus: "四人及以上", family: "家庭",

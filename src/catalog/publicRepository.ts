@@ -1,3 +1,4 @@
+import { cleanPriceNote } from "../../shared/priceNotes";
 import { groupInclusions } from "../../shared/inclusionGroups";
 import type { PrototypeProduct, Capacity } from "../prototype/model";
 
@@ -32,6 +33,7 @@ export type PublicRecord = {
   attributes?: Record<string, unknown>;
   subtitle?: string;
   description?: string;
+  price_note_override?: string | null;
   images?: PublicImage[];
   inclusions?: {
     name: string;
@@ -114,6 +116,11 @@ export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
   const religious = [1, 2, 3, 4].includes(raw.category_id);
   if (religious && !raw.religions.length)
     throw new Error("产品公开资料不完整。");
+  return projectProductRecord(raw);
+}
+// Pure projection shared by public reads and unsaved admin preview.
+// Public callers must go through mapPublicProduct for publication completeness.
+export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
   const allowed = new Set(raw.religions.map((r) => r.id));
   const prices = raw.prices.filter(
     (p) =>
@@ -138,6 +145,10 @@ export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
       : undefined;
   };
   const a = raw.attributes || {};
+  const commonNotes = prices.map(p => cleanPriceNote(p.price_note));
+  const commonNote = commonNotes.length && commonNotes.every(n => n === commonNotes[0]) ? commonNotes[0] : '';
+  const days = a.duration_days, nights = a.duration_nights;
+
   return {
     id: raw.slug,
     databaseId: raw.id,
@@ -185,6 +196,8 @@ export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
           ? ((raw.placement_type ?? a.placement_type) as "indoor" | "outdoor")
           : undefined
         : undefined,
+    durationDays: raw.category_id === 4 && Number.isInteger(days) && Number(days) > 0 ? Number(days) : undefined,
+    durationNights: raw.category_id === 4 && Number.isInteger(nights) && Number(nights) >= 0 ? Number(nights) : undefined,
     funeralMethod:
       raw.category_id === 4 && ["cremation", "burial", "both"].includes(String(a.funeral_method))
         ? a.funeral_method as PrototypeProduct["funeralMethod"]
@@ -193,10 +206,9 @@ export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
       typeof a.pet_burial_method === "string" ? a.pet_burial_method : undefined,
     description: raw.description,
     subtitle: raw.subtitle,
-    priceNote: [
-      ...new Set(prices.map((p) => p.price_note).filter(Boolean)),
-    ].join("\n"),
-    terms: typeof a.terms_summary === "string" ? a.terms_summary : undefined,
+    priceNote: cleanPriceNote(raw.price_note_override) || commonNote || undefined,
+    terms: raw.category_id !== 4 && typeof a.terms_summary === "string" ? a.terms_summary : undefined,
+
   };
 }
 export async function loadPublicProducts(

@@ -1081,3 +1081,9 @@ td.number {
 .inclusion-editor-group { margin-top: 16px; border-top: 1px solid var(--line); }
 .inclusion-editor-group > summary { min-height: 44px; padding: 10px 0; cursor: pointer; font-weight: 600; }
 .inclusion-editor-group > .row { margin: 8px 0 12px; }
+
+.detail-preview-frame { display: block; width: 100%; height: 70vh; min-height: 420px; border: 1px solid var(--line); background: var(--paper); }
+.detail-preview-frame.is-mobile { width: min(390px, 100%); margin-inline: auto; }
+.product-preview-modal[open] { display: flex; flex-direction: column; overflow: hidden; }
+.product-preview-modal .dialoghead { position: static; flex-shrink: 0; }
+.product-preview-modal .dialogbody { min-height: 0; overflow-y: auto; }

@@ -4,6 +4,7 @@ import { handler } from './server/media';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
+    resolve: { dedupe: ['react', 'react-dom', 'react-router', 'react-router-dom'] },
     plugins: [
       react(),
       {
