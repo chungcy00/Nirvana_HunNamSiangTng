@@ -32,12 +32,13 @@ function WebsiteProductCard({ product, returnTo, view }: { product: PrototypePro
       <div className="fgp-card-body">
         <p className="fgp-card-category">{categories.find(c => c.id === product.category)?.name}</p>
         <h3>{product.name}</h3>
-        <ProductTags product={product}/>
+        <ProductTags product={product} desktopServiceVenue/>
         {product.category === 4 && <div className="fgp-card-service-meta">
           {funeralDurationLabel(product) && <span>{product.durationDays}天{product.durationNights}夜</span>}
           {product.serviceVenue && <span>{product.serviceVenue}</span>}
         </div>}
-        <div className="fgp-card-pricing"><PrototypePrices product={product} compact showNotes={false}/></div>
+        <div className="fgp-card-pricing"><PrototypePrices product={product} compact showCompactNotes/></div>
+        {product.productPriceNote && <p className="fgp-catalog-product-note">{product.productPriceNote}</p>}
         <span className="fgp-card-action">查看详情<ArrowRight size={15} aria-hidden="true"/></span>
       </div>
     </Link>

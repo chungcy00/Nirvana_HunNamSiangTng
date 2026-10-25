@@ -15,15 +15,8 @@ export function cleanPriceNote(value: unknown): string {
     ),
   ].join("\n");
 }
-// Same precedence as api.catalog_product_prices: price > product > active notices.
-export function resolvePriceNote(
-  price: unknown,
-  product: unknown,
-  notices: readonly string[],
-) {
-  return (
-    cleanPriceNote(price) ||
-    cleanPriceNote(product) ||
-    cleanPriceNote(notices.join("\n"))
-  );
+// A price note belongs only to that price. Product notes are returned separately;
+// the global settings remain stored but never fill an empty price note.
+export function resolvePriceNote(price: unknown) {
+  return cleanPriceNote(price);
 }

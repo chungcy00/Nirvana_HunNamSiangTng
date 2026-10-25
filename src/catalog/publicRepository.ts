@@ -17,7 +17,7 @@ export type PublicPrice = {
   religion_id?: number;
   price_type: string;
   amount: number;
-  price_note?: string;
+  price_note?: string | null;
 };
 export type PublicRecord = {
   id: string;
@@ -208,6 +208,9 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
     description: raw.description,
     subtitle: raw.subtitle,
     priceNote: cleanPriceNote(raw.price_note_override) || commonNote || undefined,
+    // Preserve the source separately: resolved per-price/global notes are not
+    // evidence that a product-specific note was entered in the backend.
+    productPriceNote: cleanPriceNote(raw.price_note_override) || undefined,
     terms: raw.category_id !== 4 && typeof a.terms_summary === "string" ? a.terms_summary : undefined,
 
   };
