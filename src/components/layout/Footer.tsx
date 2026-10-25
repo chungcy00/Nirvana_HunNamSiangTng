@@ -8,6 +8,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div>
             <Link to="/" className="brand footer-brand-name" aria-label="身后事 · 皆可托，返回首页">身后事 · 皆可托</Link>
+            <p className="footer-brand-tagline">LIFE · MEMORY · PEACE</p>
             <p>
               以温柔相送，让身后事 · 皆可托
               <br />

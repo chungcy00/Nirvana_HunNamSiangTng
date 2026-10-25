@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { principles } from "../data/site";
 import { ConsultButton, SectionHeading } from "../components/ui";
+import "./Home.css";
 
 const icons = [HeartHandshake, Leaf, ListChecks, CheckCircle2];
 
@@ -110,19 +111,6 @@ export default function Home() {
               </div>
             </Link>
           ))}
-        </div>
-      </section>
-
-      <section className="container needs-guide" aria-labelledby="needs-guide-title">
-        <div>
-          <h2 id="needs-guide-title">还不确定从哪里开始？</h2>
-          <p>可以先了解适合自己的安排，也可以直接联系顾问。</p>
-        </div>
-        <div className="needs-guide-actions">
-          <Link className="button button-outline" to="/contact#needs-questionnaire">
-            根据需求了解 <ArrowRight size={17} aria-hidden="true" />
-          </Link>
-          <ConsultButton className="guide-consult">直接咨询顾问</ConsultButton>
         </div>
       </section>
 

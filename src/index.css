@@ -2738,3 +2738,43 @@ body:has(.mobile-nav:not([hidden])) .floating-consult { visibility: hidden; }
   .contact-form .button { min-height: 44px; white-space: normal; }
   .contact-whatsapp-numbers a { display: inline-flex; align-items: center; min-height: 44px; }
 }
+
+/* Shared shell appearance approved with the homepage revision. */
+.site-header {
+  background: #faf9f6;
+  color: #2d4336;
+}
+.site-header .button {
+  background: #2d4336;
+  border-color: transparent;
+  border-radius: 4px;
+}
+.site-header .button:hover { background: #23352a; }
+.site-header .desktop-nav a.active { color: #2d4336; }
+.site-header .desktop-nav a.active::after { background: #c5a880; }
+.site-header.is-transparent .desktop-nav a.active { color: #fffbed; }
+.mobile-menu-drawer {
+  --green: #2d4336;
+  --muted: #4b5563;
+  --line: #e7e4dc;
+  background: #faf9f6;
+  color: #2d4336;
+}
+.mobile-menu-drawer .mobile-nav { background: transparent; }
+.mobile-menu-drawer .mobile-nav > a { color: #4b5563; border-color: #e7e4dc; }
+.mobile-menu-drawer .mobile-nav > a.active {
+  color: #2d4336;
+  background: #f2f0eb;
+}
+.mobile-menu-drawer .mobile-nav > a:hover { color: #2d4336; background: #f2f0eb; }
+.mobile-menu-drawer .menu-close { color: #2d4336; }
+.site-footer { background: #2d4336; }
+.site-footer .footer-grid .footer-brand-tagline {
+  margin: 2px 0 0;
+  color: #c5a880;
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: .12em;
+}
