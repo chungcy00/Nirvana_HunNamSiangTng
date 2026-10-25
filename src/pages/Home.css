@@ -1,0 +1,156 @@
+/* Homepage-only presentation: keep the other business pages on their current styles. */
+.home-page {
+  --cream: #faf9f6;
+  --green: #2d4336;
+  --green-hover: #23352a;
+  --foreground: #1f2937;
+  --muted: #4b5563;
+  --line: #e7e4dc;
+  background: var(--cream);
+}
+
+.home-page .container {
+  width: min(1240px, calc(100% - 64px));
+  max-width: 1240px;
+}
+.home-page .home-hero-shell.container { width: 100%; max-width: none; }
+.home-page .button,
+.home-page .portal-link { border-radius: 9999px; }
+.site-header-home .header-consult .button {
+  min-height: 44px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid #2d433640;
+  color: #2d4336;
+}
+.site-header-home.is-transparent .header-consult .button {
+  border-color: #ffffff80;
+  color: #fffbed;
+}
+.site-header-home .header-consult .button:hover {
+  background: #2d4336;
+  color: #fff;
+}
+.home-page .service-portals { padding-block: 80px; }
+.home-page .service-portals .section-heading { margin-bottom: 32px; }
+.home-page .portal-grid { gap: 32px; }
+.home-page .portal-card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -2px #2d43360a;
+  transition: box-shadow 180ms ease;
+}
+.home-page .portal-card:hover,
+.home-page .portal-card:focus-within {
+  transform: none;
+  box-shadow: 0 8px 30px -4px #2d433614;
+}
+.home-page .portal-card:hover .portal-visual > img,
+.home-page .portal-card:focus-within .portal-visual > img { transform: none; }
+.home-page .portal-card .portal-visual { height: clamp(240px, 22vw, 300px); }
+.home-page .portal-summary-copy { inset: auto 28px 24px; }
+.home-page .portal-summary-copy h3 { font-size: 30px; }
+.home-page .portal-summary-copy small { color: #fffbed; }
+.home-page .portal-details { padding: 28px; }
+.home-page .portal-details p { max-width: 65ch; }
+.home-page .portal-details li {
+  border-radius: 9999px;
+  padding: 6px 14px;
+  background: #f0efea;
+  color: var(--muted);
+}
+.home-page .portal-details ul { margin-block: 20px 28px; }
+.home-page .portal-link { font-weight: 500; padding-inline: 24px; }
+.home-page .portal-link:hover { background: var(--green-hover); }
+.home-page .principles-bar {
+  padding-block: 0;
+  border-block: 1px solid var(--line);
+  background: transparent;
+}
+.home-page .principles-grid { padding-block: 56px; gap: 24px; }
+.home-page .principle {
+  display: flex;
+  gap: 14px;
+  padding: 0;
+  text-align: left;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.home-page .principle > svg { width: 22px; height: 22px; color: var(--green); margin: 2px 0 0; }
+.home-page .principle h3 { margin: 0; font-size: 16px; }
+.home-page .principle p { margin-top: 8px; font-size: 13px; line-height: 1.8; }
+.home-page .consultation-flow { padding-block: 96px; }
+.home-page .consultation-timeline { margin-top: 64px; }
+.home-page .consultation-timeline li:not(:last-child)::before { top: 9px; }
+.home-page .consultation-node {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--green);
+  background: var(--cream);
+  box-shadow: 0 0 0 4px var(--cream);
+}
+.home-page .consultation-node::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.home-page .consultation-flow .consultation-start {
+  margin-top: 56px;
+  min-width: 160px;
+  border: 0;
+  border-radius: 9999px;
+  box-shadow: none;
+}
+
+@media (min-width: 1024px) {
+  .home-page .service-portals { padding-block: 96px; }
+  .home-page .service-portals .section-heading { margin-bottom: 40px; }
+  .home-page .portal-grid { gap: 40px; }
+  .home-page .portal-card .portal-visual { height: 288px; }
+  .home-page .portal-details { padding: 32px; }
+  .home-page .portal-summary-copy { inset: auto 32px 32px; }
+}
+
+@media (min-width: 641px) and (max-width: 960px) {
+  .home-page .principles-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-page .principles-grid.container {
+    width: max-content;
+    max-width: calc(100% - 64px);
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 48px;
+    margin-inline: auto;
+  }
+  .home-page .portal-grid { gap: 24px; }
+  .home-page .portal-details { padding: 24px; }
+}
+@media (max-width: 640px) {
+  .home-page .container { width: calc(100% - 32px); }
+  .home-page .home-hero-shell.container { width: 100%; }
+  .home-page .service-portals { padding-block: 48px; }
+  .home-page .portal-grid { grid-template-columns: 1fr; gap: 24px; }
+  .home-page .portal-card .portal-visual { height: 240px; }
+  .home-page .portal-details { padding: 24px; }
+  .home-page .portal-summary-copy { inset-inline: 24px; }
+  .home-page .portal-summary-copy h3 { font-size: 28px; }
+  .home-page .principles-grid { grid-template-columns: 1fr; gap: 28px; padding-block: 36px; }
+  .home-page .principles-grid.container {
+    width: max-content;
+    max-width: calc(100% - 48px);
+    margin-inline: auto;
+  }
+  .home-page .consultation-flow { padding-block: 48px 56px; }
+  .home-page .consultation-timeline {
+    width: max-content;
+    max-width: 100%;
+    margin: 36px auto 0;
+  }
+  .home-page .consultation-node { width: 18px; height: 18px; }
+  .home-page .consultation-timeline li:not(:last-child)::before { top: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-page .portal-card { transition: none; }
+}

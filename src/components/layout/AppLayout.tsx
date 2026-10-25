@@ -4,7 +4,6 @@ import { Outlet, useLocation, useNavigationType } from "react-router-dom";
 import { questionnaireReturnKey } from "../../data/questionnaireReturn";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import FloatingConsult from "./FloatingConsult";
 import { navigation } from "../../data/site";
 function RouteEffects() {
   const { pathname, hash } = useLocation();
@@ -56,7 +55,6 @@ export default function AppLayout() {
         </PageLoadBoundary>
       </main>
       <Footer />
-      <FloatingConsult />
     </>
   );
 }
