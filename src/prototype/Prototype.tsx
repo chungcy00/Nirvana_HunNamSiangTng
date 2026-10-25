@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List } from "lucide-react";
 import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext";
@@ -29,10 +29,16 @@ function WebsiteProductCard({ product, returnTo, view }: { product: PrototypePro
   return <article className={`fgp-card fgp-catalog-card${product.category === 4 ? " fgp-card-funeral" : ""}`}>
     <Link className="fgp-product-link" to={detailPath(product.id)} state={{ returnTo }} aria-label={`${product.name}，查看详情`}>
       {product.category !== 4 && <div className="fgp-product-visual"><ProductImage product={product}/></div>}
-      <div className="fgp-card-body"><ProductTags product={product}/><h3>{product.name}</h3>{funeralDurationLabel(product) && <p className="fgp-duration">{funeralDurationLabel(product)}</p>}
-        <PrototypePrices product={product} compact/>
-
-        <ArrowRight className="fgp-card-arrow" size={16} aria-hidden="true"/>
+      <div className="fgp-card-body">
+        <p className="fgp-card-category">{categories.find(c => c.id === product.category)?.name}</p>
+        <h3>{product.name}</h3>
+        <ProductTags product={product}/>
+        {product.category === 4 && <div className="fgp-card-service-meta">
+          {funeralDurationLabel(product) && <span>{product.durationDays}天{product.durationNights}夜</span>}
+          {product.serviceVenue && <span>{product.serviceVenue}</span>}
+        </div>}
+        <div className="fgp-card-pricing"><PrototypePrices product={product} compact showNotes={false}/></div>
+        <span className="fgp-card-action">查看详情<ArrowRight size={15} aria-hidden="true"/></span>
       </div>
     </Link>
   </article>;
@@ -51,25 +57,6 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
   useEffect(() => { latestParams.current = params; }, [location.search, params]);
   const category = categories.find(c => home ? c.id === Number(params.get("category") || 1) : c.slug === categorySlug);
   const navRef = useRef<HTMLDivElement>(null);
-  const [navEdges, setNavEdges] = useState({ before: false, after: false });
-  useEffect(() => {
-    const nav = navRef.current;
-    if (!nav) return;
-    const measure = () => setNavEdges({
-      before: nav.scrollLeft > 2,
-      after: nav.scrollWidth - nav.clientWidth - nav.scrollLeft > 2,
-    });
-    measure();
-    nav.addEventListener("scroll", measure, { passive: true });
-    const observer = new ResizeObserver(measure);
-    observer.observe(nav);
-    window.addEventListener("resize", measure);
-    return () => {
-      nav.removeEventListener("scroll", measure);
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [category?.id]);
   useEffect(() => {
     const nav = navRef.current;
     const active = nav?.querySelector<HTMLElement>('[aria-current="page"]');
@@ -109,19 +96,14 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
     <div className="fgp-wrap">
       {!home && <nav className="fgp-crumb" aria-label="当前位置"><Link to={homePath}>产品首页</Link><ChevronRight size={14}/><span>{category.name}</span></nav>}
       <section className={home ? "fgp-intro" : "fgp-list-intro"}>
-        <div><h1>{home ? website ? "富贵山庄" : <>每一份纪念，<br/>都有合适的安排。</> : category.name}</h1>{!(website && home) && <p>{home ? "从产品类别开始，按人数与宗教了解适合的选择。" : category.description}</p>}</div>
+        <div><h1>{home ? website ? "富贵山庄" : <>每一份纪念，<br/>都有合适的安排。</> : category.name}</h1>{website && home && <><p className="fgp-catalog-title">产品目录与福地配套</p><p className="fgp-catalog-description">从产品类别开始，按人数与宗教了解适合的选择。</p></>}{!(website && home) && <p>{home ? "从产品类别开始，按人数与宗教了解适合的选择。" : category.description}</p>}</div>
         {home ? !website && <div className="fgp-intro-note"><Leaf size={24} strokeWidth={1.2}/><p>资料清楚，选择从容。<br/><span>按实际适用的条件浏览，无需逐项填写。</span></p></div> : <Link className="fgp-text-link" to={homePath}>查看全部类别<ArrowRight size={16}/></Link>}
       </section>
     </div>
     <section className="fgp-catalog fgp-wrap" aria-label="产品目录">
-      <div className="fgp-category-nav" ref={navRef} role="navigation" aria-label="产品类别" aria-describedby={website && (navEdges.before || navEdges.after) ? "fgp-category-scroll-hint" : undefined}>
+      <div className="fgp-category-nav" ref={navRef} role="navigation" aria-label="产品类别">
         {categories.map(c => <button type="button" key={c.id} onClick={() => switchCategory(c.id)} aria-current={category.id === c.id ? "page" : undefined} className={category.id===c.id ? "is-active" : ""}>{c.name}</button>)}
       </div>
-      {website && (navEdges.before || navEdges.after) && <p className="fgp-scroll-hint" id="fgp-category-scroll-hint">
-        {navEdges.before && <ArrowLeft size={14} aria-hidden="true"/>}
-        <span>左右滑动查看更多分类</span>
-        {navEdges.after && <ArrowRight size={14} aria-hidden="true"/>}
-      </p>}
       <div className="fgp-browse-toolbar"><div className="fgp-filters">
         {hasCapacity(category.id) && <div className="fgp-filter-row"><span className="fgp-filter-label">使用人数</span><div className="fgp-capacities" role="group" aria-label="使用人数筛选">
           {[{id:"",name:"全部"}, ...capacities.map(c=>({id:c,name:capacityLabels[c]}))].map(c=><button type="button" key={c.id} aria-pressed={capacity===c.id} className={capacity===c.id ? "is-selected" : ""} onClick={()=>changeFilter("capacity",c.id)}>{c.name}</button>)}
@@ -131,10 +113,10 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
         </div></div>}
       </div>
       {website && <div className="fgp-display-controls">
-        <label className="fgp-sort" title={sort === "price-asc" ? "价格从低到高" : sort === "price-desc" ? "价格从高到低" : "价格排序"}><img className={`fgp-sort-icon${sort === 'default' ? ' fgp-sort-icon-default' : ''}`} src={`/images/sort-${sort === 'price-asc' ? 'ascending' : sort === 'price-desc' ? 'descending' : 'default'}.png`} alt="" aria-hidden="true" width="28" height="28"/><span className="fgp-sr">价格排序</span><select aria-label="价格排序" value={sort} onChange={e=>changeFilter('sort', e.target.value === 'default' ? '' : e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
+        <label className="fgp-sort"><span>排序方式</span><select aria-label="价格排序" value={sort} onChange={e=>changeFilter('sort', e.target.value === 'default' ? '' : e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
         <div className="fgp-view-toggle" role="group" aria-label="展示模式">{[
           {id:'grid', label:'双栏网格', icon:LayoutGrid}, {id:'list', label:'左图右文列表', icon:List},
-        ].map(({id,label,icon:Icon})=><button type="button" key={id} aria-label={label} title={label} aria-pressed={view===id} onClick={()=>changeFilter('view',id==='grid'?'':id)}><Icon size={18} aria-hidden="true"/></button>)}</div>
+        ].map(({id,label,icon:Icon})=><button type="button" key={id} aria-label={label} title={label} aria-pressed={view===id} disabled={status !== "ready" || products.length === 0} onClick={()=>changeFilter('view',id==='grid'?'':id)}><Icon size={18} aria-hidden="true"/></button>)}</div>
       </div>}
       </div>
       <div className="fgp-results-heading"><div><h2>{category.name}</h2><span role={status === "ready" ? "status" : undefined} aria-live={status === "ready" ? "polite" : undefined}>{status === "loading" ? "正在读取…" : status === "error" ? "暂时无法读取" : `共 ${products.length} 项产品`}</span></div>

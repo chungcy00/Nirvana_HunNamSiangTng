@@ -3,6 +3,7 @@ import { ProductNavigationContext } from "../prototype/Prototype";
 import { categories } from "../prototype/model";
 import { useCatalog } from "../catalog/context";
 import { NotFound } from "../components/ui";
+import "./NirvanaProducts.css";
 
 const navigation = {
   homePath: "/nirvana",

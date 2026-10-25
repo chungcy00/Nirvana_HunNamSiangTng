@@ -352,3 +352,16 @@ test('missing one or both prices retain truthful labels without zero money; summ
   assert.match(html,/RM 26,888/);
   assert.doesNotMatch(html,/fgp-price-note|预购须/);
 });
+
+
+test("website detail price panel shows each backend note below its matching price", () => {
+  const html = details();
+  const panel = html.match(/<section[^>]*class="fgp-price-panel"[\s\S]*?<\/section>/)?.[0];
+  assert(panel, "detail must contain a price panel");
+  assert.match(panel, /预购价格<\/span><strong>RM 23,888<\/strong><p class="fgp-price-note">预购须至少提前3天购买。<\/p>/);
+  assert.match(panel, /即用价格<\/span><strong>RM 26,888<\/strong><p class="fgp-price-note">适用于即时安排的服务。<\/p>/);
+  assert.equal((panel.match(/预购须至少提前3天购买。/g) || []).length, 1);
+  assert.equal((panel.match(/适用于即时安排的服务。/g) || []).length, 1);
+  const noNotes = details(mapPublicProduct({ ...record, prices: record.prices.map(row => ({ ...row, price_note: "" })) }));
+  assert.doesNotMatch(noNotes, /class="fgp-price-note"/);
+});

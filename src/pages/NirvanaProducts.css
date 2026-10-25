@@ -1,0 +1,205 @@
+/* Serene Reverence: scoped to the public Nirvana catalog and its details. */
+.fgp-website {
+  --p-ink: #1f2937;
+  --p-green: #2d4336;
+  --p-soft: #f2f0eb;
+  --p-line: #e7e4dc;
+  --p-muted: #4b5563;
+  --n-gold: #93734d;
+  background: #f8f7f4;
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--p-ink);
+}
+.fgp-website .fgp-wrap { width: min(1240px, calc(100% - 64px)); max-width: 1240px; }
+.fgp-website :is(h1, h2, h3, h4, h5) { font-family: inherit; }
+.fgp-website ::selection { background: #ebdcc8; color: #172d21; }
+.fgp-website .fgp-intro { padding: 48px 0 32px; border-bottom: 1px solid var(--p-line); }
+.fgp-website .fgp-intro h1 { color: var(--p-green); font-size: 36px; font-weight: 600; line-height: 1.35; letter-spacing: -.01em; }
+.fgp-website .fgp-intro .fgp-catalog-title { color: var(--p-green); font-size: 24px; font-weight: 500; margin: 8px 0 0; }
+.fgp-website .fgp-intro .fgp-catalog-description { margin: 12px 0 0; max-width: 65ch; color: var(--p-muted); font-size: 14px; }
+.fgp-website .fgp-catalog { padding-bottom: 80px; }
+.fgp-website .fgp-category-nav { gap: 24px; margin: 20px 0 0; padding: 0; border: 0; scrollbar-color: #c5b69f transparent; }
+.fgp-website .fgp-category-nav button { position: relative; flex: 0 0 auto; padding: 14px 0; min-height: 50px; border: 0; font-size: 15px; background: transparent; }
+.fgp-website .fgp-category-nav button:hover { color: var(--p-green); background: transparent; }
+.fgp-website .fgp-category-nav button.is-active::after { content: ""; position: absolute; bottom: 0; left: calc(50% - 12px); width: 24px; height: 2px; background: #c5a880; border-radius: 1px; }
+.fgp-website .fgp-browse-toolbar { display: flex; flex-direction: column; align-items: stretch; gap: 8px; background: white; margin-top: 22px; padding: 16px 24px; border: 0; border-radius: 8px; }
+.fgp-website .fgp-browse-toolbar .fgp-filters { display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 0; border: 0; }
+.fgp-website .fgp-filter-row { gap: 12px; min-height: 44px; }
+.fgp-website .fgp-filter-label { min-width: auto; padding: 0; font-size: 13px; }
+.fgp-website .fgp-capacities { gap: 4px; }
+.fgp-website .fgp-capacities button { min-height: 44px; padding: 7px 12px; background: var(--p-soft); font-size: 13px; border: 0; border-radius: 4px; }
+.fgp-website .fgp-capacities button:hover { background: #e7e4dc; }
+.fgp-website .fgp-capacities button.is-selected { background: var(--p-green); color: white; }
+.fgp-website .fgp-display-controls { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0 0; }
+.fgp-website .fgp-sort { display: flex; position: static; width: auto; height: auto; gap: 12px; border: 0; border-radius: 0; color: var(--p-muted); font-size: 13px; }
+.fgp-website .fgp-sort:hover { background: transparent; }
+.fgp-website .fgp-sort select { position: static; opacity: 1; inset: auto; min-height: 44px; width: auto; max-width: 180px; border: 0; border-radius: 4px; padding: 8px 28px 8px 12px; background: var(--p-soft); cursor: pointer; font-size: 13px; }
+.fgp-website .fgp-sort:focus-within { outline: none; }
+.fgp-website .fgp-view-toggle { display: flex; padding: 3px; gap: 2px; background: var(--p-soft); border-radius: 4px; }
+.fgp-website .fgp-view-toggle button { width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--p-muted); border-radius: 3px; }
+.fgp-website .fgp-view-toggle button[aria-pressed="true"] { background: white; color: var(--p-green); box-shadow: 0 2px 6px #2d43360a; }
+.fgp-website .fgp-results-heading { padding: 24px 0 18px; }
+.fgp-website .fgp-results-heading h2 { font-size: 18px; font-weight: 500; }
+.fgp-website .fgp-results-heading span { color: var(--p-muted); }
+.fgp-website .fgp-applied button { background: #ebdcc8; border: 0; border-radius: 4px; min-height: 44px; color: #584323; }
+.fgp-website .fgp-view-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.fgp-website .fgp-catalog-card { background: white; border: 0; border-radius: 8px; box-shadow: 0 4px 20px -2px #2d43360a; transition: box-shadow 180ms ease; }
+.fgp-website .fgp-catalog-card:hover { box-shadow: 0 8px 30px -4px #2d433614; }
+.fgp-website .fgp-product-link { display: flex; flex-direction: column; height: 100%; padding: 20px; }
+.fgp-website .fgp-product-visual { width: 100%; }
+.fgp-website .fgp-catalog-card .fgp-image { aspect-ratio: 1.5; height: auto; min-height: 0; border: 0; border-radius: 4px; overflow: hidden; background: var(--p-soft); color: #6d746c; }
+.fgp-website .fgp-image::after { display: none; }
+.fgp-website .fgp-catalog-card .fgp-card-body { padding: 18px 0 0; width: 100%; min-width: 0; }
+.fgp-website .fgp-card-category { font-size: 12px; color: var(--n-gold); margin: 0 0 6px; }
+.fgp-website .fgp-catalog-card h3 { font-size: 18px; font-weight: 500; line-height: 1.55; margin: 0 0 12px; color: var(--p-green); }
+.fgp-website .fgp-catalog-card .fgp-tags { gap: 6px; margin-bottom: 20px; }
+.fgp-website .fgp-catalog-card .fgp-tags > span { display: inline-flex; min-height: 24px; padding: 2px 7px; background: var(--p-soft); color: var(--p-muted); border-radius: 3px; font-size: 11px; white-space: normal; }
+.fgp-website .fgp-card-service-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: -8px 0 24px; color: var(--p-muted); font-size: 13px; }
+.fgp-website .fgp-card-pricing { margin-top: auto; padding-top: 20px; border-top: 1px solid #e7e4dc99; }
+.fgp-website .fgp-prices-compact { margin: 0; gap: 12px; }
+.fgp-website .fgp-prices-compact strong { font-size: 23px; font-weight: 500; white-space: normal; overflow-wrap: anywhere; }
+.fgp-website .fgp-prices-compact:not(.fgp-dual-prices) .fgp-price-entry { flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.fgp-website .fgp-card-action { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 22px; min-height: 44px; padding: 8px 12px; background: var(--p-soft); color: var(--p-green); font-size: 13px; border-radius: 4px; }
+.fgp-website .fgp-product-link:hover .fgp-card-action { background: #e7e4dc; }
+.fgp-website .fgp-card-funeral .fgp-card-body { padding-top: 0; }
+.fgp-website .fgp-card-funeral .fgp-card-category { padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid #e7e4dc99; }
+.fgp-website .fgp-card-funeral .fgp-card-pricing { border: 0; padding: 0; }
+.fgp-website .fgp-catalog-card .fgp-dual-prices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; background: var(--p-soft); border-radius: 5px; padding: 16px; }
+.fgp-website .fgp-catalog-card .fgp-dual-prices > div + div { padding-left: 0; border-left: 0; }
+.fgp-website .fgp-card-funeral .fgp-prices strong { font-size: 20px; }
+.fgp-website .fgp-card-funeral .fgp-card-action { background: var(--p-green); color: white; }
+.fgp-website .fgp-card-funeral .fgp-product-link:hover .fgp-card-action { background: #23352a; }
+.fgp-website .fgp-view-list { grid-template-columns: 1fr; }
+.fgp-website .fgp-view-list .fgp-product-link { flex-direction: row; gap: 24px; height: auto; align-items: stretch; }
+.fgp-website .fgp-view-list .fgp-product-visual { width: 240px; height: auto; display: flex; }
+.fgp-website .fgp-view-list .fgp-catalog-card .fgp-image { height: 100%; width: 100%; aspect-ratio: 1.3; }
+.fgp-website .fgp-view-list .fgp-card-body { padding: 0; flex: 1; }
+.fgp-website .fgp-view-list h3 { display: block; overflow: visible; }
+.fgp-website .fgp-view-list .fgp-card-action { align-self: flex-end; min-width: 150px; margin-top: 16px; }
+.fgp-website .fgp-empty { background: white; border-radius: 8px; }
+.fgp-website .fgp-primary:hover { background: #23352a; }
+/* Details keep price and consultation with the overview, then full-width inclusions. */
+.fgp-website .fgp-detail { padding-bottom: 80px; }
+.fgp-website .fgp-back { padding: 20px 0; }
+.fgp-website .fgp-detail-top { padding: 32px; gap: 40px; background: white; border-radius: 8px; box-shadow: 0 4px 20px -2px #2d43360a; grid-template-columns: 1fr 1fr; align-items: start; }
+.fgp-website .fgp-service-detail { display: block; }
+.fgp-website .fgp-product-overview { padding: 0; min-width: 0; }
+.fgp-website .fgp-product-overview h1 { color: var(--p-green); font-size: 30px; font-weight: 600; line-height: 1.4; margin: 12px 0 20px; }
+.fgp-website .fgp-category-label { color: var(--n-gold); }
+.fgp-website .fgp-product-overview > p { color: var(--p-muted); line-height: 1.85; }
+.fgp-website .fgp-product-overview .fgp-tags > span { background: var(--p-soft); color: var(--p-muted); }
+.fgp-website .fgp-image-large { background: var(--p-soft); border: 0; border-radius: 5px; overflow: hidden; }
+.fgp-website .fgp-image-caption { bottom: 16px; left: 16px; padding: 5px 9px; background: #fffffff0; color: var(--p-muted); border-radius: 3px; }
+.fgp-website .fgp-designs button { border: 0; background: var(--p-soft); min-height: 44px; }
+.fgp-website .fgp-designs button.is-selected { background: var(--p-green); color: white; }
+.fgp-website .fgp-specs { margin-top: 24px; }
+.fgp-website .fgp-specs > div { border-color: #e7e4dc99; }
+.fgp-website .fgp-product-overview .fgp-price-panel { margin-top: 24px; background: var(--p-soft); border-radius: 6px; padding: 24px; }
+.fgp-website .fgp-price-panel h2 { margin: 0 0 20px; font-size: 18px; font-weight: 600; }
+.fgp-website .fgp-prices-detail strong { font-size: 26px; font-weight: 600; white-space: normal; overflow-wrap: anywhere; }
+.fgp-website .fgp-prices-detail > div + div { border: 0; padding-top: 20px; }
+.fgp-website .fgp-price-note, .fgp-website .fgp-price-terms { color: var(--p-muted); border: 0; padding-top: 0; margin-top: 8px; font-size: 12px; line-height: 1.8; }
+.fgp-website .fgp-service-consult { display: flex; justify-content: center; min-height: 48px; margin-top: 20px; width: 100%; border: 0; border-radius: 4px; background: var(--p-green); color: white; font-size: 14px; }
+.fgp-website .fgp-service-consult:hover { background: #23352a; }
+.fgp-website .fgp-detail-bottom { display: block; margin-top: 40px; }
+.fgp-website .fgp-inclusions > h2 { color: var(--p-green); font-size: 26px; font-weight: 600; margin: 0 0 24px; }
+.fgp-website .fgp-inclusions > ul, .fgp-website .fgp-inclusion-section { padding: 20px 24px; background: white; border: 0; border-radius: 8px; }
+.fgp-website .fgp-inclusion-section + .fgp-inclusion-section { margin-top: 16px; }
+.fgp-website .fgp-inclusion-section > summary { padding: 4px 0 16px; border-bottom: 1px solid #e7e4dc99; min-height: 48px; }
+.fgp-website .fgp-inclusion-section:not([open]) > summary { padding-bottom: 4px; border-bottom: 0; }
+.fgp-website .fgp-inclusion-section > summary :is(h3, h5) { font-size: 17px; font-weight: 500; }
+.fgp-website .fgp-inclusion-section > summary:hover { background: transparent; color: var(--p-green); }
+.fgp-website .fgp-inclusions ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+.fgp-website .fgp-inclusion-section ul { padding-top: 16px; }
+.fgp-website .fgp-inclusions li { padding: 14px 16px; border: 0; background: #f8f7f4; border-radius: 4px; color: var(--p-ink); overflow-wrap: anywhere; }
+.fgp-website .fgp-inclusions li svg { color: var(--n-gold); flex-shrink: 0; }
+.fgp-website .fgp-content-tabs button { min-height: 44px; background: var(--p-soft); }
+.fgp-website .fgp-content-tabs button.is-selected { background: var(--p-green); color: white; }
+@media (min-width: 1024px) {
+  .fgp-website .fgp-service-detail .fgp-product-overview { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: 48px; align-items: start; }
+  .fgp-website .fgp-service-detail .fgp-product-overview > :not(.fgp-price-panel) { grid-column: 1; }
+  .fgp-website .fgp-service-detail .fgp-price-panel { grid-column: 2; grid-row: 1 / span 12; margin: 0; }
+  .fgp-website .fgp-service-detail .fgp-specs { display: block; padding: 0; border: 0; }
+  .fgp-website .fgp-service-detail .fgp-specs > div { display: grid; grid-template-columns: 100px minmax(0, 1fr); padding: 14px 0; border-top: 1px solid var(--p-line); }
+}
+@media (min-width: 768px) and (max-width: 1100px) {
+  .fgp-website .fgp-view-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fgp-website .fgp-detail-top { gap: 28px; padding: 24px; }
+}
+@media (max-width: 767px) {
+  .fgp-website .fgp-wrap { width: calc(100% - 32px); }
+  .fgp-website .fgp-intro { padding: 32px 0 24px; }
+  .fgp-website .fgp-intro h1 { font-size: 28px; }
+  .fgp-website .fgp-intro .fgp-catalog-title { font-size: 19px; margin-top: 6px; }
+  .fgp-website .fgp-intro .fgp-catalog-description { font-size: 13px; max-width: 100%; line-height: 1.7; margin-top: 10px; }
+  .fgp-website .fgp-category-nav { gap: 24px; margin-top: 16px; }
+  .fgp-website .fgp-category-nav button { font-size: 14px; }
+  .fgp-website .fgp-browse-toolbar { margin-top: 16px; padding: 12px; }
+  .fgp-website .fgp-browse-toolbar .fgp-filters { flex-direction: column; gap: 8px; }
+  .fgp-website .fgp-filter-row { flex-wrap: nowrap; align-items: flex-start; gap: 8px; }
+  .fgp-website .fgp-filter-label { width: 52px; padding-top: 12px; font-size: 12px; }
+  .fgp-website .fgp-capacities { flex: 1; gap: 4px; }
+  .fgp-website .fgp-capacities button { font-size: 12px; padding: 6px 10px; }
+  .fgp-website .fgp-sort { gap: 8px; font-size: 12px; }
+  .fgp-website .fgp-sort select { max-width: 134px; font-size: 12px; }
+  .fgp-website .fgp-view-toggle { padding: 0; }
+  .fgp-website .fgp-display-controls { gap: 8px; flex-wrap: wrap; }
+  .fgp-website .fgp-view-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .fgp-website .fgp-product-link { padding: 20px; }
+  .fgp-website .fgp-view-grid .fgp-card-body { padding: 18px 0 0; }
+  .fgp-website .fgp-view-grid h3 { font-size: 19px; line-height: 1.5; margin: 0 0 12px; }
+  .fgp-website .fgp-catalog-card .fgp-tags > span { font-size: 12px; }
+  .fgp-website .fgp-card-funeral .fgp-card-body { padding-top: 0; }
+  .fgp-website .fgp-view-list .fgp-product-link { flex-wrap: nowrap; gap: 14px; padding: 14px; align-items: flex-start; }
+  .fgp-website .fgp-view-list .fgp-product-visual { width: clamp(80px, 23vw, 128px); flex: 0 0 clamp(80px, 23vw, 128px); }
+  .fgp-website .fgp-view-list .fgp-catalog-card .fgp-image { aspect-ratio: 1; height: auto; }
+  .fgp-website .fgp-view-list .fgp-image-center span { display: none; }
+  .fgp-website .fgp-view-list .fgp-card-body { flex: 1; padding: 0; }
+  .fgp-website .fgp-view-list .fgp-prices strong { font-size: 23px; line-height: 1.4; }
+  .fgp-website .fgp-catalog-card .fgp-dual-prices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 14px; }
+  .fgp-website .fgp-card-funeral .fgp-prices strong { font-size: 20px; }
+  .fgp-website .fgp-view-list .fgp-prices span { font-size: 12px; line-height: 1.5; }
+  .fgp-website .fgp-results-heading h2 { font-size: 17px; }
+  .fgp-website .fgp-results-heading span { font-size: 12px; }
+  .fgp-website .fgp-detail-top { display: flex; flex-direction: column; padding: 20px; gap: 28px; }
+  .fgp-website .fgp-gallery, .fgp-website .fgp-product-overview { width: 100%; }
+  .fgp-website .fgp-product-overview h1 { font-size: 25px; }
+  .fgp-website .fgp-product-overview .fgp-price-panel { padding: 20px; }
+  .fgp-website .fgp-detail-bottom { margin-top: 32px; }
+  .fgp-website .fgp-inclusions > h2 { font-size: 23px; }
+  .fgp-website .fgp-inclusions ul { grid-template-columns: minmax(0, 1fr); }
+  .fgp-website .fgp-inclusions > ul, .fgp-website .fgp-inclusion-section { padding: 16px; }
+  .fgp-website .fgp-inclusion-section > summary :is(h3, h5) { font-size: 16px; }
+  .fgp-website .fgp-catalog, .fgp-website .fgp-detail { padding-bottom: 48px; }
+}
+
+/* Reset inherited compact-control and narrow-price separators. */
+.fgp-website .fgp-display-controls { margin-left: 0; }
+.fgp-website .fgp-view-toggle { border: 0; }
+.fgp-website .fgp-view-toggle button + button { border-left: 0; }
+.fgp-website .fgp-catalog-card .fgp-dual-prices > div + div { border-top: 0; padding-top: 0; }
+
+.fgp-website .fgp-view-toggle button:disabled { opacity: .4; cursor: default; }
+.fgp-website .fgp-view-toggle button:disabled:hover { background: transparent; }
+@media (max-width: 767px) {
+  .fgp-website .fgp-view-grid .fgp-product-link { padding: 12px; }
+  .fgp-website .fgp-view-grid .fgp-card-body { padding-top: 12px; }
+  .fgp-website .fgp-view-grid .fgp-card-funeral .fgp-card-body { padding-top: 0; }
+  .fgp-website .fgp-view-grid h3 { font-size: 15px; }
+  .fgp-website .fgp-view-grid .fgp-tags { gap: 4px; margin-bottom: 14px; }
+  .fgp-website .fgp-view-grid .fgp-tags > span { font-size: 11px; padding-inline: 5px; }
+  .fgp-website .fgp-view-grid .fgp-prices-compact strong { font-size: 17px; }
+  .fgp-website .fgp-view-grid .fgp-card-pricing { padding-top: 14px; }
+  .fgp-website .fgp-view-grid .fgp-card-action { margin-top: 16px; }
+  .fgp-website .fgp-view-grid .fgp-dual-prices { padding: 8px; gap: 8px; }
+  .fgp-website .fgp-view-grid .fgp-dual-prices strong { font-size: 14px; }
+  .fgp-website .fgp-view-grid .fgp-dual-prices span { font-size: 11px; }
+  .fgp-website .fgp-view-grid .fgp-card-service-meta { font-size: 12px; }
+  .fgp-website .fgp-view-list .fgp-card-action { align-self: stretch; min-width: 0; }
+  .fgp-website .fgp-view-list .fgp-prices strong { font-size: 18px; }
+  .fgp-website .fgp-view-list .fgp-dual-prices strong { font-size: 17px; }
+  .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 16px; }
+  .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-category { grid-column: 1 / -1; }
+  .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-pricing { grid-column: 2; grid-row: 2 / span 3; }
+  .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-action { grid-column: 1 / -1; }
+}

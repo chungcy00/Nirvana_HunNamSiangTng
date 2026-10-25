@@ -236,6 +236,47 @@ export function ProductDetailContent({
       ? [["面积", `${product.area} sqft`]]
       : []),
   ];
+  const pricePanel = (
+    <section
+      ref={pricePanelRef}
+      className="fgp-price-panel"
+      aria-labelledby="fgp-price-heading"
+    >
+      <h2 id="fgp-price-heading">
+        {product.category === 4
+          ? "殡仪服务价格"
+          : product.category === 3
+            ? "最低起价"
+            : "产品价格"}
+      </h2>
+      <ProductPrices product={product} detailed religion={religion} />
+      {product.offers.length > 1 && product.offers.some((o) => o.area) && (
+        <dl className="fgp-offer-specs">
+          {product.offers
+            .filter((o) => o.area)
+            .map((o) => (
+              <div key={o.name}>
+                <dt>{o.name}</dt>
+                <dd>{o.area} sqft</dd>
+              </div>
+            ))}
+        </dl>
+      )}
+      {product.category !== 4 &&
+        product.terms &&
+        !(website && product.referencePrice) && (
+          <p className="fgp-price-terms">{product.terms}</p>
+        )}
+      {(funeral || website) && (
+        <ConsultButton
+          subject={product.name}
+          className="fgp-service-consult"
+        >
+          直接咨询
+        </ConsultButton>
+      )}
+    </section>
+  );
   return (
     <>
       <div
@@ -274,7 +315,7 @@ export function ProductDetailContent({
           <span className="fgp-category-label">{category.name}</span>
           <h1>{product.name}</h1>
           <ProductTags product={product} />
-          {funeral && (
+          {funeral && !website && (
             <div
               className="fgp-service-price-summary"
               aria-label="殡仪服务价格摘要"
@@ -299,6 +340,7 @@ export function ProductDetailContent({
               </div>
             ))}
           </dl>
+          {website && pricePanel}
           {!funeral && (
             <a
               className="fgp-overview-next"
@@ -394,45 +436,7 @@ export function ProductDetailContent({
             </div>
           )}
         </section>
-        <section
-          ref={pricePanelRef}
-          className="fgp-price-panel"
-          aria-labelledby="fgp-price-heading"
-        >
-          <h2 id="fgp-price-heading">
-            {product.category === 4
-              ? "殡仪服务价格"
-              : product.category === 3
-                ? "最低起价"
-                : "产品价格"}
-          </h2>
-          <ProductPrices product={product} detailed religion={religion} />
-          {product.offers.length > 1 && product.offers.some((o) => o.area) && (
-            <dl className="fgp-offer-specs">
-              {product.offers
-                .filter((o) => o.area)
-                .map((o) => (
-                  <div key={o.name}>
-                    <dt>{o.name}</dt>
-                    <dd>{o.area} sqft</dd>
-                  </div>
-                ))}
-            </dl>
-          )}
-          {product.category !== 4 &&
-            product.terms &&
-            !(website && product.referencePrice) && (
-              <p className="fgp-price-terms">{product.terms}</p>
-            )}
-          {funeral && (
-            <ConsultButton
-              subject={product.name}
-              className="fgp-service-consult"
-            >
-              直接咨询
-            </ConsultButton>
-          )}
-        </section>
+        {!website && pricePanel}
       </div>
     </>
   );
@@ -502,7 +506,8 @@ export function ProductPrices({
           note: cleanPriceNote(product.priceNote),
         }));
   rows = rows.filter((r) => Number.isFinite(r.amount) && r.amount > 0);
-  if (product.category === 3 && rows.length)
+  const startingPrice = product.category === 3 || (!funeral && compact && rows.length > 1);
+  if ((product.category === 3 || (!funeral && compact)) && rows.length)
     rows = [
       rows.reduce((best, row) => (row.amount < best.amount ? row : best)),
     ];
@@ -565,7 +570,7 @@ export function ProductPrices({
           )}
           <strong>
             {row.amount > 0 ? formatMoney(row.amount) : unavailable}
-            {product.category === 3 && <em>起</em>}
+            {startingPrice && <em>起</em>}
           </strong>
           {showNotes && row.note && (
             <p className="fgp-price-note">{row.note}</p>

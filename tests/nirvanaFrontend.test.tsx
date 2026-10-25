@@ -76,18 +76,21 @@ test("仁爱园按已确认宗教进入单人佛教筛选，详情保留最低�
   assert.doesNotMatch(detail, /<dt>(朝向|面积|楼层|层位)<\/dt>/);
 });
 
-test("一般产品卡片展示实际方案售价，不加起且税务备注留在详情", () => {
+test("一般产品卡片只显示最低价，完整方案售价和备注留在详情", () => {
   const html = render('/nirvana?category=2');
   const cards = html.match(/<article class="fgp-card fgp-catalog-card">.*?<\/article>/g)!;
   assert.equal(cards.length, 6);
   assert(cards[0].includes('RM 238,888'));
-  assert(cards[0].includes('RM 258,888'));
-  assert(cards[0].includes('RM 308,888'));
+  assert.match(cards[0], /RM 238,888<em>起<\/em>/);
+  assert.doesNotMatch(cards[0], /RM 258,888|RM 308,888|普通地段|角头地段/);
   for(const card of cards) {
-    assert.doesNotMatch(card, /<em>起<\/em>|印花税|fgp-card-link/);
+    assert.doesNotMatch(card, /印花税|fgp-card-link/);
+    assert.equal((card.match(/class="fgp-price-entry"/g) || []).length, 1);
     assert.equal((card.match(/<a /g) || []).length, 1);
   }
   assert.doesNotMatch(html, /fgp-source-note|以上价格未包含印花税|每一份纪念/);
+  const listCards = render('/nirvana?category=2&view=list');
+  assert.doesNotMatch(listCards, /RM 258,888|RM 308,888|普通地段|角头地段/);
   const detail = render('/nirvana/products/item/w-family-lot');
   assert.match(detail, /普通地段 864 sqft/);
   assert.match(detail, /RM 258,888/);
