@@ -288,7 +288,7 @@
   .fgp-website .fgp-catalog .fgp-filters { width: 100%; min-width: 0; gap: 12px; }
   .fgp-website .fgp-catalog .fgp-filter-row { width: 100%; min-width: 0; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
   .fgp-website .fgp-catalog .fgp-filter-label { flex: 0 0 auto; color: var(--p-ink); font-size: 12px; font-weight: 500; }
-  .fgp-website .fgp-catalog .fgp-capacities { min-width: 0; max-width: 100%; min-height: 46px; padding: 2px; gap: 2px; align-items: center; border: 1px solid #e7e4dc80; border-radius: 4px; background: var(--p-soft); }
+  .fgp-website .fgp-catalog .fgp-capacities { flex: 0 1 auto; width: fit-content; min-width: 0; max-width: 100%; min-height: 46px; padding: 2px; gap: 2px; align-items: center; border: 1px solid #e7e4dc80; border-radius: 4px; background: var(--p-soft); }
   .fgp-website .fgp-catalog .fgp-capacities button { min-height: 40px; padding: 6px 8px; font-size: 12px; line-height: 20px; background: transparent; }
   .fgp-website .fgp-catalog .fgp-capacities button.is-selected { background: var(--p-green); color: white; font-weight: 500; }
   .fgp-website .fgp-catalog .fgp-display-controls { width: 100%; min-width: 0; padding-top: 12px; border-top: 1px solid var(--p-line); align-items: center; flex-wrap: wrap; gap: 8px; }
