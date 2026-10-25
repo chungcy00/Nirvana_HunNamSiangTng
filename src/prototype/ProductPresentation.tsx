@@ -77,7 +77,7 @@ export function ProductImage({
     </div>
   );
 }
-export function ProductTags({ product }: { product: PrototypeProduct }) {
+export function ProductTags({ product, desktopServiceVenue = false }: { product: PrototypeProduct; desktopServiceVenue?: boolean }) {
   return (
     <div className="fgp-tags">
       {hasCapacity(product.category) && product.capacity && (
@@ -90,11 +90,14 @@ export function ProductTags({ product }: { product: PrototypeProduct }) {
         </span>
       )}
       {product.category === 4 && product.funeralMethod && (
-        <span>{funeralMethodLabels[product.funeralMethod]}</span>
+        <span className="fgp-funeral-method">{funeralMethodLabels[product.funeralMethod]}</span>
       )}
       {product.religions.map((r) => (
         <span key={r.id}>{r.name}</span>
       ))}
+      {desktopServiceVenue && product.category === 4 && product.serviceVenue && (
+        <span className="fgp-desktop-service-venue">{product.serviceVenue}</span>
+      )}
       {product.category === 3 && product.placement && (
         <span className="fgp-environment">
           {product.placement === "indoor" ? "室内" : "室外"}
@@ -250,6 +253,7 @@ export function ProductDetailContent({
             : "产品价格"}
       </h2>
       <ProductPrices product={product} detailed religion={religion} />
+      {product.productPriceNote && <p className="fgp-price-note fgp-product-price-note">{product.productPriceNote}</p>}
       {product.offers.length > 1 && product.offers.some((o) => o.area) && (
         <dl className="fgp-offer-specs">
           {product.offers
@@ -447,12 +451,14 @@ export function ProductPrices({
   detailed = false,
   religion = "",
   compact = false,
+  showCompactNotes = false,
   showNotes: notesVisible = true,
 }: {
   product: PrototypeProduct;
   detailed?: boolean;
   religion?: string;
   compact?: boolean;
+  showCompactNotes?: boolean;
   showNotes?: boolean;
 }) {
   const { website } = useContext(ProductNavigationContext);
@@ -473,8 +479,7 @@ export function ProductPrices({
           name: p.offer_name,
           kind: p.price_type,
           amount: Number(p.amount),
-          note:
-            cleanPriceNote(p.price_note) || cleanPriceNote(product.priceNote),
+          note: cleanPriceNote(p.price_note),
         }))
     : funeral
       ? [
@@ -537,7 +542,11 @@ export function ProductPrices({
         (a.kind === "pre_need" ? 0 : 1) - (b.kind === "pre_need" ? 0 : 1),
     );
   }
-  const showNotes = notesVisible && (detailed || funeral);
+  const showNotes = notesVisible && (detailed || funeral || showCompactNotes);
+  const renderNote = (note: string, extraClass = "") => {
+    if (!showNotes || !note) return null;
+    return <p className={`fgp-price-note${extraClass}`}>{note}</p>;
+  };
   const displayedRows = rows.map((row) => ({
     ...row,
     note: funeral
@@ -572,9 +581,7 @@ export function ProductPrices({
             {row.amount > 0 ? formatMoney(row.amount) : unavailable}
             {startingPrice && <em>起</em>}
           </strong>
-          {showNotes && row.note && (
-            <p className="fgp-price-note">{row.note}</p>
-          )}
+          {renderNote(row.note)}
         </div>
       ))}
       {!rows.length && (
@@ -582,9 +589,7 @@ export function ProductPrices({
           <strong>{unavailable}</strong>
         </div>
       )}
-      {showNotes && common && (
-        <p className="fgp-price-note fgp-common-price-note">{common}</p>
-      )}
+      {renderNote(common, " fgp-common-price-note")}
     </div>
   );
 }

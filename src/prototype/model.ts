@@ -13,7 +13,7 @@ export interface PrototypeProduct {
   religions: ReligionContent[]; inclusions: string[]; inclusionGroups?: InclusionGroup[];
   offers: { name: string; amount: number; area?: number; religionId?: string }[];
   facing?: string; area?: number; preNeed?: number; atNeed?: number;
-  referencePrice?: boolean; priceNote?: string; terms?: string;
+  referencePrice?: boolean; priceNote?: string; productPriceNote?: string; terms?: string;
 }
 export const categories = [
   { id: 1, slug: "cremation-burial", name: "火化土葬", description: "火化后的土葬安排，按人数与宗教了解适用配套。" },

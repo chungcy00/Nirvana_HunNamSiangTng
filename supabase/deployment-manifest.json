@@ -66,6 +66,16 @@
       "local": "20261023140432_inclusion_group_titles.sql",
       "remote_version": "20261023141149",
       "remote_name": "inclusion_group_titles"
+    },
+    {
+      "local": "20261025145141_catalog_product_price_note.sql",
+      "remote_version": "20261025151509",
+      "remote_name": "catalog_product_price_note"
+    },
+    {
+      "local": "20261025150802_catalog_explicit_price_notes.sql",
+      "remote_version": "20261025151520",
+      "remote_name": "catalog_explicit_price_notes"
     }
   ],
   "hosted_validation": {
@@ -85,5 +95,10 @@
     "human_password_login_tested": false
   },
   "remaining_auth_advisor": "auth_leaked_password_protection",
-  "warning": "Remote migration versions differ from local filenames. Reconcile history before CLI deployment; do not reset remote."
+  "warning": "Remote migration versions differ from local filenames. Reconcile history before CLI deployment; do not reset remote.",
+  "price_note_deployment": {
+    "date": "2026-10-25",
+    "scope": "Existing note RPCs only; no business data edits; no GitHub push",
+    "business_table_checksums_unchanged": 18
+  }
 }

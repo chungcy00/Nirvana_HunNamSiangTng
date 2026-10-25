@@ -203,3 +203,64 @@
   .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-pricing { grid-column: 2; grid-row: 2 / span 3; }
   .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-action { grid-column: 1 / -1; }
 }
+
+/* Catalog notes are desktop-only; preserve the approved smaller layouts. */
+.fgp-website .fgp-catalog-card .fgp-price-note { display: none; }
+.fgp-website .fgp-catalog-product-note { display: none; }
+.fgp-website .fgp-catalog-card .fgp-tags > .fgp-desktop-service-venue { display: none; }
+@media (min-width: 1101px) {
+  .fgp-website .fgp-catalog-card { position: relative; transition: box-shadow 180ms ease, transform 180ms ease; }
+  .fgp-website .fgp-catalog-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 8px; border-top: 2px solid transparent; border-radius: 8px 8px 0 0; pointer-events: none; }
+  .fgp-website .fgp-catalog-card:hover,
+  .fgp-website .fgp-catalog-card:focus-within { transform: translateY(-2px); box-shadow: 0 10px 28px -6px #2d433626; }
+  .fgp-website .fgp-catalog-card:hover::before,
+  .fgp-website .fgp-catalog-card:focus-within::before { border-top-color: #c5a880; }
+  .fgp-website .fgp-catalog-card .fgp-tags > .fgp-desktop-service-venue { display: inline-flex; }
+  .fgp-website .fgp-catalog-card .fgp-card-service-meta { display: none; }
+  .fgp-website:has(.fgp-catalog) { background: #faf9f6; }
+  .fgp-website .fgp-catalog .fgp-category-nav { width: fit-content; max-width: 100%; height: 52px; align-items: center; padding: 6px; gap: 4px; border: 1px solid var(--p-line); border-radius: 8px; background: var(--p-soft); box-shadow: 0 1px 2px #2d43360d; overflow-x: auto; overflow-y: hidden; }
+  .fgp-website .fgp-catalog .fgp-category-nav button { height: 38px; min-height: 38px; padding: 0 16px; border: 0; border-radius: 4px; font-size: 14px; line-height: 22px; font-weight: 400; }
+  .fgp-website .fgp-catalog .fgp-category-nav button:focus-visible { outline-offset: -2px; }
+  .fgp-website .fgp-catalog .fgp-category-nav button:hover { background: #ffffff80; }
+  .fgp-website .fgp-catalog .fgp-category-nav button.is-active { background: white; color: var(--p-green); font-weight: 600; box-shadow: 0 1px 2px #2d43360d; }
+  .fgp-website .fgp-catalog .fgp-category-nav button.is-active::after { display: none; }
+  .fgp-website .fgp-catalog .fgp-browse-toolbar { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px 24px; min-height: 72px; padding: 12px 20px; border: 1px solid var(--p-line); box-shadow: 0 1px 2px #2d43360d; }
+  .fgp-website .fgp-browse-toolbar .fgp-filters { flex: 1 1 auto; gap: 12px 24px; min-width: 0; }
+  .fgp-website .fgp-catalog .fgp-filter-row { flex-wrap: wrap; gap: 8px; }
+  .fgp-website .fgp-catalog .fgp-filter-label { color: var(--p-ink); font-weight: 500; flex-shrink: 0; }
+  .fgp-website .fgp-catalog .fgp-capacities { align-items: center; min-height: 46px; gap: 2px; padding: 2px; border: 1px solid #e7e4dc80; border-radius: 4px; background: var(--p-soft); }
+  .fgp-website .fgp-catalog .fgp-capacities button { height: 40px; min-height: 40px; padding: 0 12px; background: transparent; font-size: 12px; line-height: 20px; }
+  .fgp-website .fgp-catalog .fgp-capacities button:hover { background: #ffffff99; }
+  .fgp-website .fgp-catalog .fgp-capacities button.is-selected { background: var(--p-green); color: white; font-weight: 500; box-shadow: 0 1px 2px #2d43360d; }
+  .fgp-website .fgp-catalog .fgp-display-controls { flex: 0 0 auto; margin-left: auto; padding: 0; align-items: center; }
+  .fgp-website .fgp-catalog .fgp-sort { gap: 8px; }
+  .fgp-website .fgp-catalog .fgp-sort select { height: 40px; min-height: 40px; border: 1px solid #e7e4dc99; font-size: 12px; }
+  .fgp-website .fgp-catalog .fgp-view-toggle { height: 40px; align-items: center; padding: 2px; border: 1px solid #e7e4dc99; }
+  .fgp-website .fgp-catalog .fgp-view-toggle button { width: 34px; height: 34px; min-height: 34px; padding: 0; flex: 0 0 34px; }
+  .fgp-website .fgp-catalog .fgp-view-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .fgp-website .fgp-catalog .fgp-product-link { padding: 12px; }
+  .fgp-website .fgp-catalog-card .fgp-image { aspect-ratio: 4 / 3; }
+  .fgp-website .fgp-catalog-card .fgp-card-body { padding-top: 16px; }
+  .fgp-website .fgp-catalog-card h3 { font-weight: 600; margin-bottom: 10px; }
+  .fgp-website .fgp-catalog-card .fgp-tags > span { border-radius: 9999px; padding: 6px 14px; background: #f0efea; color: var(--p-muted); font-size: 12px; }
+  .fgp-website .fgp-card-funeral .fgp-tags > .fgp-funeral-method { order: 1; }
+  .fgp-website .fgp-card-funeral .fgp-tags > .fgp-desktop-service-venue { order: 2; }
+  .fgp-website .fgp-catalog-card .fgp-card-pricing { padding-top: 16px; }
+  .fgp-website .fgp-catalog-card .fgp-price-note { display: block; flex-basis: 100%; padding: 0; margin: 4px 0 0; border: 0; color: var(--p-muted); font-size: 12px; line-height: 1.6; }
+  .fgp-website .fgp-catalog-product-note { display: block; margin: 16px 0 0; color: var(--p-muted); font-size: 12px; line-height: 1.6; text-align: right; white-space: pre-line; overflow-wrap: anywhere; }
+  .fgp-website .fgp-catalog-card .fgp-prices-compact:not(.fgp-dual-prices) .fgp-price-note { text-align: right; }
+  .fgp-website .fgp-catalog-card .fgp-card-action { margin-top: 18px; border-radius: 4px; }
+  .fgp-website .fgp-card-funeral .fgp-card-body { padding-top: 0; }
+  .fgp-website .fgp-card-funeral .fgp-card-pricing { margin-top: 0; padding-top: 0; }
+  .fgp-website .fgp-catalog-card .fgp-dual-prices { grid-template-columns: minmax(0, 1fr); gap: 16px; border-radius: 6px; }
+  .fgp-website .fgp-catalog-card .fgp-dual-prices > .fgp-price-entry + .fgp-price-entry { border-top: 1px solid var(--p-line); padding-top: 16px; }
+  .fgp-website .fgp-card-funeral .fgp-prices strong { font-size: 23px; font-weight: 500; }
+  .fgp-website .fgp-catalog .fgp-view-list .fgp-product-visual { flex: 0 0 240px; align-self: flex-start; }
+  .fgp-website .fgp-view-list .fgp-catalog-card .fgp-image { height: auto; aspect-ratio: 4 / 3; }
+  .fgp-website .fgp-view-list .fgp-card-body { padding-top: 0; }
+}
+@media (min-width: 1101px) and (prefers-reduced-motion: reduce) {
+  .fgp-website .fgp-catalog-card { transition: none; }
+  .fgp-website .fgp-catalog-card:hover,
+  .fgp-website .fgp-catalog-card:focus-within { transform: none; }
+}

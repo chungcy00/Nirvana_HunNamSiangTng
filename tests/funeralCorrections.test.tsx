@@ -197,15 +197,15 @@ test("only niche prices use starting from; standard products show actual offers 
     }
   }
 });
-test("note fallback matches existing SQL precedence, avoids blanks and repeats, normalizes tax wording", () => {
+test("price notes never fall back to product/global notes, and retain existing normalization", () => {
   assert.equal(
-    resolvePriceNote("独立备注", "产品备注", ["系统备注"]),
+    resolvePriceNote("独立备注"),
     "独立备注",
   );
-  assert.equal(resolvePriceNote(" ", "产品备注", ["系统备注"]), "产品备注");
+  assert.equal(resolvePriceNote(" "), "");
   assert.equal(
-    resolvePriceNote(null, "", ["以上价格未包含印花税。"]),
-    "以上价格未包含印花税",
+    resolvePriceNote(null),
+    "",
   );
   const html = price({
     ...record,
@@ -364,4 +364,21 @@ test("website detail price panel shows each backend note below its matching pric
   assert.equal((panel.match(/适用于即时安排的服务。/g) || []).length, 1);
   const noNotes = details(mapPublicProduct({ ...record, prices: record.prices.map(row => ({ ...row, price_note: "" })) }));
   assert.doesNotMatch(noNotes, /class="fgp-price-note"/);
+});
+
+test('admin preview preserves global settings but never fills an empty price note from them or the product', () => {
+  const edited=structuredClone(bundle);
+  edited.product.price_note_override='产品专属说明';
+  edited.offer_prices.forEach((p:any)=>{p.price_note=null;});
+  const before=JSON.stringify({edited,refs});
+  const product=mapAdminPreviewProduct(edited,refs);
+  assert.equal(product.productPriceNote,'产品专属说明');
+  assert(product.publicPrices?.every(p=>p.price_note===''));
+  const html=details(product);
+  assert.match(html,/fgp-product-price-note">产品专属说明/);
+  assert.doesNotMatch(html,/以上价格未包含印花税|RM 26,888<\/strong><p/);
+  edited.product.price_note_override='';
+  assert.doesNotMatch(details(mapAdminPreviewProduct(edited,refs)),/fgp-price-note/);
+  edited.product.price_note_override='产品专属说明';
+  assert.equal(JSON.stringify({edited,refs}),before);
 });

@@ -29,14 +29,6 @@ export function mapAdminPreviewProduct(
     (all || r.is_published !== false) &&
     religious(r.religion_id) &&
     (!r.offer_id || offered.has(r.offer_id));
-  const notices = [...refs.notices]
-    .filter((n) => n.is_active)
-    .sort(
-      (a, b) =>
-        (a.sort_order ?? 0) - (b.sort_order ?? 0) ||
-        String(a.content).localeCompare(String(b.content)),
-    )
-    .map((n) => n.content);
   const images = bundle.product_images
     .filter(visible)
     .sort((a: Row, b: Row) => a.sort_order - b.sort_order || a.id.localeCompare(b.id))
@@ -58,6 +50,7 @@ export function mapAdminPreviewProduct(
     capacity_count: p.capacity_count,
     subtitle: p.subtitle,
     description: p.description,
+    price_note_override: p.price_note_override,
     attributes:
       bundle[
         [
@@ -88,7 +81,7 @@ export function mapAdminPreviewProduct(
         religion_id: offers.find((o: Row) => o.id === price.offer_id)?.religion_id,
         price_type: price.price_type,
         amount: price.price_amount,
-        price_note: resolvePriceNote(price.price_note, p.price_note_override, notices),
+        price_note: resolvePriceNote(price.price_note),
       })),
     inclusions: bundle.product_inclusions
       .filter(visible)

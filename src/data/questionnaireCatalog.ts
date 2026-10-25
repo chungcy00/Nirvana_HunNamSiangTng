@@ -29,7 +29,7 @@ export function nirvanaQuestionnaireProducts(prototypeProducts: readonly Prototy
       description: p.name, variants,
       includes: p.inclusions.join('；') || '包含项目尚待核实。',
       religiousInclusions: Object.fromEntries(p.religions.map(r => [r.name, r.inclusions])),
-      restriction: [p.referencePrice ? '具体售价及服务内容请与顾问确认。' : p.terms, p.priceNote, ...(!p.priceNote ? (p.publicPrices || []).filter(price=>cleanPriceNote(price.price_note)).map(price=>`${price.price_type==='pre_need'?'预购价格':price.price_type==='at_need'?'即用价格':price.offer_name}：${cleanPriceNote(price.price_note)}`) : [])].filter(Boolean).join(' '),
+      restriction: [p.referencePrice ? '具体售价及服务内容请与顾问确认。' : p.terms, p.publicPrices ? p.productPriceNote : p.priceNote, ...(p.publicPrices || []).filter(price=>cleanPriceNote(price.price_note)).map(price=>`${price.price_type==='pre_need'?'预购价格':price.price_type==='at_need'?'即用价格':price.offer_name}：${cleanPriceNote(price.price_note)}`)].filter(Boolean).join(' '),
       referencePrice: p.referencePrice, startingPrice: p.category === 3,
       source: '富贵山庄产品目录',
     }];
