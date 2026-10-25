@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { ChevronRight, Menu, X } from "lucide-react";
 import { navigation } from "../../data/site";
 import { ConsultButton } from "../ui";
-export function Brand({ footer = false }: { footer?: boolean }) {
+export function Brand({ footer = false, onNavigate }: { footer?: boolean; onNavigate?: () => void }) {
   return (
-    <Link to="/" className="brand" aria-label="身后事 · 皆可托，返回首页">
+    <Link to="/" className="brand" aria-label="身后事 · 皆可托，返回首页" onClick={onNavigate}>
       <svg
         className="brand-logo"
         viewBox={footer ? "0 0 2048 768" : "42 268 1357 499"}
@@ -92,11 +92,17 @@ export default function Navbar() {
           }}
         >
           <h2 id="mobile-menu-title" className="sr-only">网站导航</h2>
-          <button type="button" className="menu-close" aria-label="关闭菜单" onClick={() => setOpen(false)}><X /></button>
+          <div className="mobile-menu-header">
+            <Brand onNavigate={() => setOpen(false)} />
+            <button type="button" className="menu-close" aria-label="关闭菜单" onClick={() => setOpen(false)}><X /></button>
+          </div>
           <nav aria-label="移动端导航" className="mobile-nav">
             {navigation.map((link) => (
               <NavLink end={link.to === "/"} key={link.to} to={link.to} onClick={() => setOpen(false)}>
-                {link.label}
+                {({ isActive }) => <>
+                  <span>{link.label}</span>
+                  {!isActive && <ChevronRight size={16} strokeWidth={1.5} aria-hidden="true" />}
+                </>}
               </NavLink>
             ))}
           </nav>
