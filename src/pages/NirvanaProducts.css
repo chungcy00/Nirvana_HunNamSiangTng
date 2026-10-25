@@ -204,11 +204,11 @@
   .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-action { grid-column: 1 / -1; }
 }
 
-/* Catalog notes are desktop-only; preserve the approved smaller layouts. */
+/* Tablet and desktop share catalog presentation; preserve the mobile layout. */
 .fgp-website .fgp-catalog-card .fgp-price-note { display: none; }
 .fgp-website .fgp-catalog-product-note { display: none; }
 .fgp-website .fgp-catalog-card .fgp-tags > .fgp-desktop-service-venue { display: none; }
-@media (min-width: 1101px) {
+@media (min-width: 768px) {
   .fgp-website .fgp-catalog-card { position: relative; transition: box-shadow 180ms ease, transform 180ms ease; }
   .fgp-website .fgp-catalog-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 8px; border-top: 2px solid transparent; border-radius: 8px 8px 0 0; pointer-events: none; }
   .fgp-website .fgp-catalog-card:hover,
@@ -259,8 +259,56 @@
   .fgp-website .fgp-view-list .fgp-catalog-card .fgp-image { height: auto; aspect-ratio: 4 / 3; }
   .fgp-website .fgp-view-list .fgp-card-body { padding-top: 0; }
 }
-@media (min-width: 1101px) and (prefers-reduced-motion: reduce) {
+/* Keep tablet grid and toolbar distinct without duplicating catalog controls. */
+@media (min-width: 768px) and (max-width: 1100px) {
+  .fgp-website .fgp-catalog .fgp-view-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fgp-website .fgp-catalog .fgp-browse-toolbar { flex-direction: column; align-items: stretch; min-height: 0; padding: 16px 20px; gap: 12px; }
+  .fgp-website .fgp-browse-toolbar .fgp-filters { flex: 0 1 auto; }
+  .fgp-website .fgp-catalog .fgp-filter-row { max-width: 100%; }
+  .fgp-website .fgp-catalog .fgp-capacities { max-width: 100%; min-width: 0; }
+  .fgp-website .fgp-catalog .fgp-display-controls { margin-left: 0; padding-top: 12px; border-top: 1px solid var(--p-line); flex-wrap: wrap; justify-content: space-between; }
+  .fgp-website .fgp-catalog .fgp-product-link { padding: 16px; }
+}
+@media (min-width: 768px) and (prefers-reduced-motion: reduce) {
   .fgp-website .fgp-catalog-card { transition: none; }
   .fgp-website .fgp-catalog-card:hover,
   .fgp-website .fgp-catalog-card:focus-within { transform: none; }
+}
+
+/* Mobile catalog only: keep controls inline and prices readable in two columns. */
+@media (max-width: 767px) {
+  .fgp-website:has(.fgp-catalog) { background: #faf9f6; }
+  .fgp-website .fgp-catalog .fgp-category-nav { max-width: 100%; height: 52px; margin-inline: 0; padding: 6px; gap: 4px; align-items: center; border: 1px solid var(--p-line); border-radius: 8px; background: var(--p-soft); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .fgp-website .fgp-catalog .fgp-category-nav::-webkit-scrollbar { display: none; }
+  .fgp-website .fgp-catalog .fgp-category-nav button { height: 38px; min-height: 38px; padding: 0 16px; border: 0; border-radius: 4px; font-size: 14px; line-height: 22px; font-weight: 400; }
+  .fgp-website .fgp-catalog .fgp-category-nav button.is-active { background: white; color: var(--p-green); font-weight: 600; box-shadow: 0 1px 2px #2d43360d; }
+  .fgp-website .fgp-catalog .fgp-category-nav button.is-active::after { display: none; }
+  .fgp-website .fgp-catalog .fgp-category-nav button:focus-visible { outline-offset: -2px; }
+  .fgp-website .fgp-catalog .fgp-browse-toolbar { padding: 12px; gap: 12px; border: 1px solid var(--p-line); box-shadow: 0 1px 2px #2d43360d; }
+  .fgp-website .fgp-catalog .fgp-filters { width: 100%; min-width: 0; gap: 12px; }
+  .fgp-website .fgp-catalog .fgp-filter-row { width: 100%; min-width: 0; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+  .fgp-website .fgp-catalog .fgp-filter-label { flex: 0 0 auto; color: var(--p-ink); font-size: 12px; font-weight: 500; }
+  .fgp-website .fgp-catalog .fgp-capacities { min-width: 0; max-width: 100%; min-height: 46px; padding: 2px; gap: 2px; align-items: center; border: 1px solid #e7e4dc80; border-radius: 4px; background: var(--p-soft); }
+  .fgp-website .fgp-catalog .fgp-capacities button { min-height: 40px; padding: 6px 8px; font-size: 12px; line-height: 20px; background: transparent; }
+  .fgp-website .fgp-catalog .fgp-capacities button.is-selected { background: var(--p-green); color: white; font-weight: 500; }
+  .fgp-website .fgp-catalog .fgp-display-controls { width: 100%; min-width: 0; padding-top: 12px; border-top: 1px solid var(--p-line); align-items: center; flex-wrap: wrap; gap: 8px; }
+  .fgp-website .fgp-catalog .fgp-sort { min-width: 0; gap: 6px; font-size: 12px; }
+  .fgp-website .fgp-catalog .fgp-sort select { min-height: 40px; height: 40px; max-width: 140px; padding-left: 8px; border: 1px solid #e7e4dc99; font-size: 12px; }
+  .fgp-website .fgp-catalog .fgp-view-toggle { height: 40px; padding: 2px; align-items: center; border: 1px solid #e7e4dc99; }
+  .fgp-website .fgp-catalog .fgp-view-toggle button { flex: 0 0 34px; width: 34px; height: 34px; min-height: 34px; padding: 0; }
+  .fgp-website .fgp-catalog .fgp-view-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .fgp-website .fgp-catalog .fgp-view-grid .fgp-image { aspect-ratio: 4 / 3; }
+  .fgp-website .fgp-catalog .fgp-image img { width: 100%; height: 100%; object-fit: cover; }
+  .fgp-website .fgp-catalog .fgp-catalog-card h3 { display: block; height: auto; overflow: visible; white-space: normal; overflow-wrap: anywhere; -webkit-line-clamp: unset; }
+  .fgp-website .fgp-catalog .fgp-tags > span { max-width: 100%; border-radius: 9999px; padding: 4px 7px; overflow-wrap: anywhere; }
+  .fgp-website .fgp-catalog .fgp-tags > .fgp-desktop-service-venue { display: inline-flex; order: 2; }
+  .fgp-website .fgp-catalog .fgp-tags > .fgp-funeral-method { order: 1; }
+  .fgp-website .fgp-catalog .fgp-card-service-meta { display: none; }
+  .fgp-website .fgp-catalog .fgp-prices-compact:not(.fgp-dual-prices) .fgp-price-entry { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .fgp-website .fgp-catalog .fgp-prices strong { max-width: 100%; font-size: 17px; line-height: 1.5; white-space: normal; overflow-wrap: normal; word-break: normal; }
+  .fgp-website .fgp-catalog .fgp-price-note { display: block; margin: 4px 0 0; padding: 0; border: 0; font-size: 11px; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
+  .fgp-website .fgp-catalog .fgp-catalog-product-note { display: block; margin: 12px 0 0; font-size: 11px; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; color: var(--p-muted); }
+  .fgp-website .fgp-catalog .fgp-dual-prices { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 8px; border-radius: 6px; }
+  .fgp-website .fgp-catalog .fgp-dual-prices > .fgp-price-entry + .fgp-price-entry { border-top: 1px solid var(--p-line); padding-top: 12px; }
+  .fgp-website .fgp-catalog .fgp-view-list .fgp-card-funeral .fgp-card-body { display: flex; flex-direction: column; }
 }
