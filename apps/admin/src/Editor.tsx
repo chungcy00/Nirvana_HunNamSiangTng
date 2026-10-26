@@ -587,12 +587,6 @@ export default function Editor() {
                       {attr('共通面积（平方英尺）', 'area_sqft', 'number')}
                       {attr('长度（英尺）', 'length_ft', 'number')}
                       {attr('宽度（英尺）', 'width_ft', 'number')}
-                      {p.category_id === 1 && (
-                        <>
-                          {attr('骨灰瓮安放数量', 'urn_capacity', 'number')}
-                          {attr('包含火化次数', 'cremation_count', 'number')}
-                        </>
-                      )}
                       {attr('安葬说明', 'burial_notes', 'textarea')}
                     </>
                   ) : p.category_id === 3 ? (
@@ -752,6 +746,7 @@ export default function Editor() {
             )}
             {section === 3 && (
               <InclusionEditor
+                cremationBurial={p.category_id === 1}
                 rows={bundle.product_inclusions}
                 productId={p.id}
                 onChange={(rows) => setRows('product_inclusions', rows)}

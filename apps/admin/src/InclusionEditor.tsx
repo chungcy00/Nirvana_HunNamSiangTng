@@ -13,6 +13,7 @@ export function InclusionEditor({
   offers,
   religious,
   productScoped = false,
+  cremationBurial = false,
 }: {
   rows: Row[];
   productId: string;
@@ -21,6 +22,7 @@ export function InclusionEditor({
   offers: [string, string][];
   religious: boolean;
   productScoped?: boolean;
+  cremationBurial?: boolean;
 }) {
   const groups = groupInclusions(rows, (r) => r.group_title);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
@@ -72,6 +74,11 @@ export function InclusionEditor({
       <p className="help">
         “包含项目”总标题保持不变。展开子标题可编辑所属明细；未分组的旧项目仍正常展示。移动子标题会同时移动该组明细。
       </p>
+      {cremationBurial && (
+        <p className="help">
+          骨灰瓮、骨灰盒和火化服务请在下方包含项目中填写名称、数量和单位，只需填写一次，不再在类别专属属性重复填写。
+        </p>
+      )}
       {productScoped && rows.some((r) => r.religion_id != null || r.offer_id != null) && (
         <p className="help">
           历史明细仍有关联资料，本次会保留原值；拟公开预览仍遵守原公开规则。修正前请先备份并逐条确认，不要直接清空关联。
