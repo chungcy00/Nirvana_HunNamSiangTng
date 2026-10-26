@@ -872,7 +872,7 @@ export default function Editor() {
                   实景图用于上方大图与缩略图；设计图仅用于下方设计参考，不进入实景相册。
                   设计名称选填，留空仍可保存和批准公开。
                 </p>
-                <div className="upload">
+                <div className="upload upload-toolbar">
                   <Field
                     label="上传素材访问范围"
                     value={uploadBucket}
