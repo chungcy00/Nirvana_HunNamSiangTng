@@ -1091,3 +1091,51 @@ td.number {
 .product-editor-page :is(input, select, textarea, button, section) {
   scroll-margin-bottom: calc(var(--editor-action-height, 80px) + 16px);
 }
+
+/* Each editable price plan has a clear boundary and its own heading. */
+.offer-card {
+  margin: 24px 0;
+  padding: 20px;
+  border: 1px solid #c7c7c7;
+  border-radius: 6px;
+  background: #fafafa;
+}
+.offer-heading {
+  margin: -20px -20px 20px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #d5d5d5;
+  border-radius: 6px 6px 0 0;
+  background: #ebebeb;
+}
+.offer-heading h3 { margin: 0; font-size: 16px; overflow-wrap: anywhere; }
+.offer-card .fields { gap: 16px; }
+.offer-card button:hover { color: #fff; background: #171717; border-color: #171717; }
+.offer-specifications { min-width: 0; margin-top: 4px; }
+.offer-specifications > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  background: #e8e8e8;
+  color: #171717;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+}
+.offer-specifications > summary::-webkit-details-marker { display: none; }
+.offer-specifications > summary:hover { color: #fff; background: #171717; }
+.offer-specifications > summary:focus-visible { outline: 2px solid #171717; outline-offset: 3px; }
+.offer-specifications > summary > svg { flex-shrink: 0; }
+.offer-specifications[open] > summary > svg { transform: rotate(90deg); }
+.offer-spec-summary { margin-inline-start: auto; font-size: 12px; font-weight: 400; overflow-wrap: anywhere; }
+.offer-spec-body { padding: 12px 0 4px; }
+.offer-spec-body > .help { margin-top: 0; }
+@media (max-width: 740px) {
+  .offer-card { padding: 16px; }
+  .offer-heading { margin: -16px -16px 16px; padding: 14px 16px; }
+  .offer-heading > .row { width: 100%; justify-content: space-between; }
+  .offer-spec-summary { margin-inline-start: 26px; flex-basis: calc(100% - 26px); }
+}

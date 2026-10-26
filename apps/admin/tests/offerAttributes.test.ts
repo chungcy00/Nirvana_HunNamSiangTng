@@ -1,0 +1,31 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {resolvedOfferAttributes,offerOverrideValue} from '../../../shared/offerAttributes';
+import {changesFor,updateCommonAttribute} from '../src/model';
+test('automatic values inherit without creating stored overrides, then edits become independent',()=>{
+ const before:any={product:{id:'p',category_id:2,publication_status:'draft'},burial_details:[{product_id:'p',facing:'西北',area_sqft:864}],product_offers:[{id:'o',facing_override:null,area_sqft_override:null}]};
+ const original=JSON.stringify(before), offer=before.product_offers[0];
+ assert.deepEqual(resolvedOfferAttributes(offer,before.burial_details[0]),{facing:'西北',area:864});
+ assert.equal(JSON.stringify(before),original);
+ let current=structuredClone(before);
+ current=updateCommonAttribute(current,'area_sqft',900);
+ assert.equal(resolvedOfferAttributes(current.product_offers[0],current.burial_details[0]).area,900);
+ current.product_offers[0].area_sqft_override=offerOverrideValue('area_sqft_override',1080,current.burial_details[0]);
+ current.product_offers[0].facing_override=offerOverrideValue('facing_override','朝南',current.burial_details[0]);
+ current=updateCommonAttribute(updateCommonAttribute(current,'area_sqft',1000),'facing','朝东');
+ assert.deepEqual(resolvedOfferAttributes(current.product_offers[0],current.burial_details[0]),{facing:'朝南',area:1080});
+ let row=changesFor(before,current,'draft').p_changes.product_offers.upsert![0];
+ assert.equal(row.area_sqft_override,1080);assert.equal(row.facing_override,'朝南');
+ current.product_offers[0].area_sqft_override=offerOverrideValue('area_sqft_override',1000,current.burial_details[0]);
+ current.product_offers[0].facing_override=offerOverrideValue('facing_override',' 朝东 ',current.burial_details[0]);
+ assert.equal(current.product_offers[0].area_sqft_override,null);assert.equal(current.product_offers[0].facing_override,null);
+ current=updateCommonAttribute(current,'area_sqft',1200);
+ assert.equal(resolvedOfferAttributes(current.product_offers[0],current.burial_details[0]).area,1200);
+});
+test('blank fields inherit, absent common values stay empty, and existing overrides survive',()=>{
+ assert.equal(offerOverrideValue('area_sqft_override','',{area_sqft:56}),null);
+ assert.equal(offerOverrideValue('facing_override','',{facing:'西北'}),null);
+ assert.deepEqual(resolvedOfferAttributes({},{}),{facing:'',area:null});
+ assert.deepEqual(resolvedOfferAttributes({area_sqft_override:1080},{facing:'西北',area_sqft:null}),{facing:'西北',area:1080});
+ assert.equal(offerOverrideValue('area_sqft_override',0,{area_sqft:null}),0);
+});

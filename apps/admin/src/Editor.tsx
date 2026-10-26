@@ -1,4 +1,4 @@
-import { hasOfferDifferences } from '../../../shared/offerAttributes';
+import { OfferAttributes } from './OfferAttributes';
 import { draftKey, readDraft, writeDraft } from './draftStorage';
 import { InclusionEditor } from './InclusionEditor';
 import { ServiceVenueField } from './ServiceVenueField';
@@ -35,7 +35,6 @@ export default function Editor() {
     [busy, setBusy] = useState(false),
     [preview, setPreview] = useState(false),
     [guide, setGuide] = useState(false),
-    [offerSpecsOpen, setOfferSpecsOpen] = useState<Record<string, boolean>>({}),
     [confirmPublish, setConfirmPublish] = useState(false),
     [related, setRelated] = useState<DictionaryKind | null>(null),
     [uploadBucket, setUploadBucket] = useState('catalog-media-private'),
@@ -780,12 +779,12 @@ export default function Editor() {
                 <p className="help">
                   金额必须大于零。清空金额表示不保存该价格行；骨灰位仅有一条最低价，殡仪两种价格互不相加。
                 </p>
-                {bundle.product_offers.map((o: Row) => (
-                  <div className="entry" key={o.id}>
+                {bundle.product_offers.map((o: Row, index: number) => (
+                  <div className="offer-card" key={o.id} role="group" aria-label={`价格方案 ${index + 1}：${o.name || '未命名方案'}`}>
                     {![3, 4].includes(p.category_id) && (
                       <>
-                        <div className="row between">
-                          <strong>{o.name || '价格方案'}</strong>
+                        <div className="offer-heading row between">
+                          <h3>{o.name || '未命名方案'}</h3>
                           <div className="row">
                             <Check
                               label="启用"
@@ -825,81 +824,7 @@ export default function Editor() {
                               'text',
                               relationOptions,
                             )}
-                          {p.category_id <= 2 && (
-                            <div className="field wide">
-                              <p className="help">
-                                沿用共通规格：{attrs.facing || '朝向未填写'}；
-                                {attrs.area_sqft ? `${attrs.area_sqft} 平方英尺` : '面积未填写'}
-                                。无需重复输入。
-                              </p>
-                              <button
-                                type="button"
-                                aria-expanded={
-                                  offerSpecsOpen[o.id] ?? hasOfferDifferences(o, attrs)
-                                }
-                                onClick={() =>
-                                  setOfferSpecsOpen((current) => ({
-                                    ...current,
-                                    [o.id]: !(current[o.id] ?? hasOfferDifferences(o, attrs)),
-                                  }))
-                                }
-                              >
-                                {(offerSpecsOpen[o.id] ?? hasOfferDifferences(o, attrs))
-                                  ? '收起方案差异'
-                                  : '设置此方案的不同规格'}
-                              </button>
-                              {(offerSpecsOpen[o.id] ?? hasOfferDifferences(o, attrs)) && (
-                                <>
-                                  <p className="help">
-                                    仅填写与共通规格不同的内容；留空会沿用共通规格。位置类型用于区分普通、角头等位置。
-                                  </p>
-                                  {childField(
-                                    'product_offers',
-                                    o,
-                                    '位置类型（可选）',
-                                    'position_type',
-                                  )}
-                                  {childField(
-                                    'product_offers',
-                                    o,
-                                    '不同朝向（留空沿用共通朝向）',
-                                    'facing_override',
-                                  )}
-                                  {childField(
-                                    'product_offers',
-                                    o,
-                                    '不同面积（平方英尺，留空沿用共通面积）',
-                                    'area_sqft_override',
-                                    'number',
-                                  )}
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setRows(
-                                        'product_offers',
-                                        bundle.product_offers.map((row: Row) =>
-                                          row.id === o.id
-                                            ? {
-                                                ...row,
-                                                facing_override: null,
-                                                area_sqft_override: null,
-                                                position_type: null,
-                                              }
-                                            : row,
-                                        ),
-                                      );
-                                      setOfferSpecsOpen((current) => ({
-                                        ...current,
-                                        [o.id]: false,
-                                      }));
-                                    }}
-                                  >
-                                    恢复沿用共通规格
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          )}
+                          {p.category_id <= 2 && <OfferAttributes offer={o} common={attrs} onChange={(key,value) => update('product_offers', o.id, key, value)} />}
                         </div>
                       </>
                     )}
