@@ -42,7 +42,7 @@ export function GeneralProductGallery({ product, religion, imageRenderer }: {
     {images.length > 1 && <div className="fgp-gallery-thumbnails" role="group" aria-label="产品图片选择">
       {images.map((image, index) => <button type="button" key={image.id} aria-pressed={active.id === image.id} aria-label={`查看图片 ${index + 1}：${image.alt || product.name}`} onClick={() => setSelected(image.id)}>{renderImage(image)}</button>)}
     </div>}
-    {active && <dialog ref={dialog} className="fgp-gallery-dialog" aria-label={`${product.name}大图预览`} onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
+    {active && <dialog ref={dialog} className="fgp-gallery-dialog" aria-label={`${product.name}大图预览`} onClick={event => { if (!(event.target as Element).closest('.fgp-gallery-dialog-image img')) dialog.current?.close(); }}>
       <button type="button" className="fgp-gallery-close" aria-label="关闭大图预览" onClick={() => dialog.current?.close()}><X size={22} aria-hidden="true"/></button>
       <div className="fgp-gallery-dialog-image">{renderImage(active)}</div>
     </dialog>}

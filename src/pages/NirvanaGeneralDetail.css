@@ -56,7 +56,8 @@
 .fgp-website .fgp-gallery-thumbnails button[aria-pressed="true"] { border-color: var(--p-green); box-shadow: 0 0 0 1px var(--p-green); background: var(--p-soft); }
 .fgp-gallery-dialog { width: min(1100px, calc(100% - 32px)); max-width: none; height: min(850px, calc(100dvh - 32px)); max-height: none; margin: auto; padding: 52px 16px 16px; border: 0; border-radius: 0; background: transparent; color: #2d4336; box-shadow: none; }
 .fgp-gallery-dialog::backdrop { background: rgb(23 34 27 / 90%); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-.fgp-gallery-dialog-image { position: relative; width: 100%; height: 100%; }
+.fgp-gallery-dialog-image { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.fgp-website .fgp-gallery-dialog-image img { position: static; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
 .fgp-website .fgp-gallery-close { position: absolute; top: 4px; right: 8px; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: white; }
 
 .fgp-website .fgp-general-detail .fgp-general-main-image:not(:has(img)) { aspect-ratio: 8 / 5; }
