@@ -46,7 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     void refresh();
-    const listener = supabase?.auth.onAuthStateChange(() => {
+    const listener = supabase?.auth.onAuthStateChange((event) => {
+      // The explicit refresh above already reads the initial session.
+      if (event === 'INITIAL_SESSION') return;
       queueMicrotask(() => {
         if (active) void refresh();
       });

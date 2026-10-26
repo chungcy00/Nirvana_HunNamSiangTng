@@ -161,12 +161,12 @@ test("public configuration rejects privileged keys and untrusted image destinati
     "http://127.0.0.1:56321",
   );
 });
-test("detail revocation and transport errors do not resurrect a list snapshot", async () => {
+test("one fresh snapshot reflects revocation and transport errors without resurrecting old data", async () => {
   const saved = globalThis.fetch;
   let count = 0;
   try {
     globalThis.fetch = (async () =>
-      new Response(JSON.stringify(++count === 1 ? [raw] : null), {
+      new Response(JSON.stringify(++count === 1 ? [] : [raw]), {
         status: 200,
       })) as typeof fetch;
     assert.deepEqual(
@@ -319,4 +319,14 @@ test('inclusion sections preserve headings, item order, old lists and religion v
   const legacy = render('ready','/nirvana/products/item/live-w',[mapPublicProduct({...raw,category_id:4})]);
   assert.match(legacy,/公开包含项目/);
   assert.match(legacy, /<details class="fgp-inclusion-section" open=""><summary>.*?<h3>包含项目<\/h3>/);
+});
+
+
+test("complete catalogue loads in one authorization-filtered snapshot request",async()=>{
+ const saved=globalThis.fetch;const requests:string[]=[];
+ try {
+  globalThis.fetch=(async(url,options)=>{requests.push(String(url));assert.equal(options?.cache,'no-store');return new Response(JSON.stringify([raw]));}) as typeof fetch;
+  const records=await loadPublicProducts({url:'https://example.supabase.co',key:'sb_publishable_test'});
+  assert.equal(records.length,1);assert.equal(requests.length,1);assert.match(requests[0],/catalog_product_snapshot$/);
+ } finally {globalThis.fetch=saved;}
 });

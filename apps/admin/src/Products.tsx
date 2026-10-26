@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GripVertical } from 'lucide-react';
 import { useAdmin } from './context';
@@ -167,8 +167,12 @@ export default function Products() {
     [newCategory, setNewCategory] = useState(1),
     [sort, setSort] = useState(false),
     [preview, setPreview] = useState<Bundle | null>(null);
+  const lastQuery = useRef(query);
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
+    const delay = lastQuery.current === query ? 0 : 200;
+    lastQuery.current = query;
     setLoading(true);
     const timer = setTimeout(() => {
       rpc('admin_product_list', {
@@ -177,7 +181,7 @@ export default function Products() {
         p_series: series || null,
         p_status: status || null,
         p_page: page,
-      })
+      }, controller.signal)
         .then((result) => {
           if (active) {
             setData(result);
@@ -190,10 +194,11 @@ export default function Products() {
         .finally(() => {
           if (active) setLoading(false);
         });
-    }, 200);
+    }, delay);
     return () => {
       active = false;
       clearTimeout(timer);
+      controller.abort();
     };
   }, [query, category, series, status, page, revision]);
   function filter(fn: () => void) {

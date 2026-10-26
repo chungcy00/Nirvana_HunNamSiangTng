@@ -17,9 +17,11 @@ export const supabase = configured
       },
     })
   : null;
-export async function rpc<T = any>(name: string, args: Record<string, unknown> = {}): Promise<T> {
+export async function rpc<T = any>(name: string, args: Record<string, unknown> = {}, signal?: AbortSignal): Promise<T> {
   if (!supabase) throw new Error('尚未配置后台服务连接。');
-  const { data, error } = await supabase.rpc(name, args);
+  const request = supabase.rpc(name, args);
+  if (signal) request.abortSignal(signal);
+  const { data, error } = await request;
   if (error) throw error;
   return data;
 }

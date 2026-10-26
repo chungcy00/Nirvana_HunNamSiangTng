@@ -1,9 +1,12 @@
 import { mapAdminPreviewProduct } from './previewModel';
 import { DetailPreviewFrame } from './DetailPreviewFrame';
 import { groupInclusions } from '../../../shared/inclusionGroups';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, useCallback, type ReactNode } from 'react';
 import { Image as ImageIcon, X } from 'lucide-react';
 import { supabase } from './client';
+import { useAuth } from './auth';
+import { useVisibleImage } from '../../../shared/useVisibleImage';
+import { fetchPreviewImage } from '../../../shared/imageResource';
 import { type Row, type Bundle, type References, money, tableFor, capacities } from './types';
 import { priceLines } from './model';
 export function Field({
@@ -173,30 +176,23 @@ export function Photo({
   className?: string;
   showPlaceholder?: boolean;
 }) {
-  const [src, setSrc] = useState('');
-  useEffect(() => {
-    let active = true,
-      url = '';
-    setSrc('');
-    if (image && supabase)
-      supabase.storage
-        .from(image.storage_bucket)
-        .download(image.storage_path)
-        .then(({ data }) => {
-          if (data && active) {
-            url = URL.createObjectURL(data);
-            setSrc(url);
-          }
-        });
-    return () => {
-      active = false;
-      if (url) URL.revokeObjectURL(url);
-    };
-  }, [image?.storage_bucket, image?.storage_path]);
+  const { session } = useAuth();
+  const token = session?.access_token;
+  const bucket = image?.storage_bucket, path = image?.storage_path;
+  const identity = bucket && path && token ? `${token}:${bucket}:${path}` : '';
+  const load = useCallback(async (width: number, signal: AbortSignal) => {
+    const base = import.meta.env.VITE_SUPABASE_URL;
+    const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (!token || !bucket || !path) throw new Error('Image unavailable');
+    return fetchPreviewImage(bucket,path,width,{apikey:key,Authorization:`Bearer ${token}`},
+      `${base}/storage/v1/object/authenticated/${bucket}/${path.split('/').map(encodeURIComponent).join('/')}`,signal);
+  }, [token,bucket,path]);
+  const {target,url:src} = useVisibleImage(identity,load);
   return src ? (
-    <img className={className} src={src} alt={image?.alt_text || '产品图片'} />
-  ) : !showPlaceholder ? null : (
+    <img src={src} ref={node=>{target.current=node;}} decoding="async" className={className} alt={image?.alt_text || '产品图片'} />
+  ) : !showPlaceholder ? <span ref={node=>{target.current=node;}} aria-hidden="true" style={{position:'absolute',inset:0,pointerEvents:'none'}}/> : (
     <div
+      ref={node=>{target.current=node;}}
       className={`${className} photo-empty`}
       role="img"
       aria-label={image ? '图片暂不可读取' : '暂无产品图片'}

@@ -85,7 +85,7 @@ export function publicConfig(
 }
 export async function publicRpc(
   config: PublicConfig,
-  name: "catalog_product_list" | "catalog_product_detail",
+  name: "catalog_product_list" | "catalog_product_detail" | "catalog_product_snapshot",
   args: object,
   signal?: AbortSignal,
 ) {
@@ -229,36 +229,12 @@ export async function loadPublicProducts(
   config: PublicConfig,
   signal?: AbortSignal,
 ): Promise<PrototypeProduct[]> {
-  const list: PublicRecord[] = await publicRpc(
-    config,
-    "catalog_product_list",
-    {},
-    signal,
-  );
-  if (!Array.isArray(list))
-    throw new Error("产品资料暂时无法载入，请稍后重试。");
-  const products: (PrototypeProduct | undefined)[] = new Array(list.length);
-  let next = 0;
-  await Promise.all(
-    Array.from({ length: Math.min(4, list.length) }, async () => {
-      while (next < list.length) {
-        const index = next++,
-          item = list[index];
-        // Details re-check publication after the list request; never fill a missing
-        // or hidden result with an earlier snapshot or static prototype record.
-        const detail: PublicRecord | null = await publicRpc(
-          config,
-          "catalog_product_detail",
-          { p_slug: item.slug },
-          signal,
-        );
-        if (detail && detail.id === item.id)
-          products[index] = mapPublicProduct(detail);
-      }
-    }),
-  );
-  return products.filter((p): p is PrototypeProduct => !!p);
+  // One RLS-filtered snapshot replaces the list + one detail request per product.
+  const records: PublicRecord[] = await publicRpc(config,"catalog_product_snapshot",{},signal);
+  if (!Array.isArray(records)) throw new Error("产品资料暂时无法载入，请稍后重试。");
+  return records.map(mapPublicProduct);
 }
+
 export function imageEndpoint(config: PublicConfig, image: PublicImage) {
   if (
     !["catalog-media-private", "catalog-media-restricted"].includes(
