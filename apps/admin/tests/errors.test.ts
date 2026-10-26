@@ -5,10 +5,10 @@ test('database image constraint is translated with a useful recovery action', ()
   const text = errorText({
     code: '23514',
     message:
-      'new row for relation "product_images" violates check constraint "product_images_check1"',
+      'new row for relation "product_images" violates check constraint "product_images_design_name_check"',
   });
   assert(text.includes('设计名称'));
-  assert(text.includes('图片管理'));
+  assert(text.includes('清空'));
   assert(!text.includes('product_images'));
 });
 test('unknown service errors remain Chinese and application guidance is preserved', () => {

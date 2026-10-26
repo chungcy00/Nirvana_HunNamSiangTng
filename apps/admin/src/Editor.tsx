@@ -848,7 +848,7 @@ export default function Editor() {
                 <p className="help">
                   支持 JPEG、PNG、WebP，单张不超过 10 MB。照片保留原色；上传或替换后，请保存产品。
                   实景图用于上方大图与缩略图；设计图仅用于下方设计参考，不进入实景相册。
-                  宗教专属设计图批准公开前，须填写设计名称。
+                  设计名称选填，留空仍可保存和批准公开。
                 </p>
                 <div className="upload">
                   <Field
@@ -923,7 +923,7 @@ export default function Editor() {
                           relationOptions,
                         )}
                       <Field
-                        label="设计名称"
+                        label="设计名称（选填）"
                         value={r.design_name}
                         onChange={(v) =>
                           setRows(
@@ -940,7 +940,7 @@ export default function Editor() {
                         }
                       />
                       {r.image_type === 'design' && r.religion_id && (
-                        <p className="help">此图片属于宗教专属设计，批准公开前请填写设计名称。</p>
+                        <p className="help">设计名称可留空；填写后会显示在前台设计图下方。</p>
                       )}
                       <Check
                         label="设为共通主图"
@@ -1101,7 +1101,7 @@ export default function Editor() {
             <li>在「包含项目」添加服务内容，在「价格」添加或修改方案售价。</li>
             {p.category_id !== 4 && (
               <li>
-                在「图片管理」上传原色照片，可修改说明、替换文件、排序并设置一张共通主图。宗教专属设计图公开前需填写设计名称。
+                在「图片管理」上传原色照片，可修改说明、替换文件、排序并设置一张共通主图。设计名称选填。
               </li>
             )}
             <li>

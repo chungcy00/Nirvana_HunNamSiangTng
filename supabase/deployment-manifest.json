@@ -81,6 +81,11 @@
       "local": "20261026135045_catalog_offer_attributes.sql",
       "remote_version": "20261026135518",
       "remote_name": "catalog_offer_attributes"
+    },
+    {
+      "local": "20261026165604_catalog_optional_design_name.sql",
+      "remote_version": "20261026165618",
+      "remote_name": "catalog_optional_design_name"
     }
   ],
   "hosted_validation": {

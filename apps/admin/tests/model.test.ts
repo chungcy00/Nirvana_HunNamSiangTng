@@ -172,7 +172,7 @@ test('inclusion section title is saved, renamed, cleared and validated without l
   assert(validate(current, false).some((x) => x.includes('120')));
 });
 
-test('image rules block invalid shared covers and unnamed public religious designs in drafts', () => {
+test('image rules allow unnamed public religious designs and still block invalid shared covers', () => {
   const b = structuredClone(base);
   b.product_images = [
     {
@@ -184,7 +184,8 @@ test('image rules block invalid shared covers and unnamed public religious desig
       design_name: '   ',
     },
   ];
-  assert(validate(b, false).some((text) => text.includes('图片 1') && text.includes('设计名称')));
+  assert.deepEqual(validate(b, false), []);
+  assert.equal(changesFor(base, b, 'draft').p_changes.product_images.upsert![0].design_name, null);
   b.product_images[0].design_name = ' 莲花 ';
   assert.deepEqual(validate(b, false), []);
   const payload = changesFor(base, b, 'draft');

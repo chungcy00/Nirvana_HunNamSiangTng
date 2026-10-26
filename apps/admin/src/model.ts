@@ -169,13 +169,6 @@ export function validate(bundle: Bundle, publishing: boolean) {
       errors.push(`图片 ${index + 1}：设计图仅用于设计参考，不能设为实景相册主图。`);
     if (image.is_primary && image.religion_id)
       errors.push(`图片 ${index + 1}：共通主图的适用宗教请选择「共通」。`);
-    if (
-      image.is_published &&
-      image.image_type === 'design' &&
-      image.religion_id &&
-      !image.design_name?.trim()
-    )
-      errors.push(`图片 ${index + 1}：宗教专属设计图批准公开前，请填写设计名称。`);
   }
   if (!publishing) return errors;
   if (p.category_id === 3 && !['indoor', 'outdoor'].includes(placement))

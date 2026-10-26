@@ -9,7 +9,7 @@ export type PublicImage = {
   alt?: string;
   religion_id?: number;
   image_type?: string;
-  design_name?: string;
+  design_name?: string | null;
 };
 export type PublicPrice = {
   offer_id: string;

@@ -13,9 +13,7 @@ export function errorText(error: any) {
   if (error?.code === '23503')
     return '仍有关联资料，或关联对象无效。请先调整对应图片、方案或宗教。';
   const message = typeof error?.message === 'string' ? error.message : '';
-  if (/product_images_check1/.test(message))
-    return '宗教专属设计图批准公开前，请在「图片管理」填写设计名称，然后重新保存。';
-  if (/product_images_check2/.test(message))
+  if (/product_images_check2|product_images_design_name_check/.test(message))
     return '图片设计名称不能只填空格，请填写名称或清空此栏后重新保存。';
   if (/product_images_check\b/.test(message))
     return '共通主图不能限定宗教，请将该图片的适用宗教改为「共通」后重新保存。';

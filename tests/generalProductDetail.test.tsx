@@ -31,14 +31,18 @@ test('real image choices are deduplicated and empty galleries have no fabricated
   assert.match(html,/aria-label="查看产品大图"/);
 });
 
-test('design reference cards show only actual named designs without fabricated Type descriptions', () => {
+test('design reference cards show named and unnamed designs without fabricated names', () => {
   const product = prototypeProducts.find(p => p.category === 1)!;
   const image = {id:'design-1',bucket:'test',path:'sample.png',image_type:'design',design_name:'Type A',alt:'图片替代文字',religion_id:Number(product.religions[0].id)};
   const html = render({...product,images:[image,{...image,id:'design-2'}]});
   assert.match(html, /宗教与设计参考/);
   assert.equal((html.match(/<h3>Type A<\/h3>/g)||[]).length,1);
   assert.doesNotMatch(html, /Type C|核准总价|永久管理信托保障|沉稳黑金/);
-  assert.doesNotMatch(render({...product,images:[{...image,design_name:''}]}), /fgp-design-comparison/);
+  const unnamed = render({...product,images:[{...image,design_name:''},{...image,id:'unnamed-2',path:'second.png',design_name:null}]});
+  assert.match(unnamed, /fgp-design-comparison/);
+  assert.equal((unnamed.match(/class="fgp-design-photo"/g)||[]).length,2);
+  assert.doesNotMatch(unnamed.slice(unnamed.indexOf('class="fgp-design-comparison"'),unnamed.indexOf('class="fgp-general-purchase"')), /<h3>|Type A/);
+
 });
 
 test('design images never enter the environment gallery, including an incorrectly marked primary', () => {
