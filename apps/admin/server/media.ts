@@ -1,5 +1,5 @@
-import { previewBucket, previewWidths, storedPreviewPath } from '../../../shared/imageVariants';
-import { storeImagePreviews } from './preparePreviews';
+import { previewBucket, previewWidths, storedPreviewPath } from '../../../shared/imageVariants.js';
+import { storeImagePreviews } from './preparePreviews.js';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';

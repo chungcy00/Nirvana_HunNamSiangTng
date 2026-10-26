@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { previewBucket, storedPreviewPath } from '../../../shared/imageVariants';
+import { previewBucket, storedPreviewPath } from '../../../shared/imageVariants.js';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 type Environment = Record<string, string | undefined>;

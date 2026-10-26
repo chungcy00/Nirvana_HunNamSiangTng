@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { previewWidths, storedPreviewPath } from '../../../shared/imageVariants';
+import { previewWidths, storedPreviewPath } from '../../../shared/imageVariants.js';
 export async function storeImagePreviews(
   input: Buffer,
   bucket: string,
