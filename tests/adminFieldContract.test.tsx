@@ -26,17 +26,17 @@ test('same common/offer attributes are not repeated, while a single differing of
 });
 test('category attribute allowlists display real specs and notes without internal fields',()=>{
   const cases:[number,Record<string,unknown>,string[]][]=[
-    [1,{length_ft:7,width_ft:8,urn_capacity:2,cremation_count:2,burial_notes:'安葬说明测试'},['长度','宽度','安葬说明测试']],
-    [2,{length_ft:9,width_ft:10,burial_notes:'福地说明测试'},['长度','宽度','福地说明测试']],
+    [1,{length_ft:7,width_ft:8,urn_capacity:2,cremation_count:2,burial_notes:'安葬说明测试'},['安葬说明测试']],
+    [2,{length_ft:9,width_ft:10,burial_notes:'福地说明测试'},['福地说明测试']],
     [3,{theme_name:'楼阁主题',niche_style:'款式说明测试',niche_notes:'骨灰位补充测试'},['楼阁主题','款式说明测试','骨灰位补充测试']],
     [5,{tablet_type:'双人牌位',tablet_capacity:2,tablet_notes:'牌位补充测试'},['双人牌位','牌位容量','牌位补充测试']],
     [6,{fengshui_type:'生基类型测试',configuration_notes:'生基配置测试'},['生基类型测试','生基配置测试']],
-    [7,{pet_size_class:'小型',pet_burial_method:'ash_burial',length_ft:2,width_ft:3,pet_notes:'宠物说明测试'},['小型','骨灰安葬','长度','宽度','宠物说明测试']],
+    [7,{pet_size_class:'小型',pet_burial_method:'ash_burial',length_ft:2,width_ft:3,pet_notes:'宠物说明测试'},['小型','骨灰安葬','宠物说明测试']],
   ];
   for(const [category_id,attributes,texts] of cases){
     const html=render(mapPublicProduct({...raw,category_id,attributes:{...attributes,internal_notes:'PRIVATE_SENTINEL',source_reference:'PRIVATE_SOURCE'}}));
     texts.forEach(text=>assert(html.includes(text),`${category_id}: ${text}`));
-    assert.doesNotMatch(html,/PRIVATE_SENTINEL|PRIVATE_SOURCE/);
+    assert.doesNotMatch(html,/PRIVATE_SENTINEL|PRIVATE_SOURCE|<dt>长度<|<dt>宽度</);
     if(category_id===3)assert.doesNotMatch(html,/面积：66|朝向：朝北/);
   }
 });

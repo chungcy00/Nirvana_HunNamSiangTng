@@ -232,3 +232,16 @@ test('editing common specs updates inherited duplicate values but preserves diff
   const payload = changesFor(before, next, 'draft');
   assert.equal(payload.p_changes.product_offers.upsert![0].area_sqft_override, null);
 });
+
+
+test('retired length and width never enter save payloads, including recovered old drafts', () => {
+  for (const [category,table] of [[1,'burial_details'],[2,'burial_details'],[7,'pet_details']] as const) {
+    const before=structuredClone(base),current=structuredClone(base);
+    before.product.category_id=category;current.product.category_id=category;
+    before[table]=[{product_id:'a',facing:'朝南',length_ft:7,width_ft:8}];
+    current[table]=[{product_id:'a',facing:'朝北',length_ft:9,width_ft:10}];
+    const row=changesFor(before,current,'draft').p_changes[table].upsert![0];
+    assert(!('length_ft' in row));assert(!('width_ft' in row));
+    assert.equal(row.facing,'朝北');
+  }
+});

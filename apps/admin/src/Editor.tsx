@@ -2,7 +2,7 @@ import { hasOfferDifferences } from '../../../shared/offerAttributes';
 import { draftKey, readDraft, writeDraft } from './draftStorage';
 import { InclusionEditor } from './InclusionEditor';
 import { ServiceVenueField } from './ServiceVenueField';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { useNavigate, useParams, useBlocker } from 'react-router-dom';
 import { ArrowDown, ArrowUp, GripVertical } from 'lucide-react';
 import { useAuth } from './auth';
@@ -40,9 +40,21 @@ export default function Editor() {
     [related, setRelated] = useState<DictionaryKind | null>(null),
     [uploadBucket, setUploadBucket] = useState('catalog-media-private'),
     [uploadImageType, setUploadImageType] = useState('real'),
-    [draftStatus, setDraftStatus] = useState('');
+    [draftStatus, setDraftStatus] = useState(''),
+    [actionBarHeight, setActionBarHeight] = useState(0);
+  const actionBar = useRef<HTMLDivElement>(null);
   const staged = useRef<Row[]>([]),
     ignoreLeave = useRef(false);
+  const editorReady = !!bundle;
+  useEffect(() => {
+    const bar = actionBar.current;
+    if (!bar) return;
+    const measure = () => setActionBarHeight(Math.ceil(bar.getBoundingClientRect().height));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(bar);
+    return () => observer.disconnect();
+  }, [editorReady]);
   const localKey = member?.user_id && id ? draftKey(member.user_id, id) : '';
   const dirty = !!bundle && !!original && JSON.stringify(bundle) !== JSON.stringify(original);
   const blocker = useBlocker(dirty && !ignoreLeave.current);
@@ -393,7 +405,7 @@ export default function Editor() {
     );
   };
   return (
-    <>
+    <div className="product-editor-page" style={{ paddingBottom: actionBarHeight + 16, '--editor-action-height': `${actionBarHeight}px` } as CSSProperties}>
       <div className="pagehead row between">
         <div>
           <h1>{p.name || '未命名草稿'}</h1>
@@ -585,8 +597,6 @@ export default function Editor() {
                     <>
                       {attr('共通朝向', 'facing')}
                       {attr('共通面积（平方英尺）', 'area_sqft', 'number')}
-                      {attr('长度（英尺）', 'length_ft', 'number')}
-                      {attr('宽度（英尺）', 'width_ft', 'number')}
                       {attr('安葬说明', 'burial_notes', 'textarea')}
                     </>
                   ) : p.category_id === 3 ? (
@@ -639,8 +649,6 @@ export default function Editor() {
                         ['ash_burial', '骨灰安葬'],
                       ])}
                       {attr('宠物规格', 'pet_size_class')}
-                      {attr('长度（英尺）', 'length_ft', 'number')}
-                      {attr('宽度（英尺）', 'width_ft', 'number')}
                       {attr('面积（平方英尺）', 'area_sqft', 'number')}
                       {attr('朝向', 'facing')}
                       {attr('补充说明', 'pet_notes', 'textarea')}
@@ -1110,7 +1118,7 @@ export default function Editor() {
           </fieldset>
         </div>
       </div>
-      <div className="stickyactions row between">
+      <div ref={actionBar} className="stickyactions row between" role="region" aria-label="产品保存操作">
         <span role="status">
           {busy ? '正在处理，请稍候…' : dirty ? '有未保存修改' : '已载入最新资料'}
         </span>
@@ -1256,6 +1264,6 @@ export default function Editor() {
           </div>
         </Modal>
       )}
-    </>
+    </div>
   );
 }

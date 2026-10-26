@@ -274,11 +274,11 @@ export function imageEndpoint(config: PublicConfig, image: PublicImage) {
 // Explicit public allowlists prevent internal/source/admin-only fields leaking into UI.
 function attributeSpecifications(category: number, attrs: Record<string, unknown>, name: string) {
   const fields: [string,string,string?][] = category <= 2
-    ? [['length_ft','长度','英尺'],['width_ft','宽度','英尺']]
+    ? []
     : category === 3 ? [['theme_name','产品主题']]
     : category === 5 ? [['tablet_type','牌位类型'],['tablet_capacity','牌位容量','位']]
     : category === 6 ? [['fengshui_type','生基类型']]
-    : category === 7 ? [['pet_size_class','宠物规格'],['length_ft','长度','英尺'],['width_ft','宽度','英尺']] : [];
+    : category === 7 ? [['pet_size_class','宠物规格']] : [];
   const result = fields.flatMap(([key,label,unit]) => {
     const raw = attrs[key];
     if (raw == null || raw === '' || (typeof raw === 'number' && (!Number.isFinite(raw) || raw <= 0))) return [];

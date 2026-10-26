@@ -394,11 +394,13 @@ label {
   gap: 12px;
 }
 .stickyactions {
-  position: sticky;
+  position: fixed;
+  inset-inline-start: 224px;
+  inset-inline-end: 0;
   bottom: 0;
   background: #fff;
   border-top: 1px solid #ccc;
-  padding: 16px 22px;
+  padding: 16px 22px calc(16px + env(safe-area-inset-bottom, 0px));
   z-index: 3;
 }
 .imagegrid {
@@ -538,6 +540,7 @@ a {
   clip-path: inset(50%);
 }
 @media (max-width: 1100px) {
+  .stickyactions { inset-inline-start: 190px; }
   .shell {
     grid-template-columns: 190px 1fr;
   }
@@ -622,8 +625,8 @@ a {
     grid-column: 1/-1;
   }
   .stickyactions {
-    padding: 12px;
-    position: static;
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+    inset-inline-start: 0;
   }
   .previewcard {
     max-width: 320px;
@@ -1006,7 +1009,7 @@ textarea:focus-visible {
     width: 100%;
   }
   .stickyactions {
-    position: static;
+    position: fixed;
     bottom: 0;
     gap: 12px;
     box-shadow: none;
@@ -1083,3 +1086,8 @@ td.number {
 .product-preview-modal[open] { display: flex; flex-direction: column; overflow: hidden; }
 .product-preview-modal .dialoghead { position: static; flex-shrink: 0; }
 .product-preview-modal .dialogbody { min-height: 0; overflow-y: auto; }
+
+/* Reserve the measured action-bar height, including wrapped mobile buttons. */
+.product-editor-page :is(input, select, textarea, button, section) {
+  scroll-margin-bottom: calc(var(--editor-action-height, 80px) + 16px);
+}
