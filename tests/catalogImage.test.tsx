@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import sharp from "sharp";
 import { createImageHandler } from "../apps/admin/server/catalogImage";
-import { acquireImage } from "../shared/imageResource";
+import { acquireImage,createImageScope } from "../shared/imageResource";
 
 test("resized images preserve colour, authorize warm hits and never expose restricted originals", async () => {
   const original = await sharp({
@@ -246,4 +246,15 @@ test('brief admin memory reuse avoids return-navigation downloads and expires au
  const second=acquireImage('admin-return-photo',load,30);assert.equal(await second.promise,url);assert.equal(calls,1);second.release();
  await new Promise(resolve=>setTimeout(resolve,50));
  const third=acquireImage('admin-return-photo',load);await third.promise;assert.equal(calls,2);third.release();
+});
+
+test('a product scope retains completed and pending photos across repeated gallery switches and releases on leave',async()=>{
+ const scope=createImageScope();let calls=0;let unblock!:()=>void;
+ const gate=new Promise<void>(resolve=>{unblock=resolve;});
+ const load=async()=>{calls++;await gate;return new Blob(['photo'],{type:'image/webp'});};
+ const first=scope.acquire('gallery-photo',load);first.release();
+ const second=scope.acquire('gallery-photo',load);unblock();const url=await second.promise;second.release();
+ for(let i=0;i<6;i++){const again=scope.acquire('gallery-photo',load);assert.equal(await again.promise,url);again.release();}
+ assert.equal(calls,1);scope.dispose();
+ const nextProduct=acquireImage('gallery-photo',load);await nextProduct.promise;assert.equal(calls,2);nextProduct.release();
 });

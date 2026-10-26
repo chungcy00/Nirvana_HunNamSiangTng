@@ -1,4 +1,4 @@
-import { useContext, useState, type ReactNode } from "react";
+import { useContext, useState, useEffect, type ReactNode } from "react";
 import {
   ArrowRight,
   Check,
@@ -9,6 +9,7 @@ import {
 import { DesignImagePreview } from "./DesignImagePreview";
 import { GeneralProductGallery } from "./GeneralProductGallery";
 import CatalogImage from "../catalog/PublicImage";
+import {ProductImageScope} from '../../shared/ImageScope';
 import { ConsultButton } from "../components/ui";
 import { useBoundedPricePanel } from "./useBoundedPricePanel";
 import {
@@ -181,7 +182,17 @@ function InclusionList({
   );
 }
 
-export function ProductDetailContent({
+type DetailProps = {product:PrototypeProduct; imageRenderer?:ImageRenderer; embedded?:boolean};
+export function ProductDetailContent(props:DetailProps) {
+  return <ProductImageScope key={props.product.id}><ProductDetailBody {...props}/><PreloadProductImages {...props}/></ProductImageScope>;
+}
+function PreloadProductImages({product,imageRenderer}:DetailProps) {
+  const [ready,setReady]=useState(false);
+  useEffect(()=>setReady(true),[]);
+  const images=[...new Map([...(product.primaryImage?[product.primaryImage]:[]),...(product.images||[])].map(image=>[image.id,image])).values()];
+  return ready ? <div hidden aria-hidden="true">{images.map(image=><span key={image.id}>{imageRenderer?imageRenderer(image):<CatalogImage image={image}/>}</span>)}</div> : null;
+}
+function ProductDetailBody({
   product,
   imageRenderer,
   embedded = false,

@@ -9,6 +9,37 @@ type Entry = {
   idleTimer?: ReturnType<typeof setTimeout>;
 };
 const entries = new Map<string, Entry>();
+// Own downloaded variants for one mounted product. Consumers still hold their
+// own references, so eviction never revokes an image that is on screen.
+export function createImageScope() {
+  const held = new Map<string, {release:()=>void; bytes:number}>();
+  return {
+    acquire(key:string,load:(signal:AbortSignal)=>Promise<Blob>) {
+      if (!held.has(key)) {
+        const owner = acquireImage(key,async signal=>{
+          const blob = await load(signal);
+          const item = held.get(key);
+          if (item) item.bytes=blob.size;
+          let total=[...held.values()].reduce((sum,item)=>sum+item.bytes,0);
+          for (const [oldKey,old] of held) {
+            if (held.size<=48 && total<=16777216) break;
+            if (oldKey===key) continue;
+            held.delete(oldKey);total-=old.bytes;old.release();
+          }
+          return blob;
+        });
+        held.set(key,{release:owner.release,bytes:0});
+        void owner.promise.catch(()=>{
+          const item=held.get(key);
+          if (item?.release===owner.release) {held.delete(key);item.release();}
+        });
+      }
+      return acquireImage(key,load);
+    },
+    dispose() {for(const item of held.values())item.release();held.clear();},
+  };
+}
+export type ImageScope = ReturnType<typeof createImageScope>;
 export function acquireImage(
   key: string,
   load: (signal: AbortSignal) => Promise<Blob>,
