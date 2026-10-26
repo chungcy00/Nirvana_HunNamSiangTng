@@ -3,6 +3,7 @@ import { acquireImage } from "./imageResource";
 export function useVisibleImage(
   identity: string,
   load: (width: number, signal: AbortSignal) => Promise<Blob>,
+  keepAliveMs = 0,
 ) {
   const target = useRef<HTMLElement | null>(null);
   const [source, setSource] = useState({ identity: "", url: "" });
@@ -20,8 +21,10 @@ export function useVisibleImage(
         ) * Math.min(node.ownerDocument.defaultView?.devicePixelRatio || 1, 2);
       const width =
         [160, 480, 960, 1920].find((size) => size >= pixels) || 1920;
-      resource = acquireImage(`${identity}:${width}`, (signal) =>
-        load(width, signal),
+      resource = acquireImage(
+        `${identity}:${width}`,
+        (signal) => load(width, signal),
+        keepAliveMs,
       );
       resource.promise.then(
         (url) => {
@@ -51,6 +54,6 @@ export function useVisibleImage(
       observer?.disconnect();
       resource?.release();
     };
-  }, [identity, load]);
+  }, [identity, load, keepAliveMs]);
   return { target, url: source.identity === identity ? source.url : "" };
 }

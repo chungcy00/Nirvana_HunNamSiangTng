@@ -226,3 +226,12 @@ test("server stores only the authorized generated derivative without replacing t
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
 });
+
+test('brief admin memory reuse avoids return-navigation downloads and expires automatically',async()=>{
+ let calls=0;
+ const load=async()=>{calls++;return new Blob(['thumbnail'],{type:'image/webp'});};
+ const first=acquireImage('admin-return-photo',load,30);const url=await first.promise;first.release();
+ const second=acquireImage('admin-return-photo',load,30);assert.equal(await second.promise,url);assert.equal(calls,1);second.release();
+ await new Promise(resolve=>setTimeout(resolve,50));
+ const third=acquireImage('admin-return-photo',load);await third.promise;assert.equal(calls,2);third.release();
+});

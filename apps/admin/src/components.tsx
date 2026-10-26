@@ -187,7 +187,7 @@ export function Photo({
     return fetchPreviewImage(bucket,path,width,{apikey:key,Authorization:`Bearer ${token}`},
       `${base}/storage/v1/object/authenticated/${bucket}/${path.split('/').map(encodeURIComponent).join('/')}`,signal);
   }, [token,bucket,path]);
-  const {target,url:src} = useVisibleImage(identity,load);
+  const {target,url:src} = useVisibleImage(identity,load,30000);
   return src ? (
     <img src={src} ref={node=>{target.current=node;}} decoding="async" className={className} alt={image?.alt_text || '产品图片'} />
   ) : !showPlaceholder ? <span ref={node=>{target.current=node;}} aria-hidden="true" style={{position:'absolute',inset:0,pointerEvents:'none'}}/> : (

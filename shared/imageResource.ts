@@ -1,15 +1,18 @@
 import { previewBucket, storedPreviewPath } from "./imageVariants";
-// Share a download only while its mounted consumers remain alive. No persistent image cache.
+// Share active downloads; optional short-lived admin reuse stays in memory only.
 type Entry = {
   refs: number;
   controller: AbortController;
   promise: Promise<string>;
   url?: string;
+  bytes?: number;
+  idleTimer?: ReturnType<typeof setTimeout>;
 };
 const entries = new Map<string, Entry>();
 export function acquireImage(
   key: string,
   load: (signal: AbortSignal) => Promise<Blob>,
+  keepAliveMs = 0,
 ) {
   let entry = entries.get(key);
   if (!entry) {
@@ -21,11 +24,16 @@ export function acquireImage(
     };
     created.promise = load(controller.signal).then((blob) => {
       if (controller.signal.aborted) throw new Error("Image request cancelled");
+      created.bytes = blob.size;
       created.url = URL.createObjectURL(blob);
       return created.url;
     });
     entries.set(key, created);
     entry = created;
+  }
+  if (entry.idleTimer) {
+    clearTimeout(entry.idleTimer);
+    entry.idleTimer = undefined;
   }
   entry.refs++;
   let released = false;
@@ -35,9 +43,31 @@ export function acquireImage(
       if (released) return;
       released = true;
       if (--entry!.refs === 0) {
-        entries.delete(key);
-        entry!.controller.abort();
-        if (entry!.url) URL.revokeObjectURL(entry!.url);
+        const dispose = () => {
+          if (entries.get(key) !== entry || entry!.refs > 0) return;
+          entries.delete(key);
+          entry!.controller.abort();
+          if (entry!.url) URL.revokeObjectURL(entry!.url);
+        };
+        // Admin views have already revalidated membership and product data before
+        // rendering. Brief in-memory reuse avoids re-downloading on list/editor return.
+        // Public callers retain the default immediate disposal.
+        if (keepAliveMs > 0 && entry!.url && (entry!.bytes || 0) <= 4194304) {
+          entry!.idleTimer = setTimeout(dispose, keepAliveMs);
+          let idleBytes = [...entries.values()]
+            .filter((item) => item.refs === 0)
+            .reduce((sum, item) => sum + (item.bytes || 0), 0);
+          for (const [oldKey, old] of entries) {
+            if (entries.size <= 48 && idleBytes <= 4194304) break;
+            if (old.refs === 0) {
+              entries.delete(oldKey);
+              if (old.idleTimer) clearTimeout(old.idleTimer);
+              old.controller.abort();
+              if (old.url) URL.revokeObjectURL(old.url);
+              idleBytes -= old.bytes || 0;
+            }
+          }
+        } else dispose();
       }
     },
   };
