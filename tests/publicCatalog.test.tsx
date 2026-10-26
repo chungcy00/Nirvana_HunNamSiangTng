@@ -318,5 +318,5 @@ test('inclusion sections preserve headings, item order, old lists and religion v
   assert(html.indexOf('服务项目一') < html.indexOf('服务项目二'));
   const legacy = render('ready','/nirvana/products/item/live-w',[mapPublicProduct({...raw,category_id:4})]);
   assert.match(legacy,/公开包含项目/);
-  assert.match(legacy, /<details class="fgp-inclusion-section" open=""><summary><h3>包含项目<\/h3>/);
+  assert.match(legacy, /<details class="fgp-inclusion-section" open=""><summary>.*?<h3>包含项目<\/h3>/);
 });
