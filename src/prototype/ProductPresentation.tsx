@@ -121,6 +121,7 @@ function InclusionList({
   funeral?: boolean;
   expanded?: boolean;
 }) {
+  const { website } = useContext(ProductNavigationContext);
   const list = (rows: string[]) => (
     <ul>
       {rows.map((item, index) => (
@@ -141,11 +142,13 @@ function InclusionList({
           .map((group, index) => (
             <details className="fgp-inclusion-section" key={index} open>
               <summary>
+                {website && <span className="fgp-inclusion-number" aria-hidden="true">{index + 1}</span>}
                 {religious ? (
                   <h5>{group.title || "包含项目"}</h5>
                 ) : (
                   <h3>{group.title || "包含项目"}</h3>
                 )}
+                {website && <span className="fgp-inclusion-count">{group.items.length} 项</span>}
                 <ChevronRight size={18} aria-hidden="true" />
               </summary>
               {list(group.items)}
@@ -244,6 +247,9 @@ export function ProductDetailContent({
       ? [["面积", `${product.area} sqft`]]
       : []),
   ];
+  const orderedSpecs = website && funeral
+    ? [...specs].sort(([a], [b]) => ["适用宗教", "适用安葬方式", "服务地点"].indexOf(a) - ["适用宗教", "适用安葬方式", "服务地点"].indexOf(b))
+    : specs;
   const pricePanel = (
     <section
       ref={pricePanelRef}
@@ -308,7 +314,7 @@ export function ProductDetailContent({
           {product.subtitle && <p>{product.subtitle}</p>}
           {product.description && <p>{product.description}</p>}
           <dl className="fgp-specs">
-            {specs.map(([label, value]) => (
+            {orderedSpecs.map(([label, value]) => (
               <div key={label} className={website && funeral && label === "服务地点" ? "fgp-service-location" : undefined}>
                 {website && funeral && label === "服务地点" && <MapPin size={16} aria-hidden="true"/>}
                 <dt>{label}</dt>
@@ -379,7 +385,7 @@ export function ProductDetailContent({
         className={`fgp-detail-bottom${funeral ? " fgp-service-content" : ""}`}
       >
         <section className="fgp-inclusions" id="fgp-inclusions">
-          <h2>包含项目</h2>
+          <h2>{website && funeral ? "包含项目与服务权益" : "包含项目"}</h2>
           {product.inclusions.length > 0 ? (
             <InclusionList
               items={product.inclusions}
