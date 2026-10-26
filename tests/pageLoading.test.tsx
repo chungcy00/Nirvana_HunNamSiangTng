@@ -46,7 +46,7 @@ function renderLoaded(path: string) {
 for (const [path, expected] of [
   ["/", /归于土，化于风，安于心/],
   ["/nirvana?category=2", /家庭福地 · W区/],
-  ["/nirvana/products/item/w-family-lot", /产品价格/],
+  ["/nirvana/products/item/w-family-lot", /产品售价/],
   ["/nirvana/products/item/funeral-1-1", /殡仪服务价格/],
   ["/contact#needs-questionnaire", /直接咨询顾问[\s\S]*了解您的需求/],
   ["/about", /钟永新/],

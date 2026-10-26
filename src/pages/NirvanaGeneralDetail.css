@@ -97,3 +97,46 @@
 }
 
 .fgp-website .fgp-general-purchase .fgp-product-price-note { margin-top: 20px; }
+
+/* A compact price table: area headings are shared by their plan rows. */
+.fgp-website .fgp-general-purchase .fgp-price-table .fgp-price-entry {
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 12px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.fgp-website .fgp-general-purchase .fgp-price-table .fgp-price-entry + .fgp-price-entry { border-top: 1px solid var(--p-line); }
+.fgp-website .fgp-general-purchase .fgp-price-table strong { font-size: 20px; white-space: nowrap; }
+.fgp-website .fgp-general-purchase .fgp-grouped-prices > .fgp-area-prices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 1px;
+  padding: 0;
+  border: 1px solid var(--p-line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--p-line);
+}
+.fgp-area-price-group { min-width: 0; padding: 16px; background: #fff; }
+.fgp-website .fgp-area-price-group > h3 { margin: 0 0 14px; font-size: 16px; font-weight: 600; color: var(--p-green); }
+.fgp-area-price-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 6px 12px; padding: 6px 0; }
+.fgp-website .fgp-area-price-row > span { min-width: 0; font-size: 14px; color: var(--p-green); overflow-wrap: anywhere; }
+.fgp-website .fgp-general-purchase .fgp-area-price-row > strong { font-size: 18px; font-weight: 600; white-space: nowrap; }
+.fgp-area-price-row > .fgp-price-note { grid-column: 1 / -1; }
+.fgp-website .fgp-general-purchase .fgp-single-price-panel > h2 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.fgp-website .fgp-general-purchase .fgp-single-price-panel .fgp-price-table .fgp-price-entry {
+  padding: 10px 14px;
+  border: 1px solid var(--p-line);
+  border-radius: 4px;
+}

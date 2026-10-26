@@ -93,7 +93,9 @@ test("一般产品卡片保留现有最低价规则并提供正式备注，完�
   const listCards = render('/nirvana?category=2&view=list');
   assert.doesNotMatch(listCards, /RM 258,888|RM 308,888|普通地段|角头地段/);
   const detail = render('/nirvana/products/item/w-family-lot');
-  assert.match(detail, /普通地段 864 sqft/);
+  assert.match(detail, /<h3>864 sqft<\/h3>/);
+  assert.match(detail, />普通地段</);
+  assert.match(detail, />角头地段</);
   assert.match(detail, /RM 258,888/);
   assert.match(detail, /RM 308,888/);
 });

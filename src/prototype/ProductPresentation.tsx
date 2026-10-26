@@ -22,6 +22,7 @@ import {
   type InclusionGroup,
 } from "./model";
 import { ProductNavigationContext } from "./navigation";
+import { formatSqft, groupPricesByArea, pricePlanLabel } from "../../shared/areaPriceGroups";
 import { differentArea, differentText } from "../../shared/offerAttributes";
 import { cleanPriceNote } from "../../shared/priceNotes";
 import type { PublicImage } from "../catalog/publicRepository";
@@ -244,16 +245,19 @@ export function ProductDetailContent({
       ? [["朝向", product.facing]]
       : []),
     ...([1, 2, 6, 7].includes(product.category) && product.area
-      ? [["面积", `${product.area} sqft`]]
+      ? [["面积", formatSqft(product.area)!]]
       : []),
   ];
   const orderedSpecs = website && funeral
     ? [...specs].sort(([a], [b]) => ["适用宗教", "适用安葬方式", "服务地点"].indexOf(a) - ["适用宗教", "适用安葬方式", "服务地点"].indexOf(b))
     : specs;
+  const singleGeneralPrice = !funeral && product.category !== 3 && (product.publicPrices
+    ? product.publicPrices.filter(price => price.price_type === 'standard' && Number(price.amount)>0 && (!religion || price.religion_id == null || String(price.religion_id)===religion))
+    : product.offers.filter(offer => Number(offer.amount)>0 && (!religion || !offer.religionId || offer.religionId===religion))).length === 1;
   const pricePanel = (
     <section
       ref={pricePanelRef}
-      className="fgp-price-panel"
+      className={`fgp-price-panel${singleGeneralPrice ? " fgp-single-price-panel" : ""}`}
       aria-labelledby="fgp-price-heading"
     >
       <h2 id="fgp-price-heading">
@@ -261,7 +265,7 @@ export function ProductDetailContent({
           ? "殡仪服务价格"
           : product.category === 3
             ? "最低起价"
-            : "产品价格"}
+            : "产品售价"}
       </h2>
       <ProductPrices product={product} detailed religion={religion} />
       {product.productPriceNote && <p className="fgp-price-note fgp-product-price-note">{product.productPriceNote}</p>}
@@ -519,11 +523,11 @@ export function ProductPrices({
   const funeral = product.category === 4;
   const unavailable = website ? "欢迎咨询" : "价格待核实";
   const offerSpecs = (area: unknown, facing: unknown, position: unknown) => [
-    ...([1,2,6,7].includes(product.category) && differentArea(area, product.area) ? [`面积：${differentArea(area, product.area)} 平方英尺`] : []),
+    ...([1,2,6,7].includes(product.category) && differentArea(area, product.area) ? [`面积：${differentArea(area, product.area)} sqft`] : []),
     ...([1,2,5,6,7].includes(product.category) && differentText(facing, product.facing) ? [`朝向：${differentText(facing, product.facing)}`] : []),
     ...([1,2].includes(product.category) && typeof position === 'string' && position.trim() ? [`位置：${position.trim()}`] : []),
   ];
-  let rows: {name: string; kind: string; amount: number; note: string; specs?: string[]}[] = product.publicPrices
+  let rows: {name: string; kind: string; amount: number; note: string; specs?: string[]; area?: number | null; position?: string | null; religionId?: string}[] = product.publicPrices
     ? product.publicPrices
         .filter(
           (p) =>
@@ -540,6 +544,9 @@ export function ProductPrices({
           amount: Number(p.amount),
           note: cleanPriceNote(p.price_note),
           specs: offerSpecs(p.area_sqft_override, p.facing_override, p.position_type),
+          area: p.area_sqft_override ?? product.area,
+          position: p.position_type,
+          religionId: p.religion_id == null ? undefined : String(p.religion_id),
         }))
     : funeral
       ? [
@@ -570,6 +577,9 @@ export function ProductPrices({
           amount: o.amount,
           note: cleanPriceNote(product.priceNote),
           specs: offerSpecs(o.area, o.facing, o.positionType),
+          area: o.area ?? product.area,
+          position: o.positionType,
+          religionId: o.religionId,
         }));
   rows = rows.filter((r) => Number.isFinite(r.amount) && r.amount > 0);
   const startingPrice = product.category === 3 || (!funeral && compact && rows.length > 1);
@@ -619,9 +629,26 @@ export function ProductPrices({
         ? ""
         : row.note,
   }));
+  const grouped = detailed && !compact && [1,2].includes(product.category) && displayedRows.length > 1 && displayedRows.some(row => formatSqft(row.area));
+  if (grouped) return (
+    <div className="fgp-prices fgp-prices-detail fgp-grouped-prices">
+      <div className="fgp-area-prices">
+        {groupPricesByArea(displayedRows).map(group => <section key={group.area ?? 'unknown'} className="fgp-area-price-group" aria-label={formatSqft(group.area) || '面积未填写'}>
+          <h3>{formatSqft(group.area) || '面积未填写'}</h3>
+          {group.items.map((row,index) => <div className="fgp-area-price-row" key={index}>
+            <span>{pricePlanLabel(row.name,row.position,row.area)}{row.religionId && `（${product.religions.find(religion=>religion.id===row.religionId)?.name || '宗教配置'}）`}</span>
+            <strong>{formatMoney(row.amount)}</strong>
+            {row.specs?.filter(spec=>!spec.startsWith('面积：') && !spec.startsWith('位置：')).length ? <p className="fgp-price-note">{row.specs.filter(spec=>!spec.startsWith('面积：') && !spec.startsWith('位置：')).join(' · ')}</p> : null}
+            {renderNote(row.note)}
+          </div>)}
+        </section>)}
+      </div>
+      {renderNote(common, ' fgp-common-price-note')}
+    </div>
+  );
   return (
     <div
-      className={`fgp-prices${funeral ? " fgp-dual-prices" : ""}${detailed ? " fgp-prices-detail" : ""}${compact ? " fgp-prices-compact" : ""}`}
+      className={`fgp-prices${funeral ? " fgp-dual-prices" : ""}${detailed ? " fgp-prices-detail" : ""}${compact ? " fgp-prices-compact" : ""}${detailed && !compact && !funeral && product.category !== 3 ? " fgp-price-table" : ""}`}
     >
       {displayedRows.map((row, index) => (
         <div className="fgp-price-entry" key={index}>
@@ -633,6 +660,7 @@ export function ProductPrices({
                   : "即用价格"
                 : product.category === 3
                   ? "最低起价"
+                  : detailed && rows.length === 1 ? "产品售价"
                   : row.name && !['默认方案','产品售价'].includes(row.name)
                     ? row.name
                     : "产品售价"}

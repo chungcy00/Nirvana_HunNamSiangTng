@@ -16,13 +16,13 @@ test('offer differences and previously dropped public fields survive API and uns
   assert.equal(render(preview),render(published));
   assert.deepEqual(preview.specifications,published.specifications);
   const html=render(published);
-  for(const text of ['骨灰瓮及盒 × 2套','火化服务 × 2次','已填写安葬说明','莲花设计配置','按宗教安排仪式','面积：66 平方英尺','朝向：朝北','位置：角头']) assert(html.includes(text),text);
+  for(const text of ['骨灰瓮及盒 × 2套','火化服务 × 2次','已填写安葬说明','莲花设计配置','按宗教安排仪式','面积：66 sqft','朝向：朝北','位置：角头']) assert(html.includes(text),text);
 });
 test('same common/offer attributes are not repeated, while a single differing offer still displays its specs',()=>{
   const same={...raw,prices:[{...raw.prices[0],area_sqft_override:56,facing_override:'朝南',position_type:null}]};
   assert.equal(hasOfferDifferences({facing_override:'朝南',area_sqft_override:'56.00'},raw.attributes!),false);
   assert.doesNotMatch(render(mapPublicProduct(same)),/fgp-offer-attributes/);
-  assert.match(render(mapPublicProduct(raw)),/面积：66 平方英尺/);
+  assert.match(render(mapPublicProduct(raw)),/面积：66 sqft/);
 });
 test('category attribute allowlists display real specs and notes without internal fields',()=>{
   const cases:[number,Record<string,unknown>,string[]][]=[

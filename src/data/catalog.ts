@@ -323,7 +323,7 @@ export const catalogData: CatalogSnapshot = {
       english: "Double Cremation Packages (Zone AA)",
       description: "Zone AA · 火化后的骨灰土葬选择。",
       zone: "Zone AA",
-      area: "6.3′ × 8.9′（约 56 平方英尺）",
+      area: "6.3′ × 8.9′（约 56 sqft）",
       direction: "坐北朝南",
       price: 63888,
       depositPercent: 10,

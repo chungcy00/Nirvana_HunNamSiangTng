@@ -595,7 +595,7 @@ export default function Editor() {
                   {p.category_id <= 2 ? (
                     <>
                       {attr('共通朝向', 'facing')}
-                      {attr('共通面积（平方英尺）', 'area_sqft', 'number')}
+                      {attr('共通面积（sqft）', 'area_sqft', 'number')}
                       {attr('安葬说明', 'burial_notes', 'textarea')}
                     </>
                   ) : p.category_id === 3 ? (
@@ -637,7 +637,7 @@ export default function Editor() {
                     <>
                       {attr('生基类型', 'fengshui_type')}
                       {attr('朝向', 'facing')}
-                      {attr('面积（平方英尺）', 'area_sqft', 'number')}
+                      {attr('面积（sqft）', 'area_sqft', 'number')}
                       {attr('配置说明', 'configuration_notes', 'textarea')}
                     </>
                   ) : (
@@ -648,7 +648,7 @@ export default function Editor() {
                         ['ash_burial', '骨灰安葬'],
                       ])}
                       {attr('宠物规格', 'pet_size_class')}
-                      {attr('面积（平方英尺）', 'area_sqft', 'number')}
+                      {attr('面积（sqft）', 'area_sqft', 'number')}
                       {attr('朝向', 'facing')}
                       {attr('补充说明', 'pet_notes', 'textarea')}
                     </>
@@ -779,6 +779,7 @@ export default function Editor() {
                 <p className="help">
                   金额必须大于零。清空金额表示不保存该价格行；骨灰位仅有一条最低价，殡仪两种价格互不相加。
                 </p>
+                {p.category_id <= 2 && <p className="notice">每个「面积 × 地段类型」建立一个方案，例如：864 sqft 普通地段、864 sqft 角头地段、1,080 sqft 普通地段。方案名称填写地段类型，面积在「方案规格」填写，售价填写该方案金额；前台会按面积分组，不必把面积重复写进名称。</p>}
                 {bundle.product_offers.map((o: Row, index: number) => (
                   <div className="offer-card" key={o.id} role="group" aria-label={`价格方案 ${index + 1}：${o.name || '未命名方案'}`}>
                     {![3, 4].includes(p.category_id) && (

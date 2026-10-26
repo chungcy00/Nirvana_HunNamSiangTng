@@ -1,3 +1,4 @@
+import { formatSqft } from '../../../shared/areaPriceGroups';
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Field } from './components';
@@ -32,7 +33,7 @@ export function OfferAttributes({
         <span>方案规格</span>
         <span className="offer-spec-summary">
           {effective.facing || '朝向未填写'} ·{' '}
-          {effective.area != null ? `${effective.area} 平方英尺` : '面积未填写'}
+          {effective.area != null ? formatSqft(effective.area) : '面积未填写'}
         </span>
       </summary>
       <div className="offer-spec-body">
@@ -53,7 +54,7 @@ export function OfferAttributes({
             }
           />
           <Field
-            label="方案面积（平方英尺）"
+            label="方案面积（sqft）"
             value={effective.area}
             type="number"
             onChange={(value) =>
@@ -63,16 +64,18 @@ export function OfferAttributes({
               )
             }
             hint={
-              differentArea(offer.area_sqft_override, common.area_sqft)
-                ? '本方案单独设置'
-                : '沿用共通面积'
+              effective.area == null
+                ? '填写数值，单位 sqft；名称中的面积不会自动用于分组。'
+                : differentArea(offer.area_sqft_override, common.area_sqft)
+                  ? '本方案单独设置'
+                  : '沿用共通面积'
             }
           />
           <Field
-            label="位置类型（可选）"
+            label="地段类型（可选）"
             value={offer.position_type}
             onChange={(value) => onChange('position_type', value)}
-            hint="例如普通地段、角头地段。"
+            hint="例如普通地段、角头地段；方案名称已包含地段类型时无需重复填写。"
             wide
           />
         </div>
