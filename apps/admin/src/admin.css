@@ -327,8 +327,8 @@ td.actions button {
 }
 .editor {
   display: grid;
-  grid-template-columns: 184px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 12px;
 }
 .sections {
   position: sticky;
@@ -339,6 +339,8 @@ td.actions button {
 }
 .sections button {
   text-align: left;
+  justify-content: flex-start;
+  padding-inline: 10px;
   border: 0;
   background: transparent;
 }
@@ -568,7 +570,7 @@ a {
     grid-template-columns: 1fr 1fr;
   }
   .editor {
-    grid-template-columns: 150px 1fr;
+    grid-template-columns: 124px minmax(0, 1fr);
   }
   header {
     padding: 0 24px;
