@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Expand, Image as ImageIcon, X } from 'lucide-react';
+import { Image as ImageIcon, X } from 'lucide-react';
 import type { PublicImage } from '../catalog/publicRepository';
 import CatalogImage from '../catalog/PublicImage';
 import type { PrototypeProduct } from './model';
@@ -11,7 +11,7 @@ export function GeneralProductGallery({ product, religion, imageRenderer }: {
   const [selected, setSelected] = useState('');
   const dialog = useRef<HTMLDialogElement>(null);
   const images = [...new Map([...(product.primaryImage ? [product.primaryImage] : []), ...(product.images || [])]
-    .filter(image => image.religion_id == null || !religion || String(image.religion_id) === religion)
+    .filter(image => image.image_type !== 'design' && (image.religion_id == null || !religion || String(image.religion_id) === religion))
     .map(image => [image.id, image])).values()];
   const active = images.find(image => String(image.id) === String(selected)) || images[0];
   const renderImage = (image: PublicImage) => imageRenderer ? imageRenderer(image) : <CatalogImage image={image}/>;
@@ -33,8 +33,7 @@ export function GeneralProductGallery({ product, religion, imageRenderer }: {
   return <section className="fgp-gallery" aria-label="产品图片">
     <div className="fgp-general-main-image">
       <div className="fgp-general-image-empty"><ImageIcon size={38} aria-hidden="true"/><span>{active ? '图片加载中或暂不可用' : '产品实拍待补充'}</span></div>
-      {active && renderImage(active)}
-      {active && <button type="button" className="fgp-gallery-expand" onClick={() => dialog.current?.showModal()}><Expand size={16} aria-hidden="true"/>全屏查看图片</button>}
+      {active && <button type="button" className="fgp-general-image-trigger" aria-label="查看产品大图" aria-haspopup="dialog" onClick={() => dialog.current?.showModal()}>{renderImage(active)}</button>}
     </div>
     {images.length > 1 && <div className="fgp-gallery-thumbnails" role="group" aria-label="产品图片选择">
       {images.map((image, index) => <button type="button" key={image.id} aria-pressed={active.id === image.id} aria-label={`查看图片 ${index + 1}：${image.alt || product.name}`} onClick={() => setSelected(image.id)}>{renderImage(image)}</button>)}

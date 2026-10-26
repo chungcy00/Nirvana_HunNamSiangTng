@@ -323,6 +323,86 @@ export function ProductDetailContent({
             ))}
           </dl>
   </>);
+  const countInclusionRows = (items: string[], groups?: InclusionGroup[]) =>
+    !items.length ? 0 : groups?.some(group => group.title)
+      ? groups.reduce((total, group) => total + group.items.length, 0) : items.length;
+  const inclusionCount = countInclusionRows(product.inclusions, product.inclusionGroups)
+    + content.reduce((total, r) => total + countInclusionRows(r.inclusions, r.inclusionGroups), 0);
+  const inclusions = (
+        <section className="fgp-inclusions" id="fgp-inclusions">
+          <h2>{website && funeral ? "包含项目与服务权益" : "包含项目"}{general && <span className="fgp-general-inclusion-count">{inclusionCount} 项</span>}</h2>
+          {product.inclusions.length > 0 ? (
+            <InclusionList
+              items={product.inclusions}
+              groups={product.inclusionGroups}
+              funeral={funeral}
+              expanded={general}
+            />
+          ) : !funeral ||
+            !product.religions.some((r) => r.inclusions.length) ? (
+            <p className="fgp-muted">
+              对应产品的包含项目尚待核实，暂不列入未确认的内容。
+            </p>
+          ) : null}
+          {product.religions.some(
+            (r) => r.inclusions.length || (!general && r.designs.length),
+          ) && (
+            <div className="fgp-religious-content">
+              <h3>宗教对应内容</h3>
+              {!general && product.religions.length > 1 && (
+                <div
+                  className="fgp-content-tabs"
+                  role="group"
+                  aria-label="宗教对应内容选择"
+                >
+                  <button
+                    className={!religion ? "is-selected" : ""}
+                    aria-pressed={!religion}
+                    onClick={() => {
+                      setReligion("");
+                      setDesign("共通产品图");
+                    }}
+                  >
+                    全部宗教
+                  </button>
+                  {product.religions.map((r) => (
+                    <button
+                      key={r.id}
+                      className={religion === r.id ? "is-selected" : ""}
+                      aria-pressed={religion === r.id}
+                      onClick={() => {
+                        setReligion(r.id);
+                        setDesign("共通产品图");
+                      }}
+                    >
+                      {r.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {content.filter(r => !general || r.inclusions.length).map((r) => (
+                <div key={r.id} className="fgp-religious-group">
+                  <h4>{r.name}</h4>
+                  {r.inclusions.length > 0 && (
+                    <InclusionList
+                      items={r.inclusions}
+                      groups={r.inclusionGroups}
+                      religious
+                      funeral={funeral}
+                      expanded={general}
+                    />
+                  )}
+                  {!general && r.designs.length > 0 && (
+                    <p>
+                      对应设计：{r.designs.join("、")}。各设计沿用本产品价格。
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+  );
   const layout = (
     <>
       <div
@@ -384,85 +464,49 @@ export function ProductDetailContent({
       <div
         className={`fgp-detail-bottom${funeral ? " fgp-service-content" : ""}`}
       >
-        <section className="fgp-inclusions" id="fgp-inclusions">
-          <h2>{website && funeral ? "包含项目与服务权益" : "包含项目"}</h2>
-          {product.inclusions.length > 0 ? (
-            <InclusionList
-              items={product.inclusions}
-              groups={product.inclusionGroups}
-              funeral={funeral}
-              expanded={general}
-            />
-          ) : !funeral ||
-            !product.religions.some((r) => r.inclusions.length) ? (
-            <p className="fgp-muted">
-              对应产品的包含项目尚待核实，暂不列入未确认的内容。
-            </p>
-          ) : null}
-          {product.religions.some(
-            (r) => r.inclusions.length || r.designs.length,
-          ) && (
-            <div className="fgp-religious-content">
-              <h3>宗教对应内容</h3>
-              {product.religions.length > 1 && (
-                <div
-                  className="fgp-content-tabs"
-                  role="group"
-                  aria-label="宗教对应内容选择"
-                >
-                  <button
-                    className={!religion ? "is-selected" : ""}
-                    aria-pressed={!religion}
-                    onClick={() => {
-                      setReligion("");
-                      setDesign("共通产品图");
-                    }}
-                  >
-                    全部宗教
-                  </button>
-                  {product.religions.map((r) => (
-                    <button
-                      key={r.id}
-                      className={religion === r.id ? "is-selected" : ""}
-                      aria-pressed={religion === r.id}
-                      onClick={() => {
-                        setReligion(r.id);
-                        setDesign("共通产品图");
-                      }}
-                    >
-                      {r.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {content.map((r) => (
-                <div key={r.id} className="fgp-religious-group">
-                  <h4>{r.name}</h4>
-                  {r.inclusions.length > 0 && (
-                    <InclusionList
-                      items={r.inclusions}
-                      groups={r.inclusionGroups}
-                      religious
-                      funeral={funeral}
-                      expanded={general}
-                    />
-                  )}
-                  {r.designs.length > 0 && (
-                    <p>
-                      对应设计：{r.designs.join("、")}。各设计沿用本产品价格。
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+        {inclusions}
         {!website && pricePanel}
       </div>
       {general && <section className="fgp-general-consult"><ConsultButton subject={product.name} className="fgp-service-consult">直接咨询</ConsultButton></section>}
     </>
   );
-  return general ? <div className="fgp-general-detail">{layout}</div> : layout;
+  if (general) {
+    const generalSpecs = specs;
+    // The public projection already excludes unapproved or restricted images.
+    const designImages = [...new Map((product.images || [])
+      .filter(image => image.image_type === "design" && image.design_name?.trim() &&
+        (!religion || image.religion_id == null || String(image.religion_id) === religion))
+      .map(image => [`${image.religion_id ?? "common"}:${image.design_name}`, image])).values()];
+    return <div className="fgp-general-detail">
+      <header className="fgp-general-heading">
+        <ProductTags product={product}/>
+        <h1>{product.name}</h1>
+        {product.subtitle && <p className="fgp-general-subtitle">{product.subtitle}</p>}
+        {product.description && <p className="fgp-general-description">{product.description}</p>}
+        {generalSpecs.length > 0 && <dl className="fgp-specs">{generalSpecs.map(([label, value]) =>
+          <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+      </header>
+      <div className="fgp-general-body">
+        <div className="fgp-general-media">
+          <GeneralProductGallery product={product} religion={religion} imageRenderer={imageRenderer}/>
+          {designImages.length > 0 && <section className="fgp-design-comparison" aria-label="宗教与设计参考">
+            <h2>宗教与设计参考</h2>
+            <div className="fgp-design-grid">{designImages.map(image => <article key={image.id}>
+              <div className="fgp-design-photo">{imageRenderer ? imageRenderer(image) : <CatalogImage image={image}/>}</div>
+              <h3>{image.design_name}</h3>
+              {image.religion_id != null && <footer className="fgp-design-footer"><span className="fgp-design-religion">适用：{product.religions.find(r => r.id === String(image.religion_id))?.name}</span></footer>}
+            </article>)}</div>
+          </section>}
+        </div>
+        <div className="fgp-general-purchase">
+          {pricePanel}
+          <div className="fgp-general-consult"><ConsultButton subject={product.name} className="fgp-service-consult">直接咨询</ConsultButton></div>
+          {inclusions}
+        </div>
+      </div>
+    </div>;
+  }
+  return layout;
 }
 
 export function ProductPrices({
