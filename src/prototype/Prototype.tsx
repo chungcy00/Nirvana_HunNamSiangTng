@@ -1,15 +1,22 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, type ComponentPropsWithoutRef } from "react";
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List } from "lucide-react";
 import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext";
 import CatalogImage from "../catalog/PublicImage";
 import { categories, funeralDurationLabel, funeralMethodLabels, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct, type InclusionGroup } from "./model";
 import "./prototype.css";
+import { useCategoryHover } from "./useCategoryHover";
 
 export { ProductNavigationContext } from './navigation';
 import { ProductNavigationContext } from './navigation';
 import { ProductImage, ProductTags, ProductPrices as PrototypePrices, ProductDetailContent } from './ProductPresentation';
 export { ProductPrices as PrototypePrices } from './ProductPresentation';
+
+function FilterSegments({ enabled, selectedKey, children, ...props }: ComponentPropsWithoutRef<"div"> & { enabled: boolean; selectedKey: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const hoverRef = useCategoryHover(ref, enabled, selectedKey, '[aria-pressed="true"]');
+  return <div {...props} ref={ref} className="fgp-capacities">{children}{enabled && <span ref={hoverRef} className="fgp-category-hover" aria-hidden="true"/>}</div>;
+}
 
 function ProductCard({ product, returnTo }: { product: PrototypeProduct; returnTo: string }) {
   const { detailPath } = useContext(ProductNavigationContext);
@@ -58,6 +65,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
   useEffect(() => { latestParams.current = params; }, [location.search, params]);
   const category = categories.find(c => home ? c.id === Number(params.get("category") || 1) : c.slug === categorySlug);
   const navRef = useRef<HTMLDivElement>(null);
+  const hoverRef = useCategoryHover(navRef, website, category?.id);
   useEffect(() => {
     const nav = navRef.current;
     const active = nav?.querySelector<HTMLElement>('[aria-current="page"]');
@@ -104,14 +112,15 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
     <section className="fgp-catalog fgp-wrap" aria-label="产品目录">
       <div className="fgp-category-nav" ref={navRef} role="navigation" aria-label="产品类别">
         {categories.map(c => <button type="button" key={c.id} onClick={() => switchCategory(c.id)} aria-current={category.id === c.id ? "page" : undefined} className={category.id===c.id ? "is-active" : ""}>{c.name}</button>)}
+        {website && <span ref={hoverRef} className="fgp-category-hover" aria-hidden="true"/>}
       </div>
       <div className="fgp-browse-toolbar"><div className="fgp-filters">
-        {hasCapacity(category.id) && <div className="fgp-filter-row"><span className="fgp-filter-label">使用人数</span><div className="fgp-capacities" role="group" aria-label="使用人数筛选">
+        {hasCapacity(category.id) && <div className="fgp-filter-row"><span className="fgp-filter-label">使用人数</span><FilterSegments enabled={website} selectedKey={`${category.id}-${capacity}`} role="group" aria-label="使用人数筛选">
           {[{id:"",name:"全部"}, ...capacities.map(c=>({id:c,name:capacityLabels[c]}))].map(c=><button type="button" key={c.id} aria-pressed={capacity===c.id} className={capacity===c.id ? "is-selected" : ""} onClick={()=>changeFilter("capacity",c.id)}>{c.name}</button>)}
-        </div></div>}
-        {hasReligion(category.id) && <div className="fgp-filter-row"><span className="fgp-filter-label" id="fgp-religion-label">适用宗教</span><div className="fgp-capacities" role="group" aria-labelledby="fgp-religion-label">
+        </FilterSegments></div>}
+        {hasReligion(category.id) && <div className="fgp-filter-row"><span className="fgp-filter-label" id="fgp-religion-label">适用宗教</span><FilterSegments enabled={website} selectedKey={`${category.id}-${religion}`} role="group" aria-labelledby="fgp-religion-label">
           {[{id:"",name:"全部宗教"}, ...religions].map(r=><button type="button" key={r.id} aria-pressed={religion===r.id} className={religion===r.id ? "is-selected" : ""} onClick={()=>changeFilter("religion",r.id)}>{r.name}</button>)}
-        </div></div>}
+        </FilterSegments></div>}
       </div>
       {website && <div className="fgp-display-controls">
         <label className="fgp-sort"><span>排序方式</span><select aria-label="价格排序" value={sort} onChange={e=>changeFilter('sort', e.target.value === 'default' ? '' : e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>

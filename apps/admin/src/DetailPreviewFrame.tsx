@@ -7,9 +7,12 @@ import {
 import { ProductNavigationContext } from '../../../src/prototype/navigation';
 import type { PrototypeProduct } from '../../../src/prototype/model';
 import websiteCss from '../../../src/index.css?inline';
+import catalogCss from '../../../src/pages/NirvanaProducts.css?inline';
+import funeralDetailCss from '../../../src/pages/NirvanaFuneralDetail.css?inline';
+import generalDetailCss from '../../../src/pages/NirvanaGeneralDetail.css?inline';
 import prototypeCss from '../../../src/prototype/prototype.css?inline';
 
-const documentSource = `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${websiteCss}\n${prototypeCss}</style></head><body><div id="preview-root"></div></body></html>`;
+const documentSource = (general: boolean) => `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${websiteCss}\n${prototypeCss}\n${catalogCss}\n${general ? generalDetailCss : funeralDetailCss}</style></head><body><div id="preview-root"></div></body></html>`;
 export function DetailPreviewFrame({
   product,
   imageRenderer,
@@ -25,7 +28,7 @@ export function DetailPreviewFrame({
       <iframe
         title="正式前台详情样式预览"
         className={`detail-preview-frame${mobile ? ' is-mobile' : ''}`}
-        srcDoc={documentSource}
+        srcDoc={documentSource(product.category !== 4)}
         onLoad={(event) =>
           setTarget(event.currentTarget.contentDocument?.getElementById('preview-root') || null)
         }
