@@ -208,13 +208,14 @@
 .fgp-website .fgp-catalog-card .fgp-price-note { display: none; }
 .fgp-website .fgp-catalog-product-note { display: none; }
 .fgp-website .fgp-catalog-card .fgp-tags > .fgp-desktop-service-venue { display: none; }
+/* Shared by every catalog card, including narrow screens. */
+.fgp-website .fgp-catalog-card { position: relative; transition: box-shadow 180ms ease, transform 180ms ease; }
+.fgp-website .fgp-catalog-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 8px; border-top: 2px solid transparent; border-radius: 8px 8px 0 0; pointer-events: none; }
+.fgp-website .fgp-catalog-card:hover,
+.fgp-website .fgp-catalog-card:focus-within { transform: translateY(-2px); box-shadow: 0 10px 28px -6px #2d433626; }
+.fgp-website .fgp-catalog-card:hover::before,
+.fgp-website .fgp-catalog-card:focus-within::before { border-top-color: #c5a880; }
 @media (min-width: 768px) {
-  .fgp-website .fgp-catalog-card { position: relative; transition: box-shadow 180ms ease, transform 180ms ease; }
-  .fgp-website .fgp-catalog-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 8px; border-top: 2px solid transparent; border-radius: 8px 8px 0 0; pointer-events: none; }
-  .fgp-website .fgp-catalog-card:hover,
-  .fgp-website .fgp-catalog-card:focus-within { transform: translateY(-2px); box-shadow: 0 10px 28px -6px #2d433626; }
-  .fgp-website .fgp-catalog-card:hover::before,
-  .fgp-website .fgp-catalog-card:focus-within::before { border-top-color: #c5a880; }
   .fgp-website .fgp-catalog-card .fgp-tags > .fgp-desktop-service-venue { display: inline-flex; }
   .fgp-website .fgp-catalog-card .fgp-card-service-meta { display: none; }
   .fgp-website:has(.fgp-catalog) { background: #faf9f6; }
@@ -269,7 +270,7 @@
   .fgp-website .fgp-catalog .fgp-display-controls { margin-left: 0; padding-top: 12px; border-top: 1px solid var(--p-line); flex-wrap: wrap; justify-content: space-between; }
   .fgp-website .fgp-catalog .fgp-product-link { padding: 16px; }
 }
-@media (min-width: 768px) and (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
   .fgp-website .fgp-catalog-card { transition: none; }
   .fgp-website .fgp-catalog-card:hover,
   .fgp-website .fgp-catalog-card:focus-within { transform: none; }
@@ -328,3 +329,12 @@
 .fgp-website .fgp-catalog .fgp-capacities button { position: relative; z-index: 1; color: var(--p-muted); }
 .fgp-website .fgp-catalog .fgp-capacities button:not(.is-selected):hover { background: transparent; color: var(--p-green); }
 .fgp-website .fgp-catalog .fgp-capacities button.is-selected { background: white; color: var(--p-green); font-weight: 600; box-shadow: 0 1px 2px #2d43360d; }
+
+/* Replace the public catalog introduction with the supplied panorama. */
+.fgp-website .fgp-catalog-hero { position: relative; height: clamp(180px, 34vw, 460px); padding: 0; overflow: hidden; }
+.fgp-website .fgp-catalog-hero > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; border: 0; border-radius: 0; }
+/* Fade the image itself into the existing page background; keep its upper 88% untouched. */
+.fgp-website .fgp-catalog-hero > img { mask-image: linear-gradient(to bottom, #000 0%, #000 88%, #000000f5 90%, #000000c7 93%, #00000073 96%, #00000026 98%, #0000 100%); }
+@media (max-width: 767px) {
+  .fgp-website .fgp-catalog-hero > img { mask-image: linear-gradient(to bottom, #000 0%, #000 85%, #000000f5 88%, #000000c7 92%, #00000073 96%, #00000026 98%, #0000 100%); }
+}

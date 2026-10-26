@@ -14,7 +14,7 @@ function render(path: string, state?: unknown) {
 
 test("网站富贵山庄页沿用主导航，七类产品的详情与列表不跳到原型", () => {
   const home = render("/nirvana");
-  assert.match(home, /<h1>富贵山庄<\/h1>/);
+  assert.match(home, /<h1 class="fgp-sr">富贵山庄<\/h1>/);
   assert.match(home, /aria-label="主导航"/);
   assert.doesNotMatch(home, /交互原型|href="\/prototype/);
   assert.doesNotMatch(home, /资料清楚，选择从容|无需逐项填写|查看完整列表/);

@@ -102,12 +102,16 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
   const returnTo = location.pathname + location.search;
   const listParams = new URLSearchParams(params); listParams.delete("category");
   return <>
-    <div className="fgp-wrap">
+    <div className={home && website ? undefined : "fgp-wrap"}>
       {!home && <nav className="fgp-crumb" aria-label="当前位置"><Link to={homePath}>产品首页</Link><ChevronRight size={14}/><span>{category.name}</span></nav>}
-      <section className={home ? "fgp-intro" : "fgp-list-intro"}>
-        <div><h1>{home ? website ? "富贵山庄" : <>每一份纪念，<br/>都有合适的安排。</> : category.name}</h1>{website && home && <><p className="fgp-catalog-title">产品目录与福地配套</p><p className="fgp-catalog-description">从产品类别开始，按人数与宗教了解适合的选择。</p></>}{!(website && home) && <p>{home ? "从产品类别开始，按人数与宗教了解适合的选择。" : category.description}</p>}</div>
-        {home ? !website && <div className="fgp-intro-note"><Leaf size={24} strokeWidth={1.2}/><p>资料清楚，选择从容。<br/><span>按实际适用的条件浏览，无需逐项填写。</span></p></div> : <Link className="fgp-text-link" to={homePath}>查看全部类别<ArrowRight size={16}/></Link>}
-      </section>
+      {home && website ? <section className="fgp-catalog-hero" aria-label="富贵山庄园区全景">
+        <h1 className="fgp-sr">富贵山庄</h1>
+        <img src="/images/nirvana-catalog-panorama.jpg" alt="富贵山庄园区全景" width={1920} height={1080} fetchPriority="high" decoding="async"/>
+      </section> : <section className={home ? "fgp-intro" : "fgp-list-intro"}>
+        <div><h1>{home ? <>每一份纪念，<br/>都有合适的安排。</> : category.name}</h1><p>{home ? "从产品类别开始，按人数与宗教了解适合的选择。" : category.description}</p></div>
+        {home ? <div className="fgp-intro-note"><Leaf size={24} strokeWidth={1.2}/><p>资料清楚，选择从容。<br/><span>按实际适用的条件浏览，无需逐项填写。</span></p></div> : <Link className="fgp-text-link" to={homePath}>查看全部类别<ArrowRight size={16}/></Link>}
+      </section>}
+
     </div>
     <section className="fgp-catalog fgp-wrap" aria-label="产品目录">
       <div className="fgp-category-nav" ref={navRef} role="navigation" aria-label="产品类别">
