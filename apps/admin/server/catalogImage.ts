@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import { previewBucket, storedPreviewPath } from '../../../shared/imageVariants';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 type Environment = Record<string, string | undefined>;
@@ -119,6 +120,47 @@ export function createImageHandler(deps: Dependencies = {}) {
         }
       }
       const data = await output;
+      // The admin deployment may persist this exact derivative after the caller's
+      // original-file permission check above. It never changes an original object.
+      if (env.SUPABASE_SERVICE_ROLE_KEY) {
+        try {
+          const variant = storedPreviewPath(bucket, path, width);
+          const stored = await read(
+            `${base}/storage/v1/object/${previewBucket}/${variant.split('/').map(encodeURIComponent).join('/')}`,
+            {
+              method: 'POST',
+              headers: {
+                apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+                Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+                'Content-Type': 'image/webp',
+                'Cache-Control': '0',
+                'x-upsert': 'false',
+              },
+              body: new Uint8Array(data),
+              signal: AbortSignal.timeout(12000),
+            },
+          );
+          if (stored.ok || stored.status === 409 || stored.status === 400) {
+            // Storage reports an immutable duplicate as 400 in some API versions.
+            const exists =
+              stored.ok ||
+              (
+                await read(
+                  `${base}/storage/v1/object/authenticated/${previewBucket}/${variant.split('/').map(encodeURIComponent).join('/')}`,
+                  {
+                    method: 'HEAD',
+                    headers,
+                    cache: 'no-store',
+                    signal: AbortSignal.timeout(12000),
+                  },
+                )
+              ).ok;
+            if (exists) res.setHeader('X-Preview-Stored', '1');
+          }
+        } catch {
+          /* The authorized generated image remains usable if preview storage is temporarily unavailable. */
+        }
+      }
       res.setHeader('Content-Type', 'image/webp');
       res.setHeader('Content-Length', data.length);
       res.end(data);

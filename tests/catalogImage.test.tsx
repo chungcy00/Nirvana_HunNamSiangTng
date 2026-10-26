@@ -120,3 +120,109 @@ test("mounted image consumers share one download and cancel/revoke only after th
   assert.equal(calls, 2);
   third.release();
 });
+
+test("stored previews bypass on-demand processing and preserve fresh storage authorization", async () => {
+  const { fetchPreviewImage } = await import("../shared/imageResource");
+  const { storedPreviewPath } = await import("../shared/imageVariants");
+  assert.equal(
+    storedPreviewPath("catalog-media-private", "product/photo.jpg", 160),
+    "160/catalog-media-private/product/photo.jpg.webp",
+  );
+  assert.throws(() =>
+    storedPreviewPath("catalog-media-private", "../secret", 160),
+  );
+  const previous = globalThis.fetch,
+    calls: string[] = [];
+  try {
+    globalThis.fetch = (async (url, options) => {
+      calls.push(String(url));
+      assert.equal(options?.cache, "no-store");
+      assert.equal(
+        (options?.headers as Record<string, string>).Authorization,
+        "Bearer member",
+      );
+      return new Response(new Blob(["small"], { type: "image/webp" }), {
+        headers: { "Content-Type": "image/webp" },
+      });
+    }) as typeof fetch;
+    const result = await fetchPreviewImage(
+      "catalog-media-private",
+      "product/photo.jpg",
+      160,
+      { Authorization: "Bearer member" },
+      "https://example.supabase.co/storage/v1/object/authenticated/catalog-media-private/product/photo.jpg",
+      new AbortController().signal,
+    );
+    assert.equal(await result.text(), "small");
+    assert.equal(calls.length, 1);
+    assert.match(
+      calls[0],
+      /object\/authenticated\/catalog-media-previews\/160\//,
+    );
+    assert(!calls[0].includes("/api/catalog-image"));
+  } finally {
+    globalThis.fetch = previous;
+  }
+});
+test("server stores only the authorized generated derivative without replacing the original", async () => {
+  const input = await sharp({
+    create: { width: 200, height: 100, channels: 3, background: "#cc3344" },
+  })
+    .png()
+    .toBuffer();
+  let writes = 0;
+  const handler = createImageHandler({
+    env: {
+      VITE_SUPABASE_URL: "https://example.supabase.co",
+      VITE_SUPABASE_PUBLISHABLE_KEY: "sb_publishable_test",
+      SUPABASE_SERVICE_ROLE_KEY: "server-only-test",
+    },
+    fetch: (async (url, options) => {
+      if (options?.method === "POST") {
+        writes++;
+        assert.match(
+          String(url),
+          /object\/catalog-media-previews\/160\/catalog-media-private\/product\/photo.png.webp$/,
+        );
+        assert.equal(
+          (options?.headers as Record<string, string>).Authorization,
+          "Bearer server-only-test",
+        );
+        assert.equal(
+          (options?.headers as Record<string, string>)["x-upsert"],
+          "false",
+        );
+        assert.equal(
+          (await sharp(Buffer.from(options.body as Uint8Array)).metadata())
+            .width,
+          160,
+        );
+        return new Response("{}", { status: 200 });
+      }
+      assert.equal(
+        (options?.headers as Record<string, string>).Authorization,
+        "Bearer member",
+      );
+      return new Response(options?.method === "HEAD" ? null : input, {
+        headers: {
+          "Content-Type": "image/png",
+          etag: "one",
+          "Content-Length": String(input.length),
+        },
+      });
+    }) as typeof fetch,
+  });
+  const server = createServer(handler);
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:${(server.address() as { port: number }).port}/?bucket=catalog-media-private&path=product/photo.png&width=160`,
+      { headers: { Authorization: "Bearer member" } },
+    );
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("x-preview-stored"), "1");
+    assert.equal(writes, 1);
+  } finally {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});

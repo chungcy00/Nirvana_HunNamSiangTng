@@ -1,3 +1,5 @@
+import { previewBucket, previewWidths, storedPreviewPath } from '../../../shared/imageVariants';
+import { storeImagePreviews } from './preparePreviews';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -52,6 +54,21 @@ export async function cleanup(user: Client, storage: Client, images: Media[]) {
     }
     if (permitted.length) {
       const result = await storage.storage.from(bucket).remove(permitted);
+      if (!result.error) {
+        const previews = await storage.storage
+          .from(previewBucket)
+          .remove(
+            permitted.flatMap((path) =>
+              previewWidths.map((width) => storedPreviewPath(bucket, path, width)),
+            ),
+          );
+        if (previews.error)
+          pending.push(
+            ...images.filter(
+              (x) => x.storage_bucket === bucket && permitted.includes(x.storage_path),
+            ),
+          );
+      }
       if (result.error)
         pending.push(
           ...permitted.map((storage_path) => ({ storage_bucket: bucket, storage_path })),
@@ -84,6 +101,17 @@ export async function duplicate(user: Client, storage: Client, id: string, versi
         .upload(path, read.data, { contentType: read.data.type, upsert: false, cacheControl: '0' });
       if (result.error) throw fail('图片副本上传失败，未建立新产品。', 502);
       files.push({ storage_bucket: image.storage_bucket, storage_path: path });
+      await storeImagePreviews(
+        Buffer.from(await read.data.arrayBuffer()),
+        image.storage_bucket,
+        path,
+        async (name, data) => {
+          const preview = await storage.storage
+            .from(previewBucket)
+            .upload(name, data, { contentType: 'image/webp', upsert: false, cacheControl: '0' });
+          if (preview.error) throw fail('图片预览副本未完成，请重试。', 422);
+        },
+      );
       mapping.push({ source_id: image.id, bucket: image.storage_bucket, path });
     }
     const copy = await user.rpc('admin_copy_product', {

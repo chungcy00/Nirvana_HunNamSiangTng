@@ -91,6 +91,11 @@
       "local": "20261026170648_catalog_snapshot_read.sql",
       "remote_version": "20261026171004",
       "remote_name": "catalog_snapshot_read"
+    },
+    {
+      "local": "20261026173638_catalog_stored_image_previews.sql",
+      "remote_version": "20261026173805",
+      "remote_name": "catalog_stored_image_previews"
     }
   ],
   "hosted_validation": {

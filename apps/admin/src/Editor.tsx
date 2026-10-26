@@ -1,3 +1,4 @@
+import { prepareUploadPreviews } from './imagePreviews';
 import { OfferAttributes } from './OfferAttributes';
 import { draftKey, readDraft, writeDraft } from './draftStorage';
 import { InclusionEditor } from './InclusionEditor';
@@ -313,6 +314,8 @@ export default function Editor() {
           is_published: false,
         };
         staged.current.push(row);
+        try { await prepareUploadPreviews(file,bucket,path); }
+        catch { notify('照片已上传，预览图暂未准备完成；原图仍可使用。'); }
         setBundle((b) => ({
           ...b!,
           product_images: [...b!.product_images.filter((x: Row) => x.id !== replace), row],

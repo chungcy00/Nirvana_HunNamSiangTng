@@ -1,3 +1,4 @@
+import { previewBucket, storedPreviewPath } from "./imageVariants";
 // Share a download only while its mounted consumers remain alive. No persistent image cache.
 type Entry = {
   refs: number;
@@ -57,6 +58,15 @@ export async function fetchPreviewImage(
   signal: AbortSignal,
 ) {
   const options = { headers, signal, cache: "no-store" as const };
+  const sourceUrl = new URL(original);
+  const storedUrl = `${sourceUrl.origin}/storage/v1/object/authenticated/${previewBucket}/${storedPreviewPath(bucket, path, width).split("/").map(encodeURIComponent).join("/")}`;
+  const stored = await fetch(storedUrl, options);
+  if (
+    stored.ok &&
+    /^image\/webp/.test(stored.headers.get("content-type") || "")
+  )
+    return stored.blob();
+  if (signal.aborted) throw new Error("Image request cancelled");
   const response = await fetch(
     previewImageEndpoint(bucket, path, width),
     options,
