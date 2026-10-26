@@ -200,3 +200,11 @@ test('image rules block invalid shared covers and unnamed public religious desig
   assert.deepEqual(validate(b, false), []);
   assert.equal(changesFor(base, b, 'draft').p_changes.product_images.upsert![0].design_name, null);
 });
+
+test('design references cannot be saved as a shared environment cover', () => {
+  const b = structuredClone(base);
+  b.product_images = [{id:'design-cover',image_type:'design',is_primary:true,is_published:false}];
+  assert(validate(b, false).some(text => text.includes('不能设为实景相册主图')));
+  b.product_images[0].is_primary = false;
+  assert(!validate(b, false).some(text => text.includes('不能设为实景相册主图')));
+});

@@ -37,6 +37,7 @@ export default function Editor() {
     [confirmPublish, setConfirmPublish] = useState(false),
     [related, setRelated] = useState<DictionaryKind | null>(null),
     [uploadBucket, setUploadBucket] = useState('catalog-media-private'),
+    [uploadImageType, setUploadImageType] = useState('real'),
     [draftStatus, setDraftStatus] = useState('');
   const staged = useRef<Row[]>([]),
     ignoreLeave = useRef(false);
@@ -293,7 +294,7 @@ export default function Editor() {
           alt_text: previous?.alt_text || file.name,
           religion_id: previous?.religion_id || null,
           design_name: previous?.design_name || null,
-          image_type: previous?.image_type || 'real',
+          image_type: previous?.image_type || uploadImageType,
           sort_order: previous?.sort_order || bundle!.product_images.length,
           is_primary: previous?.is_primary || false,
           is_published: false,
@@ -832,6 +833,7 @@ export default function Editor() {
                 <h2>图片管理</h2>
                 <p className="help">
                   支持 JPEG、PNG、WebP，单张不超过 10 MB。照片保留原色；上传或替换后，请保存产品。
+                  实景图用于上方大图与缩略图；设计图仅用于下方设计参考，不进入实景相册。
                   宗教专属设计图批准公开前，须填写设计名称。
                 </p>
                 <div className="upload">
@@ -844,14 +846,24 @@ export default function Editor() {
                       ['catalog-media-restricted', '受限内部素材'],
                     ]}
                   />
+                  <Field
+                    label="上传图片用途"
+                    value={uploadImageType}
+                    onChange={setUploadImageType}
+                    options={[["real", "实景相册"], ["design", "宗教与设计参考"]]}
+                  />
                   <ImageUpload
                     label="上传单张或多张图片"
                     multiple
                     onSelect={(files) => void upload(files)}
                   />
                 </div>
-                <div className="imagegrid">
-                  {bundle.product_images.map((r: Row, i: number) => (
+                {['real', 'design'].map((imageGroup) => <div key={imageGroup}>
+                  <h3>{imageGroup === 'real' ? '实景相册' : '宗教与设计参考'}</h3>
+                  <div className="imagegrid">
+                  {bundle.product_images.map((r: Row, i: number) => ({r, i}))
+                    .filter(({r}: {r: Row}) => (r.image_type === 'design') === (imageGroup === 'design'))
+                    .map(({r, i}: {r: Row; i: number}) => (
                     <article
                       className="imageitem"
                       key={r.id}
@@ -882,11 +894,11 @@ export default function Editor() {
                         </button>
                       </div>
                       {childField('product_images', r, '图片说明', 'alt_text')}
-                      {childField('product_images', r, '图片类型', 'image_type', 'text', [
-                        ['real', '实景图'],
-                        ['design', '设计图'],
-                        ['primary', '主图'],
-                      ])}
+                      <Field label="图片用途" value={r.image_type === 'design' ? 'design' : 'real'}
+                        options={[["real", "实景相册"], ["design", "宗教与设计参考"]]}
+                        onChange={(v) => setRows('product_images', bundle.product_images.map((x: Row) => x.id === r.id
+                          ? {...x, image_type: v, is_primary: v === 'design' ? false : x.is_primary} : x))}/>
+
                       {p.category_id <= 4 &&
                         childField(
                           'product_images',
@@ -919,7 +931,7 @@ export default function Editor() {
                       <Check
                         label="设为共通主图"
                         disabled={
-                          !!r.religion_id || r.storage_bucket === 'catalog-media-restricted'
+                          r.image_type === 'design' || !!r.religion_id || r.storage_bucket === 'catalog-media-restricted'
                         }
                         value={r.is_primary}
                         onChange={(v) =>
@@ -961,7 +973,8 @@ export default function Editor() {
                       />
                     </article>
                   ))}
-                </div>
+                  </div>
+                </div>)}
                 <button
                   onClick={async () => {
                     try {
