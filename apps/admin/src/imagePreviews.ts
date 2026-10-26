@@ -1,9 +1,10 @@
 import { supabase } from './client';
 import { previewBucket, previewWidths, storedPreviewPath } from '../../../shared/imageVariants';
 
-export async function prepareUploadPreviews(file: Blob, bucket: string, path: string) {
+export async function prepareUploadPreviews(file: Blob, bucket: string, path: string, onProgress?: (completed:number,total:number)=>void) {
   const bitmap = await createImageBitmap(file);
   let placeholder: string | undefined;
+  let completed=0;
   try {
     const results = await Promise.allSettled(previewWidths.map(async (width) => {
       const ratio = Math.min(1, width / Math.max(bitmap.width, bitmap.height));
@@ -40,6 +41,7 @@ export async function prepareUploadPreviews(file: Blob, bucket: string, path: st
         });
         if (cached.error) throw cached.error;
       }
+      onProgress?.(++completed,previewWidths.length);
     }));
     for (const result of results) if (result.status === 'rejected') throw result.reason;
   } finally {

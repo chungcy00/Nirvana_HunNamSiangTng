@@ -3,10 +3,11 @@ import { chromium } from '../node_modules/@playwright/test/index.mjs';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
 const imageBytes=await sharp({create:{width:800,height:600,channels:3,background:'#a42c38'}}).webp().toBuffer();
-const imageRequests=[];let originalPosts=0,previewPosts=0,activePreviews=0,maxPreviews=0,failOriginal=false;let releaseOriginal;const originalGate=new Promise(resolve=>{releaseOriginal=resolve;});
+const imageRequests=[];let originalPosts=0,previewPosts=0,activePreviews=0,maxPreviews=0,failOriginal=false;let markOriginal;const originalStarted=new Promise(resolve=>{markOriginal=resolve;});let releaseOriginal;const originalGate=new Promise(resolve=>{releaseOriginal=resolve;});
 const browser = await chromium.launch();
 const page = await browser.newPage({viewport:{width:1440,height:1000}});
 page.setDefaultTimeout(12000);
+await page.addInitScript(()=>{const Native=window.XMLHttpRequest;window.__uploads=[];window.XMLHttpRequest=class extends Native{constructor(){super();window.__uploads.push(this);}};});
 const pageErrors=[];page.on('pageerror',e=>pageErrors.push(e.message));
 page.on('request', r=>{if(r.url().includes('/rpc/'))console.log('RPC',r.url().split('/').pop());});
 const id='00000000-0000-4000-8000-000000000001';
@@ -16,7 +17,7 @@ const bundle={product:{id,name:'双人火化土葬',category_id:1,publication_st
 bundle.burial_details[0]={product_id:id,facing:'西北',area_sqft:864};
 bundle.product_offers=[{id:'common',product_id:id,name:'普通地段',is_active:true,facing_override:null,area_sqft_override:null},{id:'large',product_id:id,name:'普通地段 1080 sqft',is_active:true,facing_override:null,area_sqft_override:1080}];
 bundle.offer_prices=bundle.product_offers.map((o,index)=>({id:'price'+index,offer_id:o.id,price_type:'standard',price_amount:index?308888:238888,is_published:true}));
-bundle.product_images[0].is_primary=true;bundle.product_images[0].image_type='real';bundle.product_images[0].religion_id=null;
+bundle.product_images[0].alt_text='before-placeholder';bundle.product_images[0].is_primary=true;bundle.product_images[0].image_type='real';bundle.product_images[0].religion_id=null;
 bundle.product_images[0].preview_placeholder='data:image/webp;base64,'+imageBytes.toString('base64');
 await page.route('**/api/catalog-image?*',route=>{throw new Error('Unexpected on-demand resize request');});
 // Isolated response fixtures: no remote requests or production writes.
@@ -29,9 +30,10 @@ await page.route('**/rest/v1/rpc/**',route=>{
  return route.fulfill({json:replies[method]});
 });
 await page.route('**/storage/v1/**',async route=>{
+ if(route.request().method()==='OPTIONS')return route.fulfill({status:204,headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'POST,GET,HEAD','Access-Control-Allow-Headers':'apikey,authorization,content-type,cache-control,x-upsert'}});
  if(route.request().method()==='POST'){
   if(route.request().url().includes('/catalog-media-previews/')){previewPosts++;activePreviews++;maxPreviews=Math.max(maxPreviews,activePreviews);await new Promise(resolve=>setTimeout(resolve,1000));activePreviews--;}
-  else {originalPosts++;await originalGate;if(failOriginal)return route.fulfill({status:400,json:{message:'Upload unavailable',error:'Upload unavailable'}});}
+  else {assert.equal(route.request().headers().authorization,`Bearer ${token}`);assert.equal(route.request().headers()['x-upsert'],'false');originalPosts++;markOriginal();await originalGate;if(failOriginal)return route.fulfill({status:400,json:{message:'Upload unavailable',error:'Upload unavailable'}});}
   return route.fulfill({json:{Key:'uploaded'}});
  }
  return route.fulfill({contentType:'image/webp',body:imageBytes});
@@ -52,24 +54,47 @@ await page.getByRole('button',{name:'编辑',exact:true}).click();
 await page.getByRole('heading',{name:'双人火化土葬',exact:true}).waitFor();
 await page.getByRole('button',{name:'图片管理',exact:true}).click();
 const before=Date.now();await page.getByLabel('上传单张或多张图片',{exact:true}).setInputFiles({name:'instant-upload.png',mimeType:'image/png',buffer:await sharp(imageBytes).png().toBuffer()});
-const pending=page.locator('article.imageitem[aria-busy=true]');await pending.waitFor();await pending.locator('img').evaluate(image=>image.decode());
-assert.equal(originalPosts,1);assert.equal(previewPosts,0);assert(Date.now()-before<1500,'local card appears without awaiting the original upload');
-console.log('Immediate card shown while original upload is held:',Date.now()-before,'ms');
+const pending=page.locator('.upload-progress');await pending.waitFor();
+assert(Date.now()-before<1500);await originalStarted;assert.equal(originalPosts,1);assert.equal(previewPosts,0);
+assert.equal(await page.locator('article.imageitem').count(),1,'uploading photos never appear ahead of existing cards');
+const existingBox=await page.locator('article.imageitem').boundingBox();const progressBox=await pending.boundingBox();
+assert(progressBox.y>=existingBox.y+existingBox.height,'progress appears beneath the existing cards');
+assert(progressBox.height<180,'progress is compact, not a tall empty photo card');
+await page.evaluate(()=>{const request=window.__uploads.find(request=>request.readyState===1);request.upload.dispatchEvent(new ProgressEvent('progress',{lengthComputable:true,loaded:50,total:100}));});
+await page.getByText('正在上传 50%',{exact:true}).waitFor();
+assert.equal(await pending.locator('progress').getAttribute('value'),'50');
+if(process.env.UPLOAD_SCREENSHOT){await pending.scrollIntoViewIfNeeded();await page.screenshot({path:process.env.UPLOAD_SCREENSHOT});}
+console.log('PASS compact progress below existing cards reports actual byte events');
 
 releaseOriginal();
-await page.getByText('原图已上传，正在准备清晰预览…',{exact:true}).waitFor();
-assert.equal(await pending.count(),0);
+await page.getByText('照片已上传，正在准备预览（0/4）…',{exact:true}).waitFor();
+assert.equal(await pending.count(),1);
+assert.equal(await page.locator('article.imageitem').count(),1,'keep existing order during preview preparation');
 await page.getByRole('button',{name:'保存草稿',exact:true}).waitFor({state:'visible'});
 await page.waitForFunction(()=>!document.querySelector('fieldset[disabled]'));
 assert.equal(originalPosts,1);assert.equal(previewPosts,4);assert.equal(maxPreviews,4,'preview uploads run in parallel');
 assert.equal(await page.locator('article.imageitem').count(),2);
-console.log('PASS: immediate local card, promotion before preview completion, four previews uploaded, no product mutation');
+assert.equal(await page.locator('article.imageitem').first().locator('input[aria-label=图片说明]').inputValue(),'before-placeholder');
+console.log('PASS: stable append after upload completion, four previews in parallel, no product mutation');
 failOriginal=true;
 await page.getByLabel('上传单张或多张图片',{exact:true}).setInputFiles({name:'failed-upload.png',mimeType:'image/png',buffer:await sharp(imageBytes).png().toBuffer()});
 await page.waitForFunction(()=>!document.querySelector('fieldset[disabled]'));
 assert.equal(await page.locator('article.imageitem').count(),2,'failed uploads never enter the product bundle');
-assert.equal(await page.locator('article.imageitem[aria-busy=true]').count(),0);
+assert.equal(await page.locator('.upload-progress').count(),0);
 assert.equal(previewPosts,4,'failed originals never start preview writes');
 console.log('PASS failed upload leaves the existing photos intact and clears pending cards');
+failOriginal=false;
+await page.getByLabel('替换文件',{exact:true}).first().setInputFiles({name:'replacement.png',mimeType:'image/png',buffer:await sharp(imageBytes).png().toBuffer()});
+await page.waitForFunction(()=>!document.querySelector('fieldset[disabled]'));
+assert.equal(await page.locator('article.imageitem').count(),2);
+assert.equal(await page.locator('article.imageitem').first().locator('input[aria-label=图片说明]').inputValue(),'before-placeholder','replacement retains original card position');
+await page.getByLabel('上传单张或多张图片',{exact:true}).setInputFiles([
+ {name:'queue-a.png',mimeType:'image/png',buffer:await sharp(imageBytes).png().toBuffer()},
+ {name:'queue-b.png',mimeType:'image/png',buffer:await sharp(imageBytes).png().toBuffer()},
+]);
+assert.equal(await page.locator('.upload-progress').count(),2);
+await page.waitForFunction(()=>!document.querySelector('fieldset[disabled]'));
+assert.deepEqual(await page.locator('article.imageitem input[aria-label=图片说明]').evaluateAll(inputs=>inputs.map(input=>input.value)),['before-placeholder','instant-upload.png','queue-a.png','queue-b.png']);
+console.log('PASS replacement keeps its slot, and a multiple-file selection appends in selection order');
 assert.deepEqual(pageErrors,[]);
 await browser.close();

@@ -1,4 +1,5 @@
 import { prepareUploadPreviews } from './imagePreviews';
+import { uploadWithProgress } from './storageUpload';
 import { OfferAttributes } from './OfferAttributes';
 import { draftKey, readDraft, writeDraft } from './draftStorage';
 import { InclusionEditor } from './InclusionEditor';
@@ -43,11 +44,7 @@ export default function Editor() {
     [draftStatus, setDraftStatus] = useState(''),
     [actionBarHeight, setActionBarHeight] = useState(0);
   const actionBar = useRef<HTMLDivElement>(null);
-  const [pendingUploads,setPendingUploads]=useState<{id:string;name:string;url:string;group:string}[]>([]);
-  const [localPreviews,setLocalPreviews]=useState<Record<string,string>>({});
-  const [preparingImages,setPreparingImages]=useState<string[]>([]);
-  const uploadUrls=useRef(new Set<string>());
-  useEffect(()=>()=>{for(const url of uploadUrls.current)URL.revokeObjectURL(url);uploadUrls.current.clear();},[]);
+  const [pendingUploads,setPendingUploads]=useState<{id:string;name:string;group:string;phase:string;loaded:number;total:number;completed:number}[]>([]);
   const staged = useRef<Row[]>([]),
     ignoreLeave = useRef(false);
   const editorReady = !!bundle;
@@ -287,8 +284,7 @@ export default function Editor() {
     if (!files?.length || busy) return;
     setBusy(true);
     setErrors([]);
-    const jobs:{id:string;file:File;url:string;group:string}[]=[];
-    const promoted:string[]=[];
+    const jobs:{id:string;file:File;group:string}[]=[];
     try {
       for (const file of Array.from(files)) {
         if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 10485760)
@@ -296,13 +292,13 @@ export default function Editor() {
       }
       const previous = replace ? bundle!.product_images.find((x: Row) => x.id === replace) : null;
       for(const file of Array.from(files)) {
-        const url=URL.createObjectURL(file);uploadUrls.current.add(url);
-        jobs.push({id:uuid(),file,url,group:previous?.image_type || uploadImageType});
+        jobs.push({id:uuid(),file,group:previous?.image_type || uploadImageType});
       }
-      // Render every selected photo before decoding or waiting for any network request.
-      setPendingUploads(jobs.map(job=>({id:job.id,name:job.file.name,url:job.url,group:job.group})));
+      setPendingUploads(jobs.map(job=>({id:job.id,name:job.file.name,group:job.group,phase:'queued',loaded:0,total:job.file.size,completed:0})));
       for (const job of jobs) {
         const {file}=job;
+        const progress=(update:Record<string,any>)=>setPendingUploads(current=>current.map(item=>item.id===job.id?{...item,...update}:item));
+        progress({phase:'checking'});
         const bitmap = await createImageBitmap(file);
         bitmap.close();
         const ext =
@@ -312,10 +308,13 @@ export default function Editor() {
           ? bundle!.product_images.find((x: Row) => x.id === replace)?.storage_bucket ||
             uploadBucket
           : uploadBucket;
-        const result = await supabase!.storage
-          .from(bucket)
-          .upload(path, file, { contentType: file.type, upsert: false, cacheControl: '0' });
-        if (result.error) throw result.error;
+        const {data:{session}}=await supabase!.auth.getSession();
+        if(!session?.access_token)throw new Error('请重新登录后上传照片。');
+        progress({phase:'uploading'});
+        await uploadWithProgress({base:import.meta.env.VITE_SUPABASE_URL,bucket,path,file,
+          key:import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,token:session.access_token,
+          onProgress:(loaded,total)=>progress({loaded,total,phase:loaded>=total?'confirming':'uploading'}),
+        });
         const row: Row = {
           id: job.id,
           product_id: p.id,
@@ -325,32 +324,25 @@ export default function Editor() {
           religion_id: previous?.religion_id || null,
           design_name: previous?.design_name || null,
           image_type: previous?.image_type || uploadImageType,
-          sort_order: previous?.sort_order || bundle!.product_images.length,
+          sort_order: previous?.sort_order ?? bundle!.product_images.length + jobs.indexOf(job),
           is_primary: previous?.is_primary || false,
           is_published: false,
         };
         staged.current.push(row);
-        promoted.push(row.id);
-        setLocalPreviews(current=>({...current,[row.id]:job.url}));
-        setPreparingImages(current=>[...current,row.id]);
-        setPendingUploads(current=>current.filter(item=>item.id!==job.id));
-        setBundle((b) => ({
-          ...b!,
-          product_images: [...b!.product_images.filter((x: Row) => x.id !== replace), row],
-        }));
+        progress({phase:'preparing'});
         try {
-          const placeholder=await prepareUploadPreviews(file,bucket,path);
-          setBundle(b=>b && ({...b,product_images:b.product_images.map((image:Row)=>image.id===row.id?{...image,preview_placeholder:placeholder}:image)}));
+          row.preview_placeholder=await prepareUploadPreviews(file,bucket,path,completed=>progress({completed}));
         }
         catch { notify('照片已上传，预览图暂未准备完成；原图仍可使用。'); }
-        finally {setPreparingImages(current=>current.filter(imageId=>imageId!==row.id));}
+        setBundle((b) => ({...b!,product_images:replace
+          ? b!.product_images.map((image:Row)=>image.id===replace?row:image)
+          : [...b!.product_images,row]}));
+        setPendingUploads(current=>current.filter(item=>item.id!==job.id));
       }
     } catch (e) {
       setErrors([errorText(e)]);
     } finally {
       setPendingUploads([]);
-      setLocalPreviews(current=>Object.fromEntries(Object.entries(current).filter(([imageId])=>!promoted.includes(imageId))));
-      for(const job of jobs){URL.revokeObjectURL(job.url);uploadUrls.current.delete(job.url);}
       setBusy(false);
     }
   }
@@ -905,11 +897,6 @@ export default function Editor() {
                 {['real', 'design'].map((imageGroup) => <div key={imageGroup}>
                   <h3>{imageGroup === 'real' ? '实景相册' : '宗教与设计参考'}</h3>
                   <div className="imagegrid">
-                  {pendingUploads.filter(item=>(item.group==='design')===(imageGroup==='design')).map(item=><article className="imageitem" key={item.id} aria-busy="true">
-                    <img src={item.url} className="editor-photo" alt={item.name}/>
-                    <strong>{item.name}</strong>
-                    <p role="status">正在上传原图，完成后可编辑图片资料…</p>
-                  </article>)}
                   {bundle.product_images.map((r: Row, i: number) => ({r, i}))
                     .filter(({r}: {r: Row}) => (r.image_type === 'design') === (imageGroup === 'design'))
                     .map(({r, i}: {r: Row; i: number}) => (
@@ -925,8 +912,7 @@ export default function Editor() {
                         if (from >= 0) move('product_images', from, i);
                       }}
                     >
-                      <Photo image={r} localSrc={localPreviews[r.id]} className="editor-photo" />
-                      {preparingImages.includes(r.id) && <p role="status">原图已上传，正在准备清晰预览…</p>}
+                      <Photo image={r} className="editor-photo" />
                       <div className="row between">
                         <span className="badge">
                           {r.is_primary
@@ -1024,6 +1010,12 @@ export default function Editor() {
                     </article>
                   ))}
                   </div>
+                  {pendingUploads.filter(item=>(item.group==='design')===(imageGroup==='design')).map(item=><div className="upload-progress" key={item.id} aria-busy="true">
+                    <strong>{item.name}</strong>
+                    <progress aria-label={`${item.name}上传进度`} max={item.phase==='preparing'?4:item.total}
+                      value={item.phase==='checking'?undefined:item.phase==='preparing'?item.completed:item.loaded}/>
+                    <span role="status">{item.phase==='queued'?'等待上传…':item.phase==='checking'?'正在检查照片…':item.phase==='preparing'?`照片已上传，正在准备预览（${item.completed}/4）…`:item.phase==='confirming'?'已发送 100%，正在确认上传…':`正在上传 ${Math.floor(item.loaded/item.total*100)}%`}</span>
+                  </div>)}
                 </div>)}
                 <button
                   onClick={async () => {
