@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Image as ImageIcon, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Image as ImageIcon, X } from 'lucide-react';
 import type { PublicImage } from '../catalog/publicRepository';
 import CatalogImage from '../catalog/PublicImage';
 import type { PrototypeProduct } from './model';
@@ -34,6 +34,10 @@ export function GeneralProductGallery({ product, religion, imageRenderer }: {
     <div className="fgp-general-main-image">
       <div className="fgp-general-image-empty"><ImageIcon size={38} aria-hidden="true"/><span>{active ? '图片加载中或暂不可用' : '产品实拍待补充'}</span></div>
       {active && <button type="button" className="fgp-general-image-trigger" aria-label="查看产品大图" aria-haspopup="dialog" onClick={() => dialog.current?.showModal()}>{renderImage(active)}</button>}
+      {images.length > 1 && <>
+        <button type="button" className="fgp-gallery-arrow fgp-gallery-previous" aria-label="上一张图片" onClick={() => setSelected(images[(images.indexOf(active) - 1 + images.length) % images.length].id)}><ChevronLeft size={24} aria-hidden="true"/></button>
+        <button type="button" className="fgp-gallery-arrow fgp-gallery-next" aria-label="下一张图片" onClick={() => setSelected(images[(images.indexOf(active) + 1) % images.length].id)}><ChevronRight size={24} aria-hidden="true"/></button>
+      </>}
     </div>
     {images.length > 1 && <div className="fgp-gallery-thumbnails" role="group" aria-label="产品图片选择">
       {images.map((image, index) => <button type="button" key={image.id} aria-pressed={active.id === image.id} aria-label={`查看图片 ${index + 1}：${image.alt || product.name}`} onClick={() => setSelected(image.id)}>{renderImage(image)}</button>)}
