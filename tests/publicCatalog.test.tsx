@@ -283,7 +283,7 @@ test("transport feedback is distinct from an empty result and never shows a zero
 });
 
 test("funeral method labels follow public attributes on cards and details without photos", () => {
-  for (const [method, label] of Object.entries({cremation: '适用火化', burial: '适用土葬', both: '火化／土葬皆适用'})) {
+  for (const [method, label] of Object.entries({cremation: '适用火化', burial: '适用土葬', both: '火化 / 土葬皆适用'})) {
     const product = mapPublicProduct({...raw, category_id: 4, attributes: {funeral_method: method}});
     assert.equal(product.funeralMethod, method);
     for (const path of ['/nirvana?category=4', '/nirvana?category=4&view=list', '/nirvana/products/item/live-w']) {

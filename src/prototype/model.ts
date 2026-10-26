@@ -28,7 +28,7 @@ export function funeralDurationLabel(product: PrototypeProduct) {
   return product.category === 4 && Number.isInteger(product.durationDays) && Number(product.durationDays) > 0 && Number.isInteger(product.durationNights) && Number(product.durationNights) >= 0
     ? `${product.durationDays}天${product.durationNights}夜殡仪服务配套` : undefined;
 }
-export const funeralMethodLabels = { cremation: "适用火化", burial: "适用土葬", both: "火化／土葬皆适用" } as const;
+export const funeralMethodLabels = { cremation: "适用火化", burial: "适用土葬", both: "火化 / 土葬皆适用" } as const;
 export const capacityLabels: Record<Capacity, string> = {
   single: "单人", double: "双人", triple: "三人", four_plus: "四人及以上", family: "家庭",
 };
