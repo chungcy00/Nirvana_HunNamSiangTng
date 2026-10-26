@@ -4,6 +4,8 @@ import { categories } from "../prototype/model";
 import { useCatalog } from "../catalog/context";
 import { NotFound } from "../components/ui";
 import "./NirvanaProducts.css";
+import "./NirvanaGeneralDetail.css";
+import "./NirvanaFuneralDetail.css";
 
 const navigation = {
   homePath: "/nirvana",

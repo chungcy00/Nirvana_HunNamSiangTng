@@ -312,3 +312,19 @@
   .fgp-website .fgp-catalog .fgp-dual-prices > .fgp-price-entry + .fgp-price-entry { border-top: 1px solid var(--p-line); padding-top: 12px; }
   .fgp-website .fgp-catalog .fgp-view-list .fgp-card-funeral .fgp-card-body { display: flex; flex-direction: column; }
 }
+
+/* Moving beige hover backdrop, independent of category selection and scrolling. */
+.fgp-website .fgp-catalog .fgp-category-nav { position: relative; isolation: isolate; }
+.fgp-website .fgp-catalog .fgp-category-nav button { z-index: 1; }
+.fgp-website .fgp-catalog .fgp-category-nav button:not(.is-active):hover { background: transparent; }
+.fgp-website .fgp-category-hover { position: absolute; left: 0; top: 0; width: var(--hover-width, 0px); height: var(--hover-height, 0px); transform: translate(var(--hover-x, 0px), var(--hover-y, 0px)); opacity: 0; pointer-events: none; border-radius: 4px; background: #e3ded2; box-shadow: 0 1px 3px #2d43361a; transition: transform 180ms ease-out, width 180ms ease-out, height 180ms ease-out, opacity 100ms ease-out; }
+.fgp-website .fgp-category-hover[data-visible="true"] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .fgp-website .fgp-category-hover { transition: none; }
+}
+
+/* Filters share category colors and the same moving hover backdrop. */
+.fgp-website .fgp-catalog .fgp-capacities { position: relative; isolation: isolate; }
+.fgp-website .fgp-catalog .fgp-capacities button { position: relative; z-index: 1; color: var(--p-muted); }
+.fgp-website .fgp-catalog .fgp-capacities button:not(.is-selected):hover { background: transparent; color: var(--p-green); }
+.fgp-website .fgp-catalog .fgp-capacities button.is-selected { background: white; color: var(--p-green); font-weight: 600; box-shadow: 0 1px 2px #2d43360d; }

@@ -4,7 +4,9 @@ import {
   Check,
   ChevronRight,
   Image as ImageIcon,
+  MapPin,
 } from "lucide-react";
+import { GeneralProductGallery } from "./GeneralProductGallery";
 import CatalogImage from "../catalog/PublicImage";
 import { ConsultButton } from "../components/ui";
 import { useBoundedPricePanel } from "./useBoundedPricePanel";
@@ -111,11 +113,13 @@ function InclusionList({
   groups,
   religious = false,
   funeral = false,
+  expanded = false,
 }: {
   items: string[];
   groups?: InclusionGroup[];
   religious?: boolean;
   funeral?: boolean;
+  expanded?: boolean;
 }) {
   const list = (rows: string[]) => (
     <ul>
@@ -155,7 +159,7 @@ function InclusionList({
     <>
       {groups.map((group, index) =>
         group.title ? (
-          <details className="fgp-inclusion-section" key={index}>
+          <details className="fgp-inclusion-section" key={index} open={expanded}>
             <summary>
               {religious ? <h5>{group.title}</h5> : <h3>{group.title}</h3>}
               <ChevronRight size={18} aria-hidden="true" />
@@ -184,6 +188,7 @@ export function ProductDetailContent({
   const { website } = useContext(ProductNavigationContext);
   const category = categories.find((c) => c.id === product.category)!;
   const funeral = product.category === 4;
+  const general = website && !funeral;
   const pricePanelRef = useBoundedPricePanel(funeral);
   const [religion, setReligion] = useState("");
   const [design, setDesign] = useState("共通产品图");
@@ -205,7 +210,7 @@ export function ProductDetailContent({
       ];
   const selectedDesign = designs.includes(design) ? design : designs[0];
   const specs = [
-    ...(funeralDurationLabel(product)
+    ...(!website && funeralDurationLabel(product)
       ? [["服务天数", `${product.durationDays}天${product.durationNights}夜`]]
       : []),
     ...(product.category === 4 && product.serviceVenue
@@ -254,7 +259,7 @@ export function ProductDetailContent({
       </h2>
       <ProductPrices product={product} detailed religion={religion} />
       {product.productPriceNote && <p className="fgp-price-note fgp-product-price-note">{product.productPriceNote}</p>}
-      {product.offers.length > 1 && product.offers.some((o) => o.area) && (
+      {[1, 2, 6, 7].includes(product.category) && product.offers.length > 1 && product.offers.some((o) => o.area) && (
         <dl className="fgp-offer-specs">
           {product.offers
             .filter((o) => o.area)
@@ -271,7 +276,7 @@ export function ProductDetailContent({
         !(website && product.referencePrice) && (
           <p className="fgp-price-terms">{product.terms}</p>
         )}
-      {(funeral || website) && (
+      {(funeral || website) && !general && (
         <ConsultButton
           subject={product.name}
           className="fgp-service-consult"
@@ -281,12 +286,43 @@ export function ProductDetailContent({
       )}
     </section>
   );
-  return (
+  const overviewContent = (<>
+          <span className="fgp-category-label">{category.name}</span>
+          <h1>{product.name}</h1>
+          <ProductTags product={product} />
+          {funeral && !website && (
+            <div
+              className="fgp-service-price-summary"
+              aria-label="殡仪服务价格摘要"
+            >
+              <ProductPrices
+                product={product}
+                religion={religion}
+                showNotes={false}
+              />
+            </div>
+          )}
+          {funeralDurationLabel(product) && (
+            <p className="fgp-duration">{funeralDurationLabel(product)}</p>
+          )}
+          {product.subtitle && <p>{product.subtitle}</p>}
+          {product.description && <p>{product.description}</p>}
+          <dl className="fgp-specs">
+            {specs.map(([label, value]) => (
+              <div key={label} className={website && funeral && label === "服务地点" ? "fgp-service-location" : undefined}>
+                {website && funeral && label === "服务地点" && <MapPin size={16} aria-hidden="true"/>}
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+  </>);
+  const layout = (
     <>
       <div
         className={`fgp-detail-top${product.category === 4 ? " fgp-service-detail" : ""}`}
       >
-        {product.category !== 4 && (
+        {general ? <GeneralProductGallery product={product} religion={religion} imageRenderer={imageRenderer}/> : product.category !== 4 && (
           <section className="fgp-gallery" aria-label="产品图片">
             <ProductImage
               product={product}
@@ -316,36 +352,9 @@ export function ProductDetailContent({
           </section>
         )}
         <section className="fgp-product-overview">
-          <span className="fgp-category-label">{category.name}</span>
-          <h1>{product.name}</h1>
-          <ProductTags product={product} />
-          {funeral && !website && (
-            <div
-              className="fgp-service-price-summary"
-              aria-label="殡仪服务价格摘要"
-            >
-              <ProductPrices
-                product={product}
-                religion={religion}
-                showNotes={false}
-              />
-            </div>
-          )}
-          {funeralDurationLabel(product) && (
-            <p className="fgp-duration">{funeralDurationLabel(product)}</p>
-          )}
-          {product.subtitle && <p>{product.subtitle}</p>}
-          {product.description && <p>{product.description}</p>}
-          <dl className="fgp-specs">
-            {specs.map(([label, value]) => (
-              <div key={label}>
-                <dt>{label}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-          </dl>
+          {website && funeral ? <div className="fgp-funeral-summary">{overviewContent}</div> : overviewContent}
           {website && pricePanel}
-          {!funeral && (
+          {!funeral && !general && (
             <a
               className="fgp-overview-next"
               href="#fgp-inclusions"
@@ -376,6 +385,7 @@ export function ProductDetailContent({
               items={product.inclusions}
               groups={product.inclusionGroups}
               funeral={funeral}
+              expanded={general}
             />
           ) : !funeral ||
             !product.religions.some((r) => r.inclusions.length) ? (
@@ -428,6 +438,7 @@ export function ProductDetailContent({
                       groups={r.inclusionGroups}
                       religious
                       funeral={funeral}
+                      expanded={general}
                     />
                   )}
                   {r.designs.length > 0 && (
@@ -442,8 +453,10 @@ export function ProductDetailContent({
         </section>
         {!website && pricePanel}
       </div>
+      {general && <section className="fgp-general-consult"><ConsultButton subject={product.name} className="fgp-service-consult">直接咨询</ConsultButton></section>}
     </>
   );
+  return general ? <div className="fgp-general-detail">{layout}</div> : layout;
 }
 
 export function ProductPrices({

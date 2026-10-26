@@ -1,0 +1,47 @@
+/* Funeral details only: use the same data and price renderer as before. */
+.fgp-website:has(.fgp-service-detail) { background: #faf9f6; }
+.fgp-website .fgp-service-detail { padding: 36px; }
+.fgp-website .fgp-service-detail .fgp-product-overview { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px; padding: 0; }
+.fgp-website .fgp-service-detail .fgp-product-overview > .fgp-funeral-summary { grid-column: 1; min-width: 0; }
+.fgp-website .fgp-service-detail .fgp-product-overview > .fgp-price-panel { grid-column: 2; grid-row: auto; margin: 0; padding: 24px; min-width: 0; background: var(--p-soft); border-radius: 6px; }
+.fgp-website .fgp-service-detail h1 { margin: 12px 0 16px; font-size: 32px; line-height: 1.4; overflow-wrap: anywhere; }
+.fgp-website .fgp-service-detail .fgp-tags { gap: 6px; }
+.fgp-website .fgp-service-detail .fgp-tags > span { border-radius: 9999px; background: var(--p-soft); font-size: 12px; }
+.fgp-website .fgp-service-detail .fgp-duration { margin: 16px 0; font-size: 18px; color: var(--p-green); }
+.fgp-website .fgp-service-detail .fgp-specs { display: block; padding: 0; border: 0; }
+.fgp-website .fgp-service-detail .fgp-specs > div { display: flex; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 14px 0; border-top: 1px solid var(--p-line); }
+.fgp-website .fgp-service-detail .fgp-specs dt { flex: 0 0 auto; min-width: 100px; }
+.fgp-website .fgp-service-detail .fgp-specs dd { flex: 0 1 auto; min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.fgp-website .fgp-service-detail .fgp-specs > .fgp-service-location { position: relative; }
+.fgp-website .fgp-service-location dt { padding-left: 22px; }
+.fgp-website .fgp-service-location > svg { position: absolute; top: 18px; left: 0; color: var(--n-gold); flex-shrink: 0; }
+.fgp-website .fgp-service-detail .fgp-price-panel h2 { margin: 0 0 16px; font-size: 18px; }
+.fgp-website .fgp-service-detail .fgp-prices { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.fgp-website .fgp-service-detail .fgp-price-entry { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px; background: white; border: 1px solid #e7e4dc; border-radius: 4px; }
+.fgp-website .fgp-service-detail .fgp-prices-detail > .fgp-price-entry + .fgp-price-entry { padding: 16px; }
+.fgp-website .fgp-service-detail .fgp-prices strong { font-size: 24px; line-height: 1.4; font-weight: 500; white-space: normal; overflow-wrap: normal; word-break: normal; }
+.fgp-website .fgp-service-detail .fgp-prices span { font-size: 13px; color: var(--p-muted); }
+.fgp-website .fgp-service-detail .fgp-price-note, .fgp-website .fgp-service-detail .fgp-price-terms { margin: 0; padding: 0; border: 0; font-size: 12px; line-height: 1.8; color: var(--p-muted); white-space: pre-line; overflow-wrap: anywhere; }
+.fgp-website .fgp-service-detail .fgp-product-price-note { margin-top: 16px; }
+.fgp-website .fgp-service-detail .fgp-service-consult { margin-top: 20px; min-height: 48px; border-radius: 4px; }
+.fgp-website .fgp-service-content { margin-top: 32px; }
+.fgp-website .fgp-service-content .fgp-inclusions > h2 { margin: 0 0 20px; font-size: 24px; }
+.fgp-website .fgp-service-content .fgp-inclusion-section { padding: 0; overflow: hidden; border-radius: 8px; background: white; }
+.fgp-website .fgp-service-content .fgp-inclusion-section > summary { padding: 20px; margin: 0; border-radius: 0; }
+.fgp-website .fgp-service-content .fgp-inclusion-section[open] > summary { margin: 0; }
+.fgp-website .fgp-service-content .fgp-inclusion-section ul { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 20px; margin: 0; gap: 12px; }
+.fgp-website .fgp-service-content .fgp-inclusions li { align-items: flex-start; padding: 12px; background: #f8f7f4; line-height: 1.8; }
+.fgp-website .fgp-service-content .fgp-inclusions li svg { margin-top: 5px; }
+@media (max-width: 1100px) {
+  .fgp-website .fgp-service-detail { padding: 28px; }
+  .fgp-website .fgp-service-detail .fgp-product-overview { display: flex; flex-direction: column; gap: 28px; }
+  .fgp-website .fgp-service-detail .fgp-funeral-summary, .fgp-website .fgp-service-detail .fgp-price-panel { width: 100%; }
+}
+@media (max-width: 767px) {
+  .fgp-website .fgp-service-detail { padding: 20px; }
+  .fgp-website .fgp-service-detail h1 { font-size: 26px; }
+  .fgp-website .fgp-service-detail .fgp-product-overview > .fgp-price-panel { padding: 16px; }
+  .fgp-website .fgp-service-detail .fgp-prices strong { font-size: 23px; }
+  .fgp-website .fgp-service-content .fgp-inclusion-section ul { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .fgp-website .fgp-service-content .fgp-inclusion-section > summary { padding: 16px; }
+}
