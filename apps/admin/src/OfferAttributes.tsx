@@ -71,13 +71,6 @@ export function OfferAttributes({
                   : '沿用共通面积'
             }
           />
-          <Field
-            label="地段类型（可选）"
-            value={offer.position_type}
-            onChange={(value) => onChange('position_type', value)}
-            hint="例如普通地段、角头地段；方案名称已包含地段类型时无需重复填写。"
-            wide
-          />
         </div>
       </div>
     </details>

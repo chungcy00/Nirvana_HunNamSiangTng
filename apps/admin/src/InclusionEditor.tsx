@@ -71,9 +71,6 @@ export function InclusionEditor({
           <button onClick={() => add('')}>添加未分组明细</button>
         </div>
       </div>
-      <p className="help">
-        “包含项目”总标题保持不变。展开子标题可编辑所属明细；未分组的旧项目仍正常展示。移动子标题会同时移动该组明细。
-      </p>
       {cremationBurial && (
         <p className="help">
           骨灰瓮、骨灰盒和火化服务请在下方包含项目中填写名称、数量和单位，只需填写一次，不再在类别专属属性重复填写。
@@ -129,9 +126,9 @@ export function InclusionEditor({
             }}
           />
           {group.items.map((r, i) => (
-            <div className="entry" key={r.id}>
-              <div className="row between">
-                <strong>明细 {i + 1}</strong>
+            <div className="entry inclusion-item-card" key={r.id}>
+              <div className="row between entry-heading">
+                <strong>明细 {i + 1}{r.item_name ? ` · ${r.item_name}` : ''}</strong>
                 <div className="row">
                   <button
                     aria-label={`明细${i + 1}上移`}
