@@ -71,6 +71,37 @@ export function Field({
     </label>
   );
 }
+export function ImageUpload({
+  label,
+  multiple = false,
+  onSelect,
+}: {
+  label: string;
+  multiple?: boolean;
+  onSelect: (files: FileList | null) => void;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  return (
+    <div className="field">
+      <span>{label}</span>
+      <input
+        ref={input}
+        hidden
+        type="file"
+        aria-label={label}
+        accept="image/jpeg,image/png,image/webp"
+        multiple={multiple}
+        onChange={(event) => {
+          onSelect(event.target.files);
+          event.target.value = '';
+        }}
+      />
+      <button type="button" onClick={() => input.current?.click()}>
+        {multiple ? '选择并上传图片' : '选择替换图片'}
+      </button>
+    </div>
+  );
+}
 export function Check({
   label,
   value,

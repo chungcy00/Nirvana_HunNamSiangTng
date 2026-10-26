@@ -1,3 +1,4 @@
+import { draftKey, readDraft, writeDraft } from './draftStorage';
 import { InclusionEditor } from './InclusionEditor';
 import { ServiceVenueField } from './ServiceVenueField';
 import { useEffect, useRef, useState } from 'react';
@@ -5,7 +6,7 @@ import { useNavigate, useParams, useBlocker } from 'react-router-dom';
 import { ArrowDown, ArrowUp, GripVertical } from 'lucide-react';
 import { useAuth } from './auth';
 import { useAdmin } from './context';
-import { Check, Field, Modal, Photo, Preview } from './components';
+import { Check, Field, Modal, Photo, Preview, ImageUpload } from './components';
 import { ReferenceDialog } from './references';
 import { changesFor, priceLines, reclassify, uuid, validate } from './model';
 import { readProduct, rpc, errorText, supabase, removeUnreferenced } from './client';
@@ -32,17 +33,19 @@ export default function Editor() {
     [errors, setErrors] = useState<string[]>([]),
     [busy, setBusy] = useState(false),
     [preview, setPreview] = useState(false),
+    [guide, setGuide] = useState(false),
     [confirmPublish, setConfirmPublish] = useState(false),
     [related, setRelated] = useState<DictionaryKind | null>(null),
-    [uploadBucket, setUploadBucket] = useState('catalog-media-private');
+    [uploadBucket, setUploadBucket] = useState('catalog-media-private'),
+    [draftStatus, setDraftStatus] = useState('');
   const staged = useRef<Row[]>([]),
     ignoreLeave = useRef(false);
+  const localKey = member?.user_id && id ? draftKey(member.user_id, id) : '';
   const dirty = !!bundle && !!original && JSON.stringify(bundle) !== JSON.stringify(original);
   const blocker = useBlocker(dirty && !ignoreLeave.current);
   useEffect(() => {
     if (blocker.state === 'blocked') {
-      if (window.confirm('产品还有未保存修改。离开将放弃这些修改，是否继续？')) {
-        void removeUnreferenced(staged.current).catch(() => {});
+      if (window.confirm('产品还有未保存到后台的修改。本机暂存不能代替保存草稿，是否仍要离开？')) {
         blocker.proceed();
       } else blocker.reset();
     }
@@ -57,13 +60,54 @@ export default function Editor() {
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
   }, [dirty]);
-  async function load() {
+  useEffect(() => {
+    if (!bundle || !original || !localKey || bundle.product.id !== id) return;
+    try {
+      if (dirty) {
+        const savedAt = writeDraft(window.localStorage, localKey, original, bundle, staged.current);
+        setDraftStatus(
+          `已自动暂存到本机 ${new Date(savedAt).toLocaleTimeString('zh-CN', { timeZone: 'Asia/Kuching' })}，尚未保存到后台。`,
+        );
+      } else {
+        window.localStorage.removeItem(localKey);
+        setDraftStatus('当前资料已与后台一致。');
+      }
+    } catch {
+      setDraftStatus(
+        '本机自动暂存失败，请立即使用下方保存按钮或导出修改备份，离开页面可能丢失输入。',
+      );
+    }
+  }, [bundle, original, localKey, dirty, id]);
+  async function load(restoreLocal = true) {
     try {
       const data = await readProduct(id!);
       if (!data) throw new Error('产品不存在或无法读取。');
-      setOriginal(data);
-      setBundle(structuredClone(data));
-      setErrors([]);
+      let cached = null;
+      if (restoreLocal && localKey) {
+        try {
+          cached = readDraft(window.localStorage, localKey);
+        } catch {
+          notify('本机暂存无法读取，已显示后台资料。请勿清除浏览器数据，并联系管理员。');
+        }
+      }
+      if (cached && cached.bundle.product.id === data.product.id) {
+        // Retain the original server version so RPC conflict checks protect newer remote edits.
+        setOriginal(cached.original);
+        setBundle(cached.bundle);
+        staged.current = cached.staged;
+        setErrors(
+          cached.original.product.updated_at !== data.product.updated_at
+            ? [
+                '已恢复本机输入，但后台资料已有其他更新。请先导出当前修改备份，再重新载入最新资料核对。',
+              ]
+            : [],
+        );
+        notify('已恢复本机暂存的未发布修改，请核对后保存到后台。');
+      } else {
+        setOriginal(data);
+        setBundle(structuredClone(data));
+        setErrors([]);
+      }
     } catch (e) {
       setErrors([errorText(e)]);
     }
@@ -226,7 +270,7 @@ export default function Editor() {
     try {
       for (const file of Array.from(files)) {
         if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 10485760)
-          throw new Error('仅支持 JPEG、PNG、WebP，单张不超过 10 MiB。');
+          throw new Error('仅支持 JPEG、PNG、WebP，单张不超过 10 MB。');
         const bitmap = await createImageBitmap(file);
         bitmap.close();
         const ext =
@@ -362,11 +406,16 @@ export default function Editor() {
           <button onClick={() => navigate('/products')}>返回列表</button>
           <button
             onClick={() => {
-              if (!dirty || window.confirm('重新载入将放弃当前未保存修改，是否继续？')) void load();
+              if (
+                !dirty ||
+                window.confirm('重新载入将清除本机暂存并放弃当前未保存修改，是否继续？')
+              )
+                void load(false);
             }}
           >
             重新载入
           </button>
+          <button onClick={() => setGuide(true)}>添加与修改指引</button>
           <button onClick={() => setPreview(true)}>预览</button>
         </div>
       </div>
@@ -378,6 +427,9 @@ export default function Editor() {
               <li key={i}>{x}</li>
             ))}
           </ul>
+          {p.category_id !== 4 && errors.some((message) => /图片|主图|设计名称/.test(message)) && (
+            <button onClick={() => setSection(5)}>前往图片管理</button>
+          )}
           <button
             onClick={() => {
               const url = URL.createObjectURL(
@@ -393,6 +445,18 @@ export default function Editor() {
             导出当前修改备份
           </button>
         </div>
+      )}
+      {editable && (
+        <p className="help" role="status">
+          {draftStatus} 本机暂存仅在当前浏览器恢复；跨设备使用请保存草稿。
+          {draftStatus.includes('失败') && (
+            <button
+              onClick={() => setErrors(['本机自动暂存失败，请导出当前修改备份或保存到后台。'])}
+            >
+              导出备份入口
+            </button>
+          )}
+        </p>
       )}
       {!editable && <p className="permission">当前为只读预览。编辑员仅能修改从未发布的草稿。</p>}
       <div className="editor">
@@ -506,7 +570,7 @@ export default function Editor() {
                   {p.category_id <= 2 ? (
                     <>
                       {attr('朝向', 'facing')}
-                      {attr('面积（sqft）', 'area_sqft', 'number')}
+                      {attr('面积（平方英尺）', 'area_sqft', 'number')}
                       {attr('长度（英尺）', 'length_ft', 'number')}
                       {attr('宽度（英尺）', 'width_ft', 'number')}
                       {p.category_id === 1 && (
@@ -538,9 +602,12 @@ export default function Editor() {
                         ['burial', '土葬'],
                         ['both', '火化／土葬皆适用'],
                       ])}
-                      <ServiceVenueField value={attrs.service_venue} onChange={value =>
-                        setRows('funeral_details', [{ ...attrs, service_venue: value }])
-                      } />
+                      <ServiceVenueField
+                        value={attrs.service_venue}
+                        onChange={(value) =>
+                          setRows('funeral_details', [{ ...attrs, service_venue: value }])
+                        }
+                      />
                     </>
                   ) : p.category_id === 5 ? (
                     <>
@@ -553,7 +620,7 @@ export default function Editor() {
                     <>
                       {attr('生基类型', 'fengshui_type')}
                       {attr('朝向', 'facing')}
-                      {attr('面积（sqft）', 'area_sqft', 'number')}
+                      {attr('面积（平方英尺）', 'area_sqft', 'number')}
                       {attr('配置说明', 'configuration_notes', 'textarea')}
                     </>
                   ) : (
@@ -566,7 +633,7 @@ export default function Editor() {
                       {attr('宠物规格', 'pet_size_class')}
                       {attr('长度（英尺）', 'length_ft', 'number')}
                       {attr('宽度（英尺）', 'width_ft', 'number')}
-                      {attr('面积（sqft）', 'area_sqft', 'number')}
+                      {attr('面积（平方英尺）', 'area_sqft', 'number')}
                       {attr('朝向', 'facing')}
                       {attr('补充说明', 'pet_notes', 'textarea')}
                     </>
@@ -743,7 +810,7 @@ export default function Editor() {
                               {childField(
                                 'product_offers',
                                 o,
-                                '方案面积（sqft）',
+                                '方案面积（平方英尺）',
                                 'area_sqft_override',
                                 'number',
                               )}
@@ -764,8 +831,8 @@ export default function Editor() {
               <section className="panel">
                 <h2>图片管理</h2>
                 <p className="help">
-                  JPEG / PNG / WebP，单张 ≤10
-                  MiB。先上传私有文件，再随产品保存图片引用。替换使用新路径。
+                  支持 JPEG、PNG、WebP，单张不超过 10 MB。照片保留原色；上传或替换后，请保存产品。
+                  宗教专属设计图批准公开前，须填写设计名称。
                 </p>
                 <div className="upload">
                   <Field
@@ -777,18 +844,11 @@ export default function Editor() {
                       ['catalog-media-restricted', '受限内部素材'],
                     ]}
                   />
-                  <label className="field">
-                    上传单张或多张图片
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      multiple
-                      onChange={(e) => {
-                        void upload(e.target.files);
-                        e.target.value = '';
-                      }}
-                    />
-                  </label>
+                  <ImageUpload
+                    label="上传单张或多张图片"
+                    multiple
+                    onSelect={(files) => void upload(files)}
+                  />
                 </div>
                 <div className="imagegrid">
                   {bundle.product_images.map((r: Row, i: number) => (
@@ -853,6 +913,9 @@ export default function Editor() {
                           )
                         }
                       />
+                      {r.image_type === 'design' && r.religion_id && (
+                        <p className="help">此图片属于宗教专属设计，批准公开前请填写设计名称。</p>
+                      )}
                       <Check
                         label="设为共通主图"
                         disabled={
@@ -892,17 +955,10 @@ export default function Editor() {
                         </button>
                         <button onClick={() => remove('product_images', r.id)}>移除图片</button>
                       </div>
-                      <label className="field">
-                        替换文件
-                        <input
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp"
-                          onChange={(e) => {
-                            void upload(e.target.files, r.id);
-                            e.target.value = '';
-                          }}
-                        />
-                      </label>
+                      <ImageUpload
+                        label="替换文件"
+                        onSelect={(files) => void upload(files, r.id)}
+                      />
                     </article>
                   ))}
                 </div>
@@ -1011,6 +1067,53 @@ export default function Editor() {
           )}
         </div>
       </div>
+      {guide && (
+        <Modal title="添加与修改指引" onClose={() => setGuide(false)}>
+          <ol>
+            <li>填写「基本资料」与「类别专属属性」，再到「宗教与设计」添加适用宗教。</li>
+            <li>在「包含项目」添加服务内容，在「价格」添加或修改方案售价。</li>
+            {p.category_id !== 4 && (
+              <li>
+                在「图片管理」上传原色照片，可修改说明、替换文件、排序并设置一张共通主图。宗教专属设计图公开前需填写设计名称。
+              </li>
+            )}
+            <li>
+              点击「预览」核对当前内容，再使用页面底部的保存按钮。草稿可先保存，补齐资料后由管理员保存并发布。
+            </li>
+          </ol>
+          <p className="help">
+            输入会自动暂存到当前浏览器，刷新后可恢复。请使用保存按钮写入后台；预览和上传不会自动发布。
+          </p>
+          <div className="row">
+            <button
+              onClick={() => {
+                setSection(0);
+                setGuide(false);
+              }}
+            >
+              编辑基本资料
+            </button>
+            <button
+              onClick={() => {
+                setSection(4);
+                setGuide(false);
+              }}
+            >
+              添加或修改价格
+            </button>
+            {p.category_id !== 4 && (
+              <button
+                onClick={() => {
+                  setSection(5);
+                  setGuide(false);
+                }}
+              >
+                添加或替换图片
+              </button>
+            )}
+          </div>
+        </Modal>
+      )}
       {preview && <Preview bundle={bundle} refs={refs} onClose={() => setPreview(false)} />}
       {related && (
         <ReferenceDialog

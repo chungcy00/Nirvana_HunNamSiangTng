@@ -23,7 +23,7 @@ export default function AuthReturn() {
     window.history.replaceState(null, '', flow.cleanPath);
     void (async () => {
       if (linkMode) return;
-      if (!supabase) throw new Error('尚未配置 Supabase 连接。');
+      if (!supabase) throw new Error('尚未配置后台服务连接。');
       if (flow.error) throw new Error('登录或恢复链接无效、已使用或已过期，请重新申请。');
       if (flow.code) {
         const r = await supabase.auth.exchangeCodeForSession(
@@ -60,7 +60,7 @@ export default function AuthReturn() {
       <h1>{ready ? '设置后台密码' : linkMode ? '验证恢复链接' : '验证登录链接'}</h1>
       {!ready && !error && !linkMode && (
         <p className="help" role="status">
-          正在验证 Supabase 登录链接…
+          正在验证登录链接…
         </p>
       )}
       {error && (
@@ -75,7 +75,7 @@ export default function AuthReturn() {
             setBusy(true);
             setError('');
             try {
-              if (!supabase) throw new Error('尚未配置 Supabase 连接。');
+              if (!supabase) throw new Error('尚未配置后台服务连接。');
               const token_hash = recoveryTokenHash(recoveryLink, import.meta.env.VITE_SUPABASE_URL);
               setRecoveryLink('');
               const verified = await supabase.auth.verifyOtp({ token_hash, type: 'recovery' });

@@ -163,6 +163,7 @@ export default function Products() {
     [loading, setLoading] = useState(true),
     [revision, setRevision] = useState(0),
     [newProduct, setNewProduct] = useState(false),
+    [guide, setGuide] = useState(false),
     [newCategory, setNewCategory] = useState(1),
     [sort, setSort] = useState(false),
     [preview, setPreview] = useState<Bundle | null>(null);
@@ -258,12 +259,37 @@ export default function Products() {
           <p>管理独立产品、价格与公开内容。</p>
         </div>
         <div className="row">
+          <button onClick={() => setGuide(true)}>添加与修改指引</button>
           {member?.role === 'admin' && <button onClick={() => setSort(true)}>调整展示顺序</button>}
           <button className="primary" onClick={() => setNewProduct(true)} disabled={busy}>
             新增产品
           </button>
         </div>
       </div>
+      {guide && (
+        <Modal title="添加与修改指引" onClose={() => setGuide(false)}>
+          <ol>
+            <li>
+              添加产品：点击「新增产品」，选择类别后建立草稿，再依次填写资料、包含项目、价格和图片。
+            </li>
+            <li>修改产品：搜索名称或筛选类别，点击该产品右侧的「编辑」。</li>
+            <li>
+              核对并保存：在编辑页点击「预览」，再保存草稿；资料齐全后由管理员「保存并发布」。
+            </li>
+          </ol>
+          <p className="help">编辑员只可修改草稿；已发布产品须由管理员修改。</p>
+          <button
+            className="primary"
+            disabled={busy}
+            onClick={() => {
+              setGuide(false);
+              setNewProduct(true);
+            }}
+          >
+            开始新增产品
+          </button>
+        </Modal>
+      )}
       <nav className="tabs" aria-label="产品类别">
         {categories.map((name, i) => (
           <button

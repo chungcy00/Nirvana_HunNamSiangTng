@@ -18,7 +18,7 @@ export const supabase = configured
     })
   : null;
 export async function rpc<T = any>(name: string, args: Record<string, unknown> = {}): Promise<T> {
-  if (!supabase) throw new Error('尚未配置 Supabase 连接。');
+  if (!supabase) throw new Error('尚未配置后台服务连接。');
   const { data, error } = await supabase.rpc(name, args);
   if (error) throw error;
   return data;
@@ -34,22 +34,7 @@ export async function readProduct(id: string) {
   return bundle;
 }
 export const readReferences = () => rpc<References>('admin_reference_data');
-export function errorText(error: any) {
-  if (
-    error?.code === 'over_email_send_rate_limit' ||
-    /email rate limit exceeded/i.test(error?.message || '')
-  )
-    return '邮件发送已达到平台限额，请等待额度恢复后再试。不要重复发送；若有尚未使用的最新邮件，请在原浏览器打开。';
-  if (error?.code === 'over_request_rate_limit' || error?.status === 429)
-    return '操作过于频繁，请稍后再试。';
-  if (error?.code === 'PT409' || error?.status === 409)
-    return '资料已被其他操作修改，本次未覆盖。请保留当前修改并重新载入核对。';
-  if (error?.code === '42501') return '当前账号无权执行此操作。请确认账号仍为有效后台成员。';
-  if (error?.code === '23505') return '名称、编号或关联已经存在，请检查重复资料。';
-  if (error?.code === '23503')
-    return '仍有关联资料，或关联对象无效。请先调整对应图片、方案或宗教。';
-  return error?.message || '操作失败，修改仍保留，请检查网络后重试。';
-}
+export { errorText } from './errors';
 export async function removeUnreferenced(images: Row[]) {
   if (!supabase || !images.length) return;
   const { data } = await supabase.auth.getSession();
@@ -83,7 +68,7 @@ export async function copyProduct(id: string, version: string) {
 }
 
 export function sendPasswordRecovery(email: string) {
-  if (!supabase) throw new Error('尚未配置 Supabase 连接。');
+  if (!supabase) throw new Error('尚未配置后台服务连接。');
   return preservePendingRecovery(window.localStorage, authStorageKey + '-code-verifier', () =>
     supabase!.auth.resetPasswordForEmail(email, {
       redirectTo: window.location.origin + '/reset-password',

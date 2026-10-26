@@ -81,7 +81,7 @@ export function Login() {
       <main className="login panel">
         <h1>富贵山庄后台</h1>
         <p className="notice">
-          尚未配置 Supabase 连接。请在后台应用环境中配置项目地址与公开密钥后重新构建。
+          尚未配置后台服务连接。请在后台应用环境中配置项目地址与公开密钥后重新构建。
         </p>
       </main>
     );
