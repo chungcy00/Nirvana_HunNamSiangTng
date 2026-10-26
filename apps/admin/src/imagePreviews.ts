@@ -5,7 +5,7 @@ export async function prepareUploadPreviews(file: Blob, bucket: string, path: st
   const bitmap = await createImageBitmap(file);
   let placeholder: string | undefined;
   try {
-    for (const width of previewWidths) {
+    const results = await Promise.allSettled(previewWidths.map(async (width) => {
       const ratio = Math.min(1, width / Math.max(bitmap.width, bitmap.height));
       const canvas = document.createElement('canvas');
       canvas.width = Math.max(1, Math.round(bitmap.width * ratio));
@@ -40,7 +40,8 @@ export async function prepareUploadPreviews(file: Blob, bucket: string, path: st
         });
         if (cached.error) throw cached.error;
       }
-    }
+    }));
+    for (const result of results) if (result.status === 'rejected') throw result.reason;
   } finally {
     bitmap.close();
   }

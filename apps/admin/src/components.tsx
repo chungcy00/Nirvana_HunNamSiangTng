@@ -172,15 +172,17 @@ export function Photo({
   image,
   className = 'thumb',
   showPlaceholder = true,
+  localSrc,
 }: {
   image?: Row;
   className?: string;
   showPlaceholder?: boolean;
+  localSrc?: string;
 }) {
   const { session } = useAuth();
   const token = session?.access_token;
   const bucket = image?.storage_bucket, path = image?.storage_path;
-  const identity = bucket && path && token ? `${token}:${bucket}:${path}` : '';
+  const identity = !localSrc && bucket && path && token ? `${token}:${bucket}:${path}` : '';
   const load = useCallback(async (width: number, signal: AbortSignal) => {
     const base = import.meta.env.VITE_SUPABASE_URL;
     const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -189,7 +191,7 @@ export function Photo({
       `${base}/storage/v1/object/authenticated/${bucket}/${path.split('/').map(encodeURIComponent).join('/')}`,signal);
   }, [token,bucket,path]);
   const {target,url} = useVisibleImage(identity,load,30000);
-  const src = url || (identity && inlinePreview(image?.preview_placeholder));
+  const src = localSrc || url || (identity && inlinePreview(image?.preview_placeholder));
   return src ? (
     <img src={src} data-image-quality={url ? 'full' : 'preview'} ref={node=>{target.current=node;}} decoding="async" className={className} alt={image?.alt_text || '产品图片'} />
   ) : !showPlaceholder ? <span ref={node=>{target.current=node;}} aria-hidden="true" style={{position:'absolute',inset:0,pointerEvents:'none'}}/> : (

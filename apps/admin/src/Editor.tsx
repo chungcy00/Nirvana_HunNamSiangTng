@@ -43,6 +43,11 @@ export default function Editor() {
     [draftStatus, setDraftStatus] = useState(''),
     [actionBarHeight, setActionBarHeight] = useState(0);
   const actionBar = useRef<HTMLDivElement>(null);
+  const [pendingUploads,setPendingUploads]=useState<{id:string;name:string;url:string;group:string}[]>([]);
+  const [localPreviews,setLocalPreviews]=useState<Record<string,string>>({});
+  const [preparingImages,setPreparingImages]=useState<string[]>([]);
+  const uploadUrls=useRef(new Set<string>());
+  useEffect(()=>()=>{for(const url of uploadUrls.current)URL.revokeObjectURL(url);uploadUrls.current.clear();},[]);
   const staged = useRef<Row[]>([]),
     ignoreLeave = useRef(false);
   const editorReady = !!bundle;
@@ -57,7 +62,7 @@ export default function Editor() {
   }, [editorReady]);
   const localKey = member?.user_id && id ? draftKey(member.user_id, id) : '';
   const dirty = !!bundle && !!original && JSON.stringify(bundle) !== JSON.stringify(original);
-  const blocker = useBlocker(dirty && !ignoreLeave.current);
+  const blocker = useBlocker((dirty || busy) && !ignoreLeave.current);
   useEffect(() => {
     if (blocker.state === 'blocked') {
       if (window.confirm('产品还有未保存到后台的修改。本机暂存不能代替保存草稿，是否仍要离开？')) {
@@ -67,14 +72,14 @@ export default function Editor() {
   }, [blocker]);
   useEffect(() => {
     const warn = (e: BeforeUnloadEvent) => {
-      if (dirty) {
+      if (dirty || busy) {
         e.preventDefault();
         e.returnValue = '';
       }
     };
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
-  }, [dirty]);
+  }, [dirty,busy]);
   useEffect(() => {
     if (!bundle || !original || !localKey || bundle.product.id !== id) return;
     try {
@@ -282,10 +287,22 @@ export default function Editor() {
     if (!files?.length || busy) return;
     setBusy(true);
     setErrors([]);
+    const jobs:{id:string;file:File;url:string;group:string}[]=[];
+    const promoted:string[]=[];
     try {
       for (const file of Array.from(files)) {
         if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 10485760)
           throw new Error('仅支持 JPEG、PNG、WebP，单张不超过 10 MB。');
+      }
+      const previous = replace ? bundle!.product_images.find((x: Row) => x.id === replace) : null;
+      for(const file of Array.from(files)) {
+        const url=URL.createObjectURL(file);uploadUrls.current.add(url);
+        jobs.push({id:uuid(),file,url,group:previous?.image_type || uploadImageType});
+      }
+      // Render every selected photo before decoding or waiting for any network request.
+      setPendingUploads(jobs.map(job=>({id:job.id,name:job.file.name,url:job.url,group:job.group})));
+      for (const job of jobs) {
+        const {file}=job;
         const bitmap = await createImageBitmap(file);
         bitmap.close();
         const ext =
@@ -299,9 +316,8 @@ export default function Editor() {
           .from(bucket)
           .upload(path, file, { contentType: file.type, upsert: false, cacheControl: '0' });
         if (result.error) throw result.error;
-        const previous = replace ? bundle!.product_images.find((x: Row) => x.id === replace) : null;
         const row: Row = {
-          id: uuid(),
+          id: job.id,
           product_id: p.id,
           storage_bucket: bucket,
           storage_path: path,
@@ -314,16 +330,27 @@ export default function Editor() {
           is_published: false,
         };
         staged.current.push(row);
-        try { row.preview_placeholder = await prepareUploadPreviews(file,bucket,path); }
-        catch { notify('照片已上传，预览图暂未准备完成；原图仍可使用。'); }
+        promoted.push(row.id);
+        setLocalPreviews(current=>({...current,[row.id]:job.url}));
+        setPreparingImages(current=>[...current,row.id]);
+        setPendingUploads(current=>current.filter(item=>item.id!==job.id));
         setBundle((b) => ({
           ...b!,
           product_images: [...b!.product_images.filter((x: Row) => x.id !== replace), row],
         }));
+        try {
+          const placeholder=await prepareUploadPreviews(file,bucket,path);
+          setBundle(b=>b && ({...b,product_images:b.product_images.map((image:Row)=>image.id===row.id?{...image,preview_placeholder:placeholder}:image)}));
+        }
+        catch { notify('照片已上传，预览图暂未准备完成；原图仍可使用。'); }
+        finally {setPreparingImages(current=>current.filter(imageId=>imageId!==row.id));}
       }
     } catch (e) {
       setErrors([errorText(e)]);
     } finally {
+      setPendingUploads([]);
+      setLocalPreviews(current=>Object.fromEntries(Object.entries(current).filter(([imageId])=>!promoted.includes(imageId))));
+      for(const job of jobs){URL.revokeObjectURL(job.url);uploadUrls.current.delete(job.url);}
       setBusy(false);
     }
   }
@@ -878,6 +905,11 @@ export default function Editor() {
                 {['real', 'design'].map((imageGroup) => <div key={imageGroup}>
                   <h3>{imageGroup === 'real' ? '实景相册' : '宗教与设计参考'}</h3>
                   <div className="imagegrid">
+                  {pendingUploads.filter(item=>(item.group==='design')===(imageGroup==='design')).map(item=><article className="imageitem" key={item.id} aria-busy="true">
+                    <img src={item.url} className="editor-photo" alt={item.name}/>
+                    <strong>{item.name}</strong>
+                    <p role="status">正在上传原图，完成后可编辑图片资料…</p>
+                  </article>)}
                   {bundle.product_images.map((r: Row, i: number) => ({r, i}))
                     .filter(({r}: {r: Row}) => (r.image_type === 'design') === (imageGroup === 'design'))
                     .map(({r, i}: {r: Row; i: number}) => (
@@ -893,7 +925,8 @@ export default function Editor() {
                         if (from >= 0) move('product_images', from, i);
                       }}
                     >
-                      <Photo image={r} className="editor-photo" />
+                      <Photo image={r} localSrc={localPreviews[r.id]} className="editor-photo" />
+                      {preparingImages.includes(r.id) && <p role="status">原图已上传，正在准备清晰预览…</p>}
                       <div className="row between">
                         <span className="badge">
                           {r.is_primary
