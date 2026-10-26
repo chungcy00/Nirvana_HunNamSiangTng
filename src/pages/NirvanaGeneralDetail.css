@@ -44,15 +44,16 @@
 .fgp-design-grid article { display: flex; flex-direction: column; }
 .fgp-design-footer { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--p-line); }
 .fgp-design-religion { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #f2f0eb; color: var(--p-muted); font-size: 12px; line-height: 1.5; }
-.fgp-general-main-image { position: relative; overflow: hidden; border-radius: 12px; background: white; }
+.fgp-website .fgp-general-detail .fgp-gallery { padding: 20px; border: 1px solid var(--p-line); border-radius: 12px; background: white; box-shadow: 0 2px 6px #2d43360a; }
+.fgp-general-main-image { position: relative; overflow: hidden; border: 1px solid var(--p-line); border-radius: 4px; background: white; }
 .fgp-general-main-image img, .fgp-gallery-thumbnails img, .fgp-gallery-dialog-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .fgp-general-main-image:has(img) .fgp-general-image-empty { display: none; }
 .fgp-general-image-empty { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 16px; align-items: center; justify-content: center; height: 100%; background: #f2f0eb; color: #4b5563; }
 .fgp-website .fgp-general-image-trigger { position: relative; display: block; width: 100%; height: auto; margin: 0; padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: zoom-in; }
 .fgp-website .fgp-general-image-trigger:focus-visible { outline: 2px solid #93734d; outline-offset: -3px; }
 .fgp-gallery-thumbnails { display: grid; align-items: start; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
-.fgp-website .fgp-gallery-thumbnails button { position: relative; min-width: 0; min-height: 44px; padding: 0; overflow: hidden; border: 2px solid transparent; border-radius: 8px; background: white; }
-.fgp-website .fgp-gallery-thumbnails button[aria-pressed="true"] { border-color: #93734d; }
+.fgp-website .fgp-gallery-thumbnails button { position: relative; min-width: 0; min-height: 44px; padding: 6px; overflow: hidden; border: 1px solid var(--p-line); border-radius: 4px; background: white; }
+.fgp-website .fgp-gallery-thumbnails button[aria-pressed="true"] { border-color: var(--p-green); box-shadow: 0 0 0 1px var(--p-green); background: var(--p-soft); }
 .fgp-gallery-dialog { width: min(1100px, calc(100% - 32px)); max-width: none; height: min(850px, calc(100dvh - 32px)); max-height: none; margin: auto; padding: 52px 16px 16px; border: 0; border-radius: 0; background: transparent; color: #2d4336; box-shadow: none; }
 .fgp-gallery-dialog::backdrop { background: rgb(23 34 27 / 90%); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .fgp-gallery-dialog-image { position: relative; width: 100%; height: 100%; }
@@ -60,7 +61,12 @@
 
 .fgp-website .fgp-general-detail .fgp-general-main-image:not(:has(img)) { aspect-ratio: 8 / 5; }
 .fgp-website .fgp-general-main-image img, .fgp-website .fgp-gallery-thumbnails img { position: static; display: block; width: 100%; height: auto; }
-.fgp-website .fgp-general-detail .fgp-gallery-thumbnails { margin-top: 24px; padding: 20px; border: 1px solid var(--p-line); border-radius: 12px; background: white; }
+.fgp-website .fgp-general-detail .fgp-gallery-thumbnails { margin-top: 16px; padding: 12px 0 0; border: 0; border-top: 1px solid var(--p-line); border-radius: 0; background: transparent; }
+ .fgp-website .fgp-gallery-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 44px; height: 44px; min-height: 44px; margin: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; color: white; box-shadow: none; cursor: pointer; }
+.fgp-website .fgp-gallery-arrow:hover, .fgp-website .fgp-gallery-arrow:focus-visible { background: #17221bbf; box-shadow: 0 2px 8px #17221b33; }
+.fgp-website .fgp-gallery-arrow:focus-visible { outline: 2px solid white; outline-offset: -4px; }
+.fgp-gallery-previous { left: 12px; }
+.fgp-gallery-next { right: 12px; }
 
 @media (max-width: 1100px) {
   .fgp-general-body { grid-template-columns: minmax(0, 1fr); }
@@ -75,7 +81,8 @@
   .fgp-general-purchase { padding: 20px; }
   .fgp-design-comparison { padding: 24px; }
 
-  .fgp-website .fgp-general-detail .fgp-gallery-thumbnails { gap: 8px; padding: 12px; margin-top: 20px; }
+  .fgp-website .fgp-general-detail .fgp-gallery { padding: 12px; }
+  .fgp-website .fgp-general-detail .fgp-gallery-thumbnails { gap: 8px; padding: 12px 0 0; margin-top: 16px; }
   .fgp-website .fgp-general-purchase .fgp-price-entry { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding: 16px; }
   .fgp-website .fgp-general-purchase .fgp-prices strong { font-size: 22px; }
 }
