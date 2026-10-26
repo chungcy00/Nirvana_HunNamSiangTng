@@ -1009,13 +1009,13 @@ export default function Editor() {
                       />
                     </article>
                   ))}
-                  </div>
                   {pendingUploads.filter(item=>(item.group==='design')===(imageGroup==='design')).map(item=><div className="upload-progress" key={item.id} aria-busy="true">
                     <strong>{item.name}</strong>
                     <progress aria-label={`${item.name}上传进度`} max={item.phase==='preparing'?4:item.total}
                       value={item.phase==='checking'?undefined:item.phase==='preparing'?item.completed:item.loaded}/>
                     <span role="status">{item.phase==='queued'?'等待上传…':item.phase==='checking'?'正在检查照片…':item.phase==='preparing'?`照片已上传，正在准备预览（${item.completed}/4）…`:item.phase==='confirming'?'已发送 100%，正在确认上传…':`正在上传 ${Math.floor(item.loaded/item.total*100)}%`}</span>
                   </div>)}
+                  </div>
                 </div>)}
                 <button
                   onClick={async () => {

@@ -58,13 +58,14 @@ const pending=page.locator('.upload-progress');await pending.waitFor();
 assert(Date.now()-before<1500);await originalStarted;assert.equal(originalPosts,1);assert.equal(previewPosts,0);
 assert.equal(await page.locator('article.imageitem').count(),1,'uploading photos never appear ahead of existing cards');
 const existingBox=await page.locator('article.imageitem').boundingBox();const progressBox=await pending.boundingBox();
-assert(progressBox.y>=existingBox.y+existingBox.height,'progress appears beneath the existing cards');
+assert(progressBox.x>=existingBox.x+existingBox.width,'progress occupies the next grid cell to the right');
+assert(Math.abs(progressBox.width-existingBox.width)<2,'progress has the same width as an image card');
 assert(progressBox.height<180,'progress is compact, not a tall empty photo card');
 await page.evaluate(()=>{const request=window.__uploads.find(request=>request.readyState===1);request.upload.dispatchEvent(new ProgressEvent('progress',{lengthComputable:true,loaded:50,total:100}));});
 await page.getByText('正在上传 50%',{exact:true}).waitFor();
 assert.equal(await pending.locator('progress').getAttribute('value'),'50');
 if(process.env.UPLOAD_SCREENSHOT){await pending.scrollIntoViewIfNeeded();await page.screenshot({path:process.env.UPLOAD_SCREENSHOT});}
-console.log('PASS compact progress below existing cards reports actual byte events');
+console.log('PASS compact progress to the right has the same card width and reports actual byte events');
 
 releaseOriginal();
 await page.getByText('照片已上传，正在准备预览（0/4）…',{exact:true}).waitFor();
