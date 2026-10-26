@@ -101,6 +101,11 @@
       "local": "20261026175814_catalog_inline_image_previews.sql",
       "remote_version": "20261026180208",
       "remote_name": "catalog_inline_image_previews"
+    },
+    {
+      "local": "20261026180406_catalog_inline_preview_permissions.sql",
+      "remote_version": "20261026180413",
+      "remote_name": "catalog_inline_preview_permissions"
     }
   ],
   "hosted_validation": {
