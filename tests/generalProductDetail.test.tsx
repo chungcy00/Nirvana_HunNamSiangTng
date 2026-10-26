@@ -36,11 +36,13 @@ test('design reference cards show named and unnamed designs without fabricated n
   const image = {id:'design-1',bucket:'test',path:'sample.png',image_type:'design',design_name:'Type A',alt:'图片替代文字',religion_id:Number(product.religions[0].id)};
   const html = render({...product,images:[image,{...image,id:'design-2'}]});
   assert.match(html, /宗教与设计参考/);
+  assert.match(html, /aria-label="查看设计大图：Type A" aria-haspopup="dialog"/);
+  assert.match(html, /class="fgp-gallery-dialog" aria-label="Type A大图预览"/);
   assert.equal((html.match(/<h3>Type A<\/h3>/g)||[]).length,1);
   assert.doesNotMatch(html, /Type C|核准总价|永久管理信托保障|沉稳黑金/);
   const unnamed = render({...product,images:[{...image,design_name:''},{...image,id:'unnamed-2',path:'second.png',design_name:null}]});
   assert.match(unnamed, /fgp-design-comparison/);
-  assert.equal((unnamed.match(/class="fgp-design-photo"/g)||[]).length,2);
+  assert.equal((unnamed.match(/class="fgp-design-photo fgp-general-image-trigger"/g)||[]).length,2);
   assert.doesNotMatch(unnamed.slice(unnamed.indexOf('class="fgp-design-comparison"'),unnamed.indexOf('class="fgp-general-purchase"')), /<h3>|Type A/);
 
 });

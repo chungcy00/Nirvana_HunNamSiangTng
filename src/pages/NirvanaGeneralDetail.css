@@ -39,7 +39,7 @@
 .fgp-design-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .fgp-design-grid article { padding: 16px; min-width: 0; border: 1px solid var(--p-line); border-radius: 12px; background: #faf9f6; }
 .fgp-design-photo { position: relative; aspect-ratio: 4 / 3; max-height: 220px; }
-.fgp-design-photo img { position: absolute; width: 100%; height: 100%; object-fit: contain; }
+.fgp-design-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .fgp-design-grid h3 { margin: 16px 0 8px; font-size: 17px; font-weight: 600; color: var(--p-green); overflow-wrap: anywhere; }
 .fgp-design-grid article { display: flex; flex-direction: column; }
 .fgp-design-footer { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--p-line); }

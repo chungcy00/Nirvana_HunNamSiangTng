@@ -8,9 +8,11 @@ import {ProductDetailContent} from '/src/prototype/ProductPresentation.tsx';
 import {ProductNavigationContext} from '/src/prototype/navigation';
 import {mapPublicProduct} from '/src/catalog/publicRepository.ts';
 const single=new URLSearchParams(location.search).has('single');
+const design=new URLSearchParams(location.search).has('design');
 const raw={id:'isolated-area-test',slug:'isolated-area-test',name:single?'普通产品示例':'家庭福地 · Zone W',category_id:2,capacity_group:'family',religions:[{id:1,name:'佛教'}],attributes:{facing:'西北'},prices:single?[{offer_id:'single',offer_name:'默认方案',price_type:'standard',amount:63888}]:[
 {offer_id:'1080',offer_name:'普通地段',price_type:'standard',amount:308888,area_sqft_override:1080},
 {offer_id:'864-normal',offer_name:'普通地段',price_type:'standard',amount:238888,area_sqft_override:864},
 {offer_id:'864-corner',offer_name:'角头地段',price_type:'standard',amount:258888,area_sqft_override:864}]};
-createRoot(document.getElementById('root')).render(React.createElement('div',{className:'fgp fgp-website'},React.createElement('div',{style:{padding:'24px',maxWidth:'1440px',margin:'auto'}},React.createElement(ProductNavigationContext.Provider,{value:{website:true,homePath:'/',listPath:()=> '/',detailPath:()=> '/'}},React.createElement(ProductDetailContent,{product:mapPublicProduct(raw)})))));
+if(design) raw.images=[{id:'design-one',bucket:'test',path:'test',image_type:'design',design_name:null},{id:'design-two',bucket:'test',path:'second',image_type:'design',design_name:'佛教'}];
+createRoot(document.getElementById('root')).render(React.createElement('div',{className:'fgp fgp-website'},React.createElement('div',{style:{padding:'24px',maxWidth:'1440px',margin:'auto'}},React.createElement(ProductNavigationContext.Provider,{value:{website:true,homePath:'/',listPath:()=> '/',detailPath:()=> '/'}},React.createElement(ProductDetailContent,{product:mapPublicProduct(raw),imageRenderer:design?()=>React.createElement('img',{src:'/images/brand-logo.png',alt:'设计测试图'}):undefined})))));
 </script></html>
