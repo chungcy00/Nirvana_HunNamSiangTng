@@ -133,13 +133,14 @@ export function createImageHandler(deps: Dependencies = {}) {
                 apikey: env.SUPABASE_SERVICE_ROLE_KEY,
                 Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
                 'Content-Type': 'image/webp',
-                'Cache-Control': '0',
+                'Cache-Control': 'max-age=0',
                 'x-upsert': 'false',
               },
               body: new Uint8Array(data),
               signal: AbortSignal.timeout(12000),
             },
           );
+          res.setHeader('X-Preview-Store-Status',String(stored.status));
           if (stored.ok || stored.status === 409 || stored.status === 400) {
             // Storage reports an immutable duplicate as 400 in some API versions.
             const exists =
