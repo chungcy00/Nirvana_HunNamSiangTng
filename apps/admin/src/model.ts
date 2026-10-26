@@ -270,3 +270,30 @@ export function priceLines(b: Bundle) {
             : b.product_offers.find((o: Row) => o.id === x.offer_id)?.name || '实际售价',
     }));
 }
+
+// Existing equal overrides are old duplicate entries. Editing the common value
+// makes those offers inherit it; genuinely different overrides stay independent.
+export function updateCommonAttribute(bundle: Bundle, key: string, value: unknown): Bundle {
+  const table = tableFor(bundle.product.category_id);
+  const attrs = bundle[table]?.[0] || { product_id: bundle.product.id };
+  const override =
+    key === 'facing' ? 'facing_override' : key === 'area_sqft' ? 'area_sqft_override' : undefined;
+  return {
+    ...bundle,
+    [table]: [{ ...attrs, [key]: value }],
+    ...(bundle.product.category_id <= 2 && override
+      ? {
+          product_offers: bundle.product_offers.map((offer: Row) => {
+            const repeated =
+              key === 'area_sqft'
+                ? offer[override] != null &&
+                  attrs[key] != null &&
+                  Number(offer[override]) === Number(attrs[key])
+                : typeof offer[override] === 'string' &&
+                  offer[override].trim() === String(attrs[key] ?? '').trim();
+            return repeated ? { ...offer, [override]: null } : offer;
+          }),
+        }
+      : {}),
+  };
+}

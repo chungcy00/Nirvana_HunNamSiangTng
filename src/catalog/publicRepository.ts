@@ -18,6 +18,9 @@ export type PublicPrice = {
   price_type: string;
   amount: number;
   price_note?: string | null;
+  facing_override?: string | null;
+  area_sqft_override?: number | null;
+  position_type?: string | null;
 };
 export type PublicRecord = {
   id: string;
@@ -27,7 +30,7 @@ export type PublicRecord = {
   capacity_group?: Capacity;
   capacity_count?: number;
   placement_type?: "indoor" | "outdoor" | null;
-  religions: { id: number; name: string }[];
+  religions: { id: number; name: string; configuration_name?: string | null; configuration_notes?: string | null }[];
   prices: PublicPrice[];
   primary_image?: PublicImage;
   attributes?: Record<string, unknown>;
@@ -161,6 +164,8 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
       id: String(r.id),
       name: r.name,
       isPublished: true,
+      configurationName: raw.category_id !== 4 ? r.configuration_name?.trim() || undefined : undefined,
+      configurationNotes: raw.category_id !== 4 ? r.configuration_notes?.trim() || undefined : undefined,
       inclusions: inclusions.filter((i) => i.religion_id === r.id).map(text),
       inclusionGroups: groupInclusions(inclusions.filter(i => i.religion_id === r.id), i => i.group_title).map(g => ({title:g.title, items:g.items.map(text)})),
       designs: images
@@ -174,6 +179,9 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
       .map((p) => ({
         name: p.offer_name || "产品售价",
         amount: Number(p.amount),
+        area: p.area_sqft_override == null ? undefined : Number(p.area_sqft_override),
+        facing: p.facing_override?.trim() || undefined,
+        positionType: p.position_type?.trim() || undefined,
         religionId: p.religion_id == null ? undefined : String(p.religion_id),
       })),
     preNeed: min("pre_need"),
@@ -186,6 +194,8 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
         allowed.has(raw.primary_image.religion_id))
         ? raw.primary_image
         : undefined,
+    specifications: attributeSpecifications(raw.category_id, a, raw.name),
+    attributeNotes: attributeNotes(raw.category_id, a),
     facing: typeof a.facing === "string" ? a.facing : undefined,
     area: a.area_sqft == null ? undefined : Number(a.area_sqft),
     placement:
@@ -259,4 +269,33 @@ export function imageEndpoint(config: PublicConfig, image: PublicImage) {
   )
     throw new Error("图片暂不可用。");
   return `${config.url}/storage/v1/object/authenticated/${image.bucket}/${image.path.split("/").map(encodeURIComponent).join("/")}`;
+}
+
+// Explicit public allowlists prevent internal/source/admin-only fields leaking into UI.
+function attributeSpecifications(category: number, attrs: Record<string, unknown>, name: string) {
+  const fields: [string,string,string?][] = category <= 2
+    ? [['length_ft','长度','英尺'],['width_ft','宽度','英尺'], ...(category === 1 ? [['urn_capacity','骨灰瓮安放数量','瓮'],['cremation_count','包含火化次数','次']] as [string,string,string][] : [])]
+    : category === 3 ? [['theme_name','产品主题']]
+    : category === 5 ? [['tablet_type','牌位类型'],['tablet_capacity','牌位容量','位']]
+    : category === 6 ? [['fengshui_type','生基类型']]
+    : category === 7 ? [['pet_size_class','宠物规格'],['length_ft','长度','英尺'],['width_ft','宽度','英尺']] : [];
+  const result = fields.flatMap(([key,label,unit]) => {
+    const raw = attrs[key];
+    if (raw == null || raw === '' || (typeof raw === 'number' && (!Number.isFinite(raw) || raw <= 0))) return [];
+    const value = String(raw).trim();
+    return !value || value === name ? [] : [{label,value:unit ? `${value} ${unit}` : value}];
+  });
+  if (category === 7) {
+    const method = {body_burial:'遗体土葬',ash_burial:'骨灰安葬'}[String(attrs.pet_burial_method)];
+    if (method) result.unshift({label:'安葬类型',value:method});
+  }
+  return result;
+}
+function attributeNotes(category: number, attrs: Record<string, unknown>) {
+  const fields: [string,string][] = category <= 2 ? [['burial_notes','安葬说明']]
+    : category === 3 ? [['niche_style','设计款式说明'],['niche_notes','补充说明']]
+    : category === 5 ? [['tablet_notes','补充说明']]
+    : category === 6 ? [['configuration_notes','配置说明']]
+    : category === 7 ? [['pet_notes','补充说明']] : [];
+  return fields.flatMap(([key,label]) => typeof attrs[key] === 'string' && attrs[key].trim() ? [{label,text:attrs[key].trim()}] : []);
 }

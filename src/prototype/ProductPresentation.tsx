@@ -22,6 +22,7 @@ import {
   type InclusionGroup,
 } from "./model";
 import { ProductNavigationContext } from "./navigation";
+import { differentArea, differentText } from "../../shared/offerAttributes";
 import { cleanPriceNote } from "../../shared/priceNotes";
 import type { PublicImage } from "../catalog/publicRepository";
 import "./prototype.css";
@@ -84,8 +85,7 @@ export function ProductTags({ product, desktopServiceVenue = false }: { product:
     <div className="fgp-tags">
       {hasCapacity(product.category) && product.capacity && (
         <span>
-          {product.category === 3 &&
-          product.capacity === "four_plus" &&
+          {["four_plus", "family"].includes(product.capacity) &&
           product.capacityCount
             ? `${product.capacityCount}人`
             : capacityLabels[product.capacity]}
@@ -223,8 +223,7 @@ export function ProductDetailContent({
       ? [
           [
             "使用人数",
-            product.category === 3 &&
-            product.capacity === "four_plus" &&
+            ["four_plus", "family"].includes(product.capacity) &&
             product.capacityCount
               ? `${product.capacityCount}人`
               : capacityLabels[product.capacity],
@@ -237,6 +236,7 @@ export function ProductDetailContent({
     ...(product.category === 4 && product.funeralMethod
       ? [["适用安葬方式", funeralMethodLabels[product.funeralMethod]]]
       : []),
+    ...(product.specifications || []).map(({label, value}) => [label, value]),
     ...(product.category === 3 && product.placement
       ? [["安放环境", product.placement === "indoor" ? "室内" : "室外"]]
       : []),
@@ -265,18 +265,6 @@ export function ProductDetailContent({
       </h2>
       <ProductPrices product={product} detailed religion={religion} />
       {product.productPriceNote && <p className="fgp-price-note fgp-product-price-note">{product.productPriceNote}</p>}
-      {[1, 2, 6, 7].includes(product.category) && product.offers.length > 1 && product.offers.some((o) => o.area) && (
-        <dl className="fgp-offer-specs">
-          {product.offers
-            .filter((o) => o.area)
-            .map((o) => (
-              <div key={o.name}>
-                <dt>{o.name}</dt>
-                <dd>{o.area} sqft</dd>
-              </div>
-            ))}
-        </dl>
-      )}
       {product.category !== 4 &&
         product.terms &&
         !(website && product.referencePrice) && (
@@ -344,8 +332,9 @@ export function ProductDetailContent({
               对应产品的包含项目尚待核实，暂不列入未确认的内容。
             </p>
           ) : null}
+          {(product.attributeNotes || []).map(note => <section key={note.label} className="fgp-attribute-note"><h3>{note.label}</h3><p style={{whiteSpace:'pre-line'}}>{note.text}</p></section>)}
           {product.religions.some(
-            (r) => r.inclusions.length || (!general && r.designs.length),
+            (r) => r.inclusions.length || r.configurationName || r.configurationNotes || (!general && r.designs.length),
           ) && (
             <div className="fgp-religious-content">
               <h3>宗教对应内容</h3>
@@ -380,9 +369,11 @@ export function ProductDetailContent({
                   ))}
                 </div>
               )}
-              {content.filter(r => !general || r.inclusions.length).map((r) => (
+              {content.filter(r => !general || r.inclusions.length || r.configurationName || r.configurationNotes).map((r) => (
                 <div key={r.id} className="fgp-religious-group">
                   <h4>{r.name}</h4>
+                  {r.configurationName && r.configurationName !== r.name && <h5>{r.configurationName}</h5>}
+                  {r.configurationNotes && <p style={{whiteSpace:'pre-line'}}>{r.configurationNotes}</p>}
                   {r.inclusions.length > 0 && (
                     <InclusionList
                       items={r.inclusions}
@@ -527,7 +518,12 @@ export function ProductPrices({
   const { website } = useContext(ProductNavigationContext);
   const funeral = product.category === 4;
   const unavailable = website ? "欢迎咨询" : "价格待核实";
-  let rows = product.publicPrices
+  const offerSpecs = (area: unknown, facing: unknown, position: unknown) => [
+    ...([1,2,6,7].includes(product.category) && differentArea(area, product.area) ? [`面积：${differentArea(area, product.area)} 平方英尺`] : []),
+    ...([1,2,5,6,7].includes(product.category) && differentText(facing, product.facing) ? [`朝向：${differentText(facing, product.facing)}`] : []),
+    ...([1,2].includes(product.category) && typeof position === 'string' && position.trim() ? [`位置：${position.trim()}`] : []),
+  ];
+  let rows: {name: string; kind: string; amount: number; note: string; specs?: string[]}[] = product.publicPrices
     ? product.publicPrices
         .filter(
           (p) =>
@@ -543,6 +539,7 @@ export function ProductPrices({
           kind: p.price_type,
           amount: Number(p.amount),
           note: cleanPriceNote(p.price_note),
+          specs: offerSpecs(p.area_sqft_override, p.facing_override, p.position_type),
         }))
     : funeral
       ? [
@@ -572,6 +569,7 @@ export function ProductPrices({
           kind: "standard",
           amount: o.amount,
           note: cleanPriceNote(product.priceNote),
+          specs: offerSpecs(o.area, o.facing, o.positionType),
         }));
   rows = rows.filter((r) => Number.isFinite(r.amount) && r.amount > 0);
   const startingPrice = product.category === 3 || (!funeral && compact && rows.length > 1);
@@ -635,7 +633,7 @@ export function ProductPrices({
                   : "即用价格"
                 : product.category === 3
                   ? "最低起价"
-                  : rows.length > 1
+                  : row.name && !['默认方案','产品售价'].includes(row.name)
                     ? row.name
                     : "产品售价"}
             </span>
@@ -644,6 +642,7 @@ export function ProductPrices({
             {row.amount > 0 ? formatMoney(row.amount) : unavailable}
             {startingPrice && <em>起</em>}
           </strong>
+          {detailed && !compact && row.specs?.length ? <p className="fgp-price-note fgp-offer-attributes">{row.specs.join(' · ')}</p> : null}
           {renderNote(row.note)}
         </div>
       ))}

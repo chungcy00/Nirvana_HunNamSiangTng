@@ -66,6 +66,8 @@ export function mapAdminPreviewProduct(
     religions: religions.map((r: Row) => ({
       id: r.religion_id,
       name: refs.religions.find((d) => d.id === r.religion_id)?.name || `宗教 ${r.religion_id}`,
+      configuration_name: r.configuration_name,
+      configuration_notes: r.configuration_notes,
     })),
     prices: bundle.offer_prices
       .filter((price: Row) => (all || price.is_published) && offered.has(price.offer_id))
@@ -79,6 +81,9 @@ export function mapAdminPreviewProduct(
         offer_id: price.offer_id,
         offer_name: offers.find((o: Row) => o.id === price.offer_id)?.name || '默认方案',
         religion_id: offers.find((o: Row) => o.id === price.offer_id)?.religion_id,
+        facing_override: offers.find((o: Row) => o.id === price.offer_id)?.facing_override,
+        area_sqft_override: offers.find((o: Row) => o.id === price.offer_id)?.area_sqft_override,
+        position_type: offers.find((o: Row) => o.id === price.offer_id)?.position_type,
         price_type: price.price_type,
         amount: price.price_amount,
         price_note: resolvePriceNote(price.price_note),

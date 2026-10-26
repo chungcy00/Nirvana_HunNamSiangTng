@@ -76,6 +76,11 @@
       "local": "20261025150802_catalog_explicit_price_notes.sql",
       "remote_version": "20261025151520",
       "remote_name": "catalog_explicit_price_notes"
+    },
+    {
+      "local": "20261026135045_catalog_offer_attributes.sql",
+      "remote_version": "20261026135518",
+      "remote_name": "catalog_offer_attributes"
     }
   ],
   "hosted_validation": {

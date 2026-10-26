@@ -1,3 +1,4 @@
+import { hasOfferDifferences } from '../../../shared/offerAttributes';
 import { draftKey, readDraft, writeDraft } from './draftStorage';
 import { InclusionEditor } from './InclusionEditor';
 import { ServiceVenueField } from './ServiceVenueField';
@@ -8,7 +9,7 @@ import { useAuth } from './auth';
 import { useAdmin } from './context';
 import { Check, Field, Modal, Photo, Preview, ImageUpload } from './components';
 import { ReferenceDialog } from './references';
-import { changesFor, priceLines, reclassify, uuid, validate } from './model';
+import { changesFor, priceLines, reclassify, uuid, validate, updateCommonAttribute } from './model';
 import { readProduct, rpc, errorText, supabase, removeUnreferenced } from './client';
 import {
   type Row,
@@ -34,6 +35,7 @@ export default function Editor() {
     [busy, setBusy] = useState(false),
     [preview, setPreview] = useState(false),
     [guide, setGuide] = useState(false),
+    [offerSpecsOpen, setOfferSpecsOpen] = useState<Record<string, boolean>>({}),
     [confirmPublish, setConfirmPublish] = useState(false),
     [related, setRelated] = useState<DictionaryKind | null>(null),
     [uploadBucket, setUploadBucket] = useState('catalog-media-private'),
@@ -212,7 +214,7 @@ export default function Editor() {
       type={type}
       options={options}
       onChange={(v) =>
-        setRows(tableFor(p.category_id), [{ ...attrs, [k]: options && v === '' ? null : v }])
+        setBundle((current) => updateCommonAttribute(current!, k, options && v === '' ? null : v))
       }
     />
   );
@@ -546,7 +548,13 @@ export default function Editor() {
                           ).map((k) => [k, capacities[k]] as [string, string]),
                         ]}
                       />
-                      {field('实际人数（有明确资料时填写）', 'capacity_count', 'number')}
+                      {['family', 'four_plus'].includes(p.capacity_group || '') &&
+                        field(
+                          '实际人数',
+                          'capacity_count',
+                          'number',
+                          '仅家庭或四人及以上规格需要补充；单人、双人、三人由系统确定。',
+                        )}
                     </>
                   )}
                   {field('产品副标题', 'subtitle')}
@@ -567,11 +575,16 @@ export default function Editor() {
             {section === 1 && (
               <section className="panel">
                 <h2>类别专属属性</h2>
+                {p.category_id <= 2 && (
+                  <p className="help">
+                    在这里填写所有价格方案共用的规格。价格页默认沿用；只有某方案不同时才补充差异。
+                  </p>
+                )}
                 <div className="fields">
                   {p.category_id <= 2 ? (
                     <>
-                      {attr('朝向', 'facing')}
-                      {attr('面积（平方英尺）', 'area_sqft', 'number')}
+                      {attr('共通朝向', 'facing')}
+                      {attr('共通面积（平方英尺）', 'area_sqft', 'number')}
                       {attr('长度（英尺）', 'length_ft', 'number')}
                       {attr('宽度（英尺）', 'width_ft', 'number')}
                       {p.category_id === 1 && (
@@ -707,11 +720,16 @@ export default function Editor() {
                         <div className="fields">
                           {p.category_id !== 4 && (
                             <>
-                              {childField('product_religions', r, '配置名称', 'configuration_name')}
                               {childField(
                                 'product_religions',
                                 r,
-                                '配置说明',
+                                '宗教配置标题',
+                                'configuration_name',
+                              )}
+                              {childField(
+                                'product_religions',
+                                r,
+                                '宗教补充说明',
                                 'configuration_notes',
                                 'textarea',
                               )}
@@ -805,17 +823,79 @@ export default function Editor() {
                               relationOptions,
                             )}
                           {p.category_id <= 2 && (
-                            <>
-                              {childField('product_offers', o, '位置类型', 'position_type')}
-                              {childField('product_offers', o, '方案朝向', 'facing_override')}
-                              {childField(
-                                'product_offers',
-                                o,
-                                '方案面积（平方英尺）',
-                                'area_sqft_override',
-                                'number',
+                            <div className="field wide">
+                              <p className="help">
+                                沿用共通规格：{attrs.facing || '朝向未填写'}；
+                                {attrs.area_sqft ? `${attrs.area_sqft} 平方英尺` : '面积未填写'}
+                                。无需重复输入。
+                              </p>
+                              <button
+                                type="button"
+                                aria-expanded={
+                                  offerSpecsOpen[o.id] ?? hasOfferDifferences(o, attrs)
+                                }
+                                onClick={() =>
+                                  setOfferSpecsOpen((current) => ({
+                                    ...current,
+                                    [o.id]: !(current[o.id] ?? hasOfferDifferences(o, attrs)),
+                                  }))
+                                }
+                              >
+                                {(offerSpecsOpen[o.id] ?? hasOfferDifferences(o, attrs))
+                                  ? '收起方案差异'
+                                  : '设置此方案的不同规格'}
+                              </button>
+                              {(offerSpecsOpen[o.id] ?? hasOfferDifferences(o, attrs)) && (
+                                <>
+                                  <p className="help">
+                                    仅填写与共通规格不同的内容；留空会沿用共通规格。位置类型用于区分普通、角头等位置。
+                                  </p>
+                                  {childField(
+                                    'product_offers',
+                                    o,
+                                    '位置类型（可选）',
+                                    'position_type',
+                                  )}
+                                  {childField(
+                                    'product_offers',
+                                    o,
+                                    '不同朝向（留空沿用共通朝向）',
+                                    'facing_override',
+                                  )}
+                                  {childField(
+                                    'product_offers',
+                                    o,
+                                    '不同面积（平方英尺，留空沿用共通面积）',
+                                    'area_sqft_override',
+                                    'number',
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setRows(
+                                        'product_offers',
+                                        bundle.product_offers.map((row: Row) =>
+                                          row.id === o.id
+                                            ? {
+                                                ...row,
+                                                facing_override: null,
+                                                area_sqft_override: null,
+                                                position_type: null,
+                                              }
+                                            : row,
+                                        ),
+                                      );
+                                      setOfferSpecsOpen((current) => ({
+                                        ...current,
+                                        [o.id]: false,
+                                      }));
+                                    }}
+                                  >
+                                    恢复沿用共通规格
+                                  </button>
+                                </>
                               )}
-                            </>
+                            </div>
                           )}
                         </div>
                       </>
@@ -825,7 +905,12 @@ export default function Editor() {
                     )}
                   </div>
                 ))}
-                {field('产品专属价格备注', 'price_note_override', 'textarea')}
+                {field(
+                  '产品共通价格备注',
+                  'price_note_override',
+                  'textarea',
+                  '适用于整个产品的说明只在此填一次；仅适用于某个价格的条件请填在该价格下。',
+                )}
               </section>
             )}
             {section === 5 && p.category_id !== 4 && (

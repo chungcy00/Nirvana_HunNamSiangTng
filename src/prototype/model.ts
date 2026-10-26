@@ -1,7 +1,7 @@
 export type Capacity = "single" | "double" | "triple" | "four_plus" | "family";
 export type InclusionGroup = { title: string; items: string[] };
 export interface ReligionContent {
-  id: string; name: string; isPublished: boolean; inclusions: string[]; inclusionGroups?: InclusionGroup[]; designs: string[];
+  id: string; name: string; isPublished: boolean; inclusions: string[]; inclusionGroups?: InclusionGroup[]; configurationName?: string; configurationNotes?: string; designs: string[];
 }
 export interface PrototypeProduct {
   databaseId?: string; primaryImage?: import("../catalog/publicRepository").PublicImage; images?: import("../catalog/publicRepository").PublicImage[]; publicPrices?: import("../catalog/publicRepository").PublicPrice[]; description?: string; subtitle?: string; petMethod?: string;
@@ -11,7 +11,8 @@ export interface PrototypeProduct {
   funeralMethod?: "cremation" | "burial" | "both";
   capacity?: Capacity; capacityCount?: number; placement?: "indoor" | "outdoor";
   religions: ReligionContent[]; inclusions: string[]; inclusionGroups?: InclusionGroup[];
-  offers: { name: string; amount: number; area?: number; religionId?: string }[];
+  offers: { name: string; amount: number; area?: number; facing?: string; positionType?: string; religionId?: string }[];
+  specifications?: {label: string; value: string}[]; attributeNotes?: {label: string; text: string}[];
   facing?: string; area?: number; preNeed?: number; atNeed?: number;
   referencePrice?: boolean; priceNote?: string; productPriceNote?: string; terms?: string;
 }

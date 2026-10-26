@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { changesFor, reclassify, validate } from '../src/model';
+import { changesFor, reclassify, validate, updateCommonAttribute } from '../src/model';
 const base: any = {
   product: {
     id: 'a',
@@ -207,4 +207,28 @@ test('design references cannot be saved as a shared environment cover', () => {
   assert(validate(b, false).some(text => text.includes('不能设为实景相册主图')));
   b.product_images[0].is_primary = false;
   assert(!validate(b, false).some(text => text.includes('不能设为实景相册主图')));
+});
+
+test('editing common specs updates inherited duplicate values but preserves different offer specs', () => {
+  const before = structuredClone(base);
+  before.burial_details = [{ product_id: 'a', facing: '朝南', area_sqft: 56 }];
+  before.product_offers = [
+    { id: 'same', product_id: 'a', facing_override: ' 朝南 ', area_sqft_override: '56.00' },
+    { id: 'different', product_id: 'a', facing_override: '朝北', area_sqft_override: 66 },
+    { id: 'inherited', product_id: 'a', facing_override: null, area_sqft_override: null },
+  ];
+  const next = updateCommonAttribute(
+    updateCommonAttribute(before, 'facing', '朝东'),
+    'area_sqft',
+    75,
+  );
+  assert.equal(next.burial_details[0].facing, '朝东');
+  assert.equal(next.burial_details[0].area_sqft, 75);
+  assert.equal(next.product_offers[0].facing_override, null);
+  assert.equal(next.product_offers[0].area_sqft_override, null);
+  assert.equal(next.product_offers[1].facing_override, '朝北');
+  assert.equal(next.product_offers[1].area_sqft_override, 66);
+  assert.equal(before.product_offers[0].area_sqft_override, '56.00');
+  const payload = changesFor(before, next, 'draft');
+  assert.equal(payload.p_changes.product_offers.upsert![0].area_sqft_override, null);
 });
