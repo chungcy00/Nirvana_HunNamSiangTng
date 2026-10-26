@@ -636,7 +636,7 @@ export function ProductPrices({
         {groupPricesByArea(displayedRows).map(group => <section key={group.area ?? 'unknown'} className="fgp-area-price-group" aria-label={formatSqft(group.area) || '面积未填写'}>
           <h3>{formatSqft(group.area) || '面积未填写'}</h3>
           {group.items.map((row,index) => <div className="fgp-area-price-row" key={index}>
-            <span>{pricePlanLabel(row.name,row.position,row.area)}{row.religionId && `（${product.religions.find(religion=>religion.id===row.religionId)?.name || '宗教配置'}）`}</span>
+            <span>{pricePlanLabel(row.name)}{row.religionId && `（${product.religions.find(religion=>religion.id===row.religionId)?.name || '宗教配置'}）`}</span>
             <strong>{formatMoney(row.amount)}</strong>
             {row.specs?.filter(spec=>!spec.startsWith('面积：') && !spec.startsWith('位置：')).length ? <p className="fgp-price-note">{row.specs.filter(spec=>!spec.startsWith('面积：') && !spec.startsWith('位置：')).join(' · ')}</p> : null}
             {renderNote(row.note)}

@@ -7,9 +7,9 @@ import {mapPublicProduct,type PublicRecord} from '../src/catalog/publicRepositor
 import {mapAdminPreviewProduct} from '../apps/admin/src/previewModel';
 import {formatSqft,groupPricesByArea,pricePlanLabel} from '../shared/areaPriceGroups';
 const record:PublicRecord={id:'zone-w-test',slug:'zone-w-test',name:'家庭福地 · Zone W',category_id:2,capacity_group:'family',religions:[{id:1,name:'佛教'}],attributes:{facing:'西北'},prices:[
- {offer_id:'1080',offer_name:'普通地段 1080 sqft',price_type:'standard',amount:308888,area_sqft_override:1080},
- {offer_id:'864-normal',offer_name:'普通地段 864 sqft',price_type:'standard',amount:238888,area_sqft_override:864},
- {offer_id:'864-corner',offer_name:'角头地段 864 sqft',price_type:'standard',amount:258888,area_sqft_override:864},
+ {offer_id:'1080',offer_name:'普通地段',price_type:'standard',amount:308888,area_sqft_override:1080},
+ {offer_id:'864-normal',offer_name:'普通地段',price_type:'standard',amount:238888,area_sqft_override:864},
+ {offer_id:'864-corner',offer_name:'角头地段',price_type:'standard',amount:258888,area_sqft_override:864},
 ]};
 const render=(raw=record,compact=false)=>renderToStaticMarkup(<ProductNavigationContext.Provider value={{website:true,homePath:'/',listPath:()=> '/',detailPath:()=> '/'}}><ProductPrices product={mapPublicProduct(raw)} detailed={!compact} compact={compact}/></ProductNavigationContext.Provider>);
 test('Zone W prices form ascending area groups and show types and unchanged prices once',()=>{
@@ -34,9 +34,8 @@ test('missing structured area is explicit, never inferred from a name, and notes
  const html=render(raw);
  assert.match(html,/<h3>面积未填写<\/h3>/);assert.doesNotMatch(html,/<h3>1,080 sqft<\/h3>/);
  assert(html.indexOf('角头独立备注')>html.indexOf('角头地段'));
- assert.equal(pricePlanLabel('普通地段 1080 sqft',null,864),'普通地段 1080 sqft');
- assert.equal(pricePlanLabel('普通地段 1080 sqft',null,1080),'普通地段');
- assert.equal(pricePlanLabel('普通地段 1080 sqft','角头地段',1080),'角头地段');
+ assert.equal(pricePlanLabel('普通地段 1080 sqft'),'普通地段 1080 sqft');
+ assert.equal(pricePlanLabel('自定义方案'),'自定义方案');
  assert.equal(formatSqft(1080),'1,080 sqft');
  assert.equal(formatSqft(10.83),'10.83 sqft');
  assert.deepEqual(groupPricesByArea([{area:1080},{area:864},{area:864}]).map(group=>group.items.length),[2,1]);
@@ -49,7 +48,15 @@ test('inherited area groups correctly and scoped prices retain religion labels a
 
 test('unsaved admin preview uses the same area groups and prices as the public detail',()=>{
  const bundle:any={product:{...record},burial_details:[record.attributes],product_offers:record.prices.map((price,index)=>({id:price.offer_id,name:price.offer_name,area_sqft_override:price.area_sqft_override,is_active:true,sort_order:index})),offer_prices:record.prices.map((price,index)=>({id:`price-${index}`,offer_id:price.offer_id,price_type:price.price_type,price_amount:price.amount,is_published:true})),product_religions:[{religion_id:1,is_published:true}],product_images:[],product_inclusions:[]};
- const preview=mapAdminPreviewProduct(bundle,{religions:[{id:1,name:'佛教',is_active:true}],categories:[],series:[],notices:[]});
+ const preview=mapAdminPreviewProduct(bundle,{religions:[{id:'1',name:'佛教',is_active:true}],categories:[],series:[],notices:[]});
  const html=renderToStaticMarkup(<ProductNavigationContext.Provider value={{website:true,homePath:'/',listPath:()=> '/',detailPath:()=> '/'}}><ProductPrices product={preview} detailed/></ProductNavigationContext.Provider>);
  assert.equal(html,render());
+});
+
+test('price row names use offer_name even when position and name area disagree',()=>{
+ const raw={...record,prices:record.prices.map(price=>({...price,offer_name:'自定义方案 999 sqft',position_type:'不可覆盖的地段类型'}))};
+ const html=render(raw);
+ assert.equal(html.split('自定义方案 999 sqft').length-1,3);
+ assert.doesNotMatch(html,/不可覆盖的地段类型|<h3>999 sqft/);
+ assert.match(html,/<h3>864 sqft<\/h3>/);
 });
