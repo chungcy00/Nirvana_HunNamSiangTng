@@ -123,6 +123,21 @@ export function createImageHandler(deps: Dependencies = {}) {
       // The admin deployment may persist this exact derivative after the caller's
       // original-file permission check above. It never changes an original object.
       if (env.SUPABASE_SERVICE_ROLE_KEY) {
+        if (width === 160) {
+          try {
+            const cached = await read(`${base}/rest/v1/rpc/cache_image_placeholder`, {
+              method: 'POST',
+              headers: {
+                apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+                Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+                'Content-Type': 'application/json', 'Content-Profile': 'api',
+              },
+              body: JSON.stringify({p_bucket:bucket,p_path:path,p_data:`data:image/webp;base64,${data.toString('base64')}`}),
+              signal: AbortSignal.timeout(12000),
+            });
+            if (cached.ok) res.setHeader('X-Placeholder-Stored','1');
+          } catch { /* The authorized generated image still remains usable. */ }
+        }
         try {
           const variant = storedPreviewPath(bucket, path, width);
           const stored = await read(

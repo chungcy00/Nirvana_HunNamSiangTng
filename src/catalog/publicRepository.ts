@@ -10,6 +10,7 @@ export type PublicImage = {
   religion_id?: number;
   image_type?: string;
   design_name?: string | null;
+  preview_placeholder?: string | null;
 };
 export type PublicPrice = {
   offer_id: string;

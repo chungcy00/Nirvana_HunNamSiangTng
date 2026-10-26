@@ -3,6 +3,7 @@ import { previewBucket, previewWidths, storedPreviewPath } from '../../../shared
 
 export async function prepareUploadPreviews(file: Blob, bucket: string, path: string) {
   const bitmap = await createImageBitmap(file);
+  let placeholder: string | undefined;
   try {
     for (const width of previewWidths) {
       const ratio = Math.min(1, width / Math.max(bitmap.width, bitmap.height));
@@ -27,8 +28,21 @@ export async function prepareUploadPreviews(file: Blob, bucket: string, path: st
           cacheControl: '0',
         });
       if (result.error) throw result.error;
+      if (width === 160) {
+        placeholder = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result));
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+        const cached = await supabase!.schema('api').rpc('cache_image_placeholder', {
+          p_bucket: bucket, p_path: path, p_data: placeholder,
+        });
+        if (cached.error) throw cached.error;
+      }
     }
   } finally {
     bitmap.close();
   }
+  return placeholder;
 }

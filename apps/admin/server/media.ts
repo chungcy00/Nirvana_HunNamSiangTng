@@ -55,6 +55,12 @@ export async function cleanup(user: Client, storage: Client, images: Media[]) {
     if (permitted.length) {
       const result = await storage.storage.from(bucket).remove(permitted);
       if (!result.error) {
+        for (const path of permitted) {
+          const cached = await storage.schema('api').rpc('cache_image_placeholder', {
+            p_bucket: bucket, p_path: path, p_data: null,
+          });
+          if (cached.error) pending.push({storage_bucket:bucket,storage_path:path});
+        }
         const previews = await storage.storage
           .from(previewBucket)
           .remove(
@@ -110,6 +116,12 @@ export async function duplicate(user: Client, storage: Client, id: string, versi
             .from(previewBucket)
             .upload(name, data, { contentType: 'image/webp', upsert: false, cacheControl: '0' });
           if (preview.error) throw fail('图片预览副本未完成，请重试。', 422);
+          if (name.startsWith('160/')) {
+            const cached = await storage.schema('api').rpc('cache_image_placeholder', {
+              p_bucket:image.storage_bucket,p_path:path,p_data:`data:image/webp;base64,${data.toString('base64')}`,
+            });
+            if (cached.error) throw fail('图片预览副本未完成，请重试。',422);
+          }
         },
       );
       mapping.push({ source_id: image.id, bucket: image.storage_bucket, path });

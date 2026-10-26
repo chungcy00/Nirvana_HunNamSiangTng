@@ -7,6 +7,7 @@ import {
 } from "./publicRepository";
 import { fetchPreviewImage } from "../../shared/imageResource";
 import { useVisibleImage } from "../../shared/useVisibleImage";
+import { inlinePreview } from "../../shared/inlinePreview";
 export default function CatalogImage({ image }: { image: PublicImage }) {
   const { config } = usePublicCatalog();
   const identity = config
@@ -27,9 +28,11 @@ export default function CatalogImage({ image }: { image: PublicImage }) {
     [config?.url, config?.key, image.bucket, image.path],
   );
   const { target, url } = useVisibleImage(identity, load);
-  return url ? (
+  const src = url || (identity && inlinePreview(image.preview_placeholder));
+  return src ? (
     <img
-      src={url}
+      src={src}
+      data-image-quality={url ? 'full' : 'preview'}
       ref={(node) => {
         target.current = node;
       }}

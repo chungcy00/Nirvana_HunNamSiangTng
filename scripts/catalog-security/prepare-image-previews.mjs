@@ -17,9 +17,10 @@ await Promise.all(Array.from({length:3},async()=>{
   const {image,width}=jobs[next++];
   const stored=base+'/storage/v1/object/authenticated/'+previewBucket+'/'+storedPreviewPath(image.bucket,image.path,width).split('/').map(encodeURIComponent).join('/');
   const head=await fetch(stored,{method:'HEAD',headers});
-  if(head.ok){existing++;continue;}
+  if(head.ok && (width!==160 || image.preview_placeholder)){existing++;continue;}
   const result=await fetch('https://admin-nirvana-hnst.vercel.app/api/catalog-image?'+new URLSearchParams({bucket:image.bucket,path:image.path,width:String(width)}),{headers});
   if(!result.ok || result.headers.get('x-preview-stored')!=='1')throw new Error('Preview was not durably stored; ensure the latest admin deployment has its server storage credentials configured');
+  if(width===160 && result.headers.get('x-placeholder-stored')!=='1')throw new Error('Inline preview was not durably stored');
   bytes+=(await result.arrayBuffer()).byteLength;created++;
   console.log(JSON.stringify({prepared:created,existing,total:jobs.length,previewBytes:bytes}));
  }

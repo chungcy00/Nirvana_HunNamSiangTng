@@ -7,6 +7,7 @@ import { supabase } from './client';
 import { useAuth } from './auth';
 import { useVisibleImage } from '../../../shared/useVisibleImage';
 import { fetchPreviewImage } from '../../../shared/imageResource';
+import { inlinePreview } from '../../../shared/inlinePreview';
 import { type Row, type Bundle, type References, money, tableFor, capacities } from './types';
 import { priceLines } from './model';
 export function Field({
@@ -187,9 +188,10 @@ export function Photo({
     return fetchPreviewImage(bucket,path,width,{apikey:key,Authorization:`Bearer ${token}`},
       `${base}/storage/v1/object/authenticated/${bucket}/${path.split('/').map(encodeURIComponent).join('/')}`,signal);
   }, [token,bucket,path]);
-  const {target,url:src} = useVisibleImage(identity,load,30000);
+  const {target,url} = useVisibleImage(identity,load,30000);
+  const src = url || (identity && inlinePreview(image?.preview_placeholder));
   return src ? (
-    <img src={src} ref={node=>{target.current=node;}} decoding="async" className={className} alt={image?.alt_text || '产品图片'} />
+    <img src={src} data-image-quality={url ? 'full' : 'preview'} ref={node=>{target.current=node;}} decoding="async" className={className} alt={image?.alt_text || '产品图片'} />
   ) : !showPlaceholder ? <span ref={node=>{target.current=node;}} aria-hidden="true" style={{position:'absolute',inset:0,pointerEvents:'none'}}/> : (
     <div
       ref={node=>{target.current=node;}}
@@ -280,6 +282,7 @@ export function Preview({
               storage_bucket: image.bucket,
               storage_path: image.path,
               alt_text: image.alt,
+              preview_placeholder: image.preview_placeholder,
             }}
           />
         )}

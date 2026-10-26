@@ -40,6 +40,7 @@ export function mapAdminPreviewProduct(
       religion_id: i.religion_id,
       image_type: i.image_type,
       design_name: i.design_name,
+      preview_placeholder: i.preview_placeholder,
     }));
   const raw: PublicRecord = {
     id: p.id,

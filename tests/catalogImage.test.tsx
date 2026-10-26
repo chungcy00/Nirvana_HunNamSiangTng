@@ -170,7 +170,7 @@ test("server stores only the authorized generated derivative without replacing t
   })
     .png()
     .toBuffer();
-  let writes = 0;
+  let writes = 0, placeholders = 0;
   const handler = createImageHandler({
     env: {
       VITE_SUPABASE_URL: "https://example.supabase.co",
@@ -179,6 +179,16 @@ test("server stores only the authorized generated derivative without replacing t
     },
     fetch: (async (url, options) => {
       if (options?.method === "POST") {
+        if (String(url).endsWith('/rpc/cache_image_placeholder')) {
+          placeholders++;
+          const body = JSON.parse(String(options.body));
+          assert.equal(body.p_bucket, 'catalog-media-private');
+          assert.equal(body.p_path, 'product/photo.png');
+          const metadata = await sharp(Buffer.from(body.p_data.split(',')[1], 'base64')).metadata();
+          assert.equal(metadata.width,160);
+          assert.equal((options.headers as Record<string,string>)['Content-Profile'],'api');
+          return new Response(null,{status:204});
+        }
         writes++;
         assert.match(
           String(url),
@@ -222,6 +232,8 @@ test("server stores only the authorized generated derivative without replacing t
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("x-preview-stored"), "1");
     assert.equal(writes, 1);
+    assert.equal(placeholders,1);
+    assert.equal(response.headers.get('x-placeholder-stored'),'1');
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }

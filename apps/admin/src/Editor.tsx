@@ -300,7 +300,7 @@ export default function Editor() {
           .upload(path, file, { contentType: file.type, upsert: false, cacheControl: '0' });
         if (result.error) throw result.error;
         const previous = replace ? bundle!.product_images.find((x: Row) => x.id === replace) : null;
-        const row = {
+        const row: Row = {
           id: uuid(),
           product_id: p.id,
           storage_bucket: bucket,
@@ -314,7 +314,7 @@ export default function Editor() {
           is_published: false,
         };
         staged.current.push(row);
-        try { await prepareUploadPreviews(file,bucket,path); }
+        try { row.preview_placeholder = await prepareUploadPreviews(file,bucket,path); }
         catch { notify('照片已上传，预览图暂未准备完成；原图仍可使用。'); }
         setBundle((b) => ({
           ...b!,
