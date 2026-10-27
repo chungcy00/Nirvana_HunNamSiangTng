@@ -4,20 +4,20 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { ChevronRight, Menu, X } from "lucide-react";
 import { navigation } from "../../data/site";
 import { ConsultButton } from "../ui";
-export function Brand({ footer = false, onNavigate }: { footer?: boolean; onNavigate?: () => void }) {
+export function Brand({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <Link to="/" className="brand" aria-label="身后事 · 皆可托，返回首页" onClick={onNavigate}>
       <svg
         className="brand-logo"
-        viewBox={footer ? "0 0 2048 768" : "42 268 1357 499"}
+        viewBox="42 268 1357 499"
         preserveAspectRatio="xMidYMid meet"
         aria-hidden="true"
         focusable="false"
       >
         <image
-          href={footer ? "/images/footer-brand-logo.png" : "/images/brand-logo.png"}
-          width={footer ? 2048 : 1448}
-          height={footer ? 768 : 1086}
+          href="/images/brand-logo-horizontal.png"
+          width={1448}
+          height={1084}
         />
       </svg>
     </Link>
