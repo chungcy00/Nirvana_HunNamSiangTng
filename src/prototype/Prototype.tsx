@@ -38,7 +38,6 @@ function WebsiteProductCard({ product, returnTo, view }: { product: PrototypePro
   const content = <>
       {product.category !== 4 && <div className="fgp-product-visual"><ProductImage product={product}/></div>}
       <div className="fgp-card-body">
-        <p className="fgp-card-category">{categories.find(c => c.id === product.category)?.name}</p>
         <h3>{product.name}</h3>
         <ProductTags product={product} desktopServiceVenue/>
         {product.category === 4 && <div className="fgp-card-service-meta">
@@ -138,7 +137,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
         ].map(({id,label,icon:Icon})=><button type="button" key={id} aria-label={label} title={label} aria-pressed={view===id} disabled={status !== "ready" || products.length === 0} onClick={()=>changeFilter('view',id==='grid'?'':id)}><Icon size={18} aria-hidden="true"/></button>)}</div>
       </div>}
       </div>
-      <div className="fgp-results-heading"><div><h2>{category.name}</h2><span role={status === "ready" ? "status" : undefined} aria-live={status === "ready" ? "polite" : undefined}>{status === "loading" ? "正在读取…" : status === "error" ? "暂时无法读取" : `共 ${products.length} 项产品`}</span></div>
+      <div className="fgp-results-heading"><div>{!website && <h2>{category.name}</h2>}<span role={status === "ready" ? "status" : undefined} aria-live={status === "ready" ? "polite" : undefined}>{status === "loading" ? "正在读取…" : status === "error" ? "暂时无法读取" : `共 ${products.length} 项产品`}</span></div>
         {filtered ? <button className="fgp-reset" onClick={reset}><RotateCcw size={14}/>清除筛选</button> : home && !website && <Link className="fgp-text-link" to={listPath(category.id)+(listParams.size ? '?'+listParams : '')}>查看完整列表<ArrowRight size={16}/></Link>}
       </div>
       {filtered && <div className="fgp-applied" aria-label="已选择条件">{capacity && <button onClick={()=>changeFilter("capacity","")}>{capacityLabels[capacity as keyof typeof capacityLabels] || capacity}<X size={13}/><span className="fgp-sr">清除人数筛选</span></button>}{religion && <button onClick={()=>changeFilter("religion","")}>{religions.find(r=>r.id===religion)?.name || religion}<X size={13}/><span className="fgp-sr">清除宗教筛选</span></button>}</div>}

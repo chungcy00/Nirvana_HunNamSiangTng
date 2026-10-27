@@ -49,10 +49,11 @@ test("网站组合筛选、空结果与未知产品有正确返回入口", () =>
   assert.match(render("/nirvana/products/unknown"), /没有找到这个产品页面/);
 });
 
-test("W区卡片显示两种宗教，骨灰位卡片及详情显示明确安放环境", () => {
+test("W区详情规格显示两种宗教且移除重复标签，骨灰位卡片及详情显示明确安放环境", () => {
   for (const product of prototypeProducts.filter(p => p.id.startsWith("w-"))) {
     const html = render(`/nirvana/products/item/${product.id}`);
-    assert.match(html, /<span>佛教<\/span><span>基督教<\/span>/);
+    assert.match(html, /<dt>适用宗教<\/dt><dd>佛教、基督教<\/dd>/);
+    assert.doesNotMatch(html, /class="fgp-tags"/);
   }
   const niches = render("/nirvana/products/niches");
   assert.equal((niches.match(/class="fgp-environment">室内/g) || []).length, 7);

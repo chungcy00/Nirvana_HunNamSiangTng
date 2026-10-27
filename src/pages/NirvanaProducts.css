@@ -50,7 +50,6 @@
 .fgp-website .fgp-catalog-card .fgp-image { aspect-ratio: 1.5; height: auto; min-height: 0; border: 0; border-radius: 4px; overflow: hidden; background: var(--p-soft); color: #6d746c; }
 .fgp-website .fgp-image::after { display: none; }
 .fgp-website .fgp-catalog-card .fgp-card-body { padding: 18px 0 0; width: 100%; min-width: 0; }
-.fgp-website .fgp-card-category { font-size: 12px; color: var(--n-gold); margin: 0 0 6px; }
 .fgp-website .fgp-catalog-card h3 { font-size: 18px; font-weight: 500; line-height: 1.55; margin: 0 0 12px; color: var(--p-green); }
 .fgp-website .fgp-catalog-card .fgp-tags { gap: 6px; margin-bottom: 20px; }
 .fgp-website .fgp-catalog-card .fgp-tags > span { display: inline-flex; min-height: 24px; padding: 2px 7px; background: var(--p-soft); color: var(--p-muted); border-radius: 3px; font-size: 11px; white-space: normal; }
@@ -62,7 +61,6 @@
 .fgp-website .fgp-card-action { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 22px; min-height: 44px; padding: 8px 12px; background: var(--p-soft); color: var(--p-green); font-size: 13px; border-radius: 4px; }
 .fgp-website .fgp-product-link:hover .fgp-card-action { background: #e7e4dc; }
 .fgp-website .fgp-card-funeral .fgp-card-body { padding-top: 0; }
-.fgp-website .fgp-card-funeral .fgp-card-category { padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid #e7e4dc99; }
 .fgp-website .fgp-card-funeral .fgp-card-pricing { border: 0; padding: 0; }
 .fgp-website .fgp-catalog-card .fgp-dual-prices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; background: var(--p-soft); border-radius: 5px; padding: 16px; }
 .fgp-website .fgp-catalog-card .fgp-dual-prices > div + div { padding-left: 0; border-left: 0; }
@@ -199,7 +197,6 @@
   .fgp-website .fgp-view-list .fgp-prices strong { font-size: 18px; }
   .fgp-website .fgp-view-list .fgp-dual-prices strong { font-size: 17px; }
   .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 16px; }
-  .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-category { grid-column: 1 / -1; }
   .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-pricing { grid-column: 2; grid-row: 2 / span 3; }
   .fgp-website .fgp-view-list .fgp-card-funeral .fgp-card-action { grid-column: 1 / -1; }
 }

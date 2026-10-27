@@ -304,7 +304,6 @@ function ProductDetailBody({
           <span className="fgp-category-label">{category.name}</span>
           <h1>{product.name}</h1>
         {product.saleStatus === 'sold_out' && <p className="fgp-sold-reference">此产品已售罄，以下资料仅供参考。</p>}
-          <ProductTags product={product} />
           {funeral && !website && (
             <div
               className="fgp-service-price-summary"
@@ -339,7 +338,7 @@ function ProductDetailBody({
     + content.reduce((total, r) => total + countInclusionRows(r.inclusions, r.inclusionGroups), 0);
   const inclusions = (
         <section className="fgp-inclusions" id="fgp-inclusions">
-          <h2>{website && funeral ? "包含项目与服务权益" : "包含项目"}{general && <span className="fgp-general-inclusion-count">{inclusionCount} 项</span>}</h2>
+          <h2>包含项目{general && <span className="fgp-general-inclusion-count">{inclusionCount} 项</span>}</h2>
           {product.inclusions.length > 0 ? (
             <InclusionList
               items={product.inclusions}
@@ -492,7 +491,6 @@ function ProductDetailBody({
       .map(image => [`${image.religion_id ?? "common"}:${image.design_name?.trim() || image.id || image.path}`, image])).values()];
     return <div className="fgp-general-detail">
       <header className="fgp-general-heading">
-        <ProductTags product={product}/>
         <h1>{product.name}</h1>
         {product.saleStatus === 'sold_out' && <p className="fgp-sold-reference">此产品已售罄，以下资料仅供参考。</p>}
         {product.subtitle && <p className="fgp-general-subtitle">{product.subtitle}</p>}
