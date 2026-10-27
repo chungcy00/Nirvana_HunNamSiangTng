@@ -43,7 +43,7 @@ test('design reference cards show named and unnamed designs without fabricated n
   const unnamed = render({...product,images:[{...image,design_name:''},{...image,id:'unnamed-2',path:'second.png',design_name:null}]});
   assert.match(unnamed, /fgp-design-comparison/);
   assert.equal((unnamed.match(/class="fgp-design-photo fgp-general-image-trigger"/g)||[]).length,2);
-  assert.doesNotMatch(unnamed.slice(unnamed.indexOf('class="fgp-design-comparison"'),unnamed.indexOf('class="fgp-general-purchase"')), /<h3>|Type A/);
+  assert.doesNotMatch(unnamed.slice(unnamed.indexOf('class="fgp-design-comparison"')), /<h3>|Type A/);
 
 });
 

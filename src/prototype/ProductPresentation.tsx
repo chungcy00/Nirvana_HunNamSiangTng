@@ -503,6 +503,13 @@ function ProductDetailBody({
       <div className="fgp-general-body">
         <div className="fgp-general-media">
           <GeneralProductGallery product={product} religion={religion} imageRenderer={imageRenderer}/>
+
+        </div>
+        <div className="fgp-general-purchase">
+          {pricePanel}
+          <div className="fgp-general-consult">{consultAction}</div>
+          {inclusions}
+        </div>
           {designImages.length > 0 && <section className="fgp-design-comparison" aria-label="宗教与设计参考">
             <h2>宗教与设计参考</h2>
             <div className="fgp-design-grid">{designImages.map(image => <article key={image.id} className={image.sale_status === 'sold_out' ? 'is-sold-out' : undefined}>
@@ -511,12 +518,6 @@ function ProductDetailBody({
               {image.religion_id != null && <footer className="fgp-design-footer"><span className="fgp-design-religion">适用：{product.religions.find(r => r.id === String(image.religion_id))?.name}</span></footer>}
             </article>)}</div>
           </section>}
-        </div>
-        <div className="fgp-general-purchase">
-          {pricePanel}
-          <div className="fgp-general-consult">{consultAction}</div>
-          {inclusions}
-        </div>
       </div>
     </div>;
   }
