@@ -10,8 +10,8 @@
 .fgp-specs-panel { margin: 24px 0 0; padding: 24px; border: 1px solid var(--p-line); border-radius: 8px; background: white; box-shadow: 0 4px 20px -2px #2d43360a; }
 .fgp-website .fgp-general-heading .fgp-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 128px), 1fr)); gap: 20px 16px; margin: 0; padding: 0; overflow: hidden; }
 .fgp-website .fgp-general-heading .fgp-specs > div { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 0; border: 0; min-width: 0; }
-/* Clipping at the grid edge hides the rule before each row's first cell, including single-column layouts. */
-.fgp-general-heading .fgp-specs > div::before { content: ""; position: absolute; inset-block: 0; left: -8px; width: 1px; background: var(--p-line); }
+/* Half-row-gap overlap joins each column's rule; clipping hides rules outside the grid, including single-column layouts. */
+.fgp-general-heading .fgp-specs > div::before { content: ""; position: absolute; inset-block: -10px; left: -8px; width: 1px; background: var(--p-line); }
 .fgp-general-heading .fgp-specs dt { font-size: 12px; }
 .fgp-general-heading .fgp-specs dd { font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
 .fgp-general-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; gap: 32px; }
