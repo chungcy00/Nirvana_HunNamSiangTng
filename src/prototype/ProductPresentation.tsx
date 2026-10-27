@@ -505,7 +505,7 @@ function ProductDetailBody({
           <GeneralProductGallery product={product} religion={religion} imageRenderer={imageRenderer}/>
           {designImages.length > 0 && <section className="fgp-design-comparison" aria-label="宗教与设计参考">
             <h2>宗教与设计参考</h2>
-            <div className="fgp-design-grid">{designImages.map(image => <article key={image.id}>
+            <div className="fgp-design-grid">{designImages.map(image => <article key={image.id} className={image.sale_status === 'sold_out' ? 'is-sold-out' : undefined}>
               <DesignImagePreview soldOut={image.sale_status === 'sold_out'} label={`${image.design_name?.trim() || image.alt || `${product.name}设计参考`}${image.sale_status === 'sold_out' ? '（已售罄）' : ''}`}>{imageRenderer ? imageRenderer(image) : <CatalogImage image={image}/>}</DesignImagePreview>
               {image.design_name?.trim() && <h3>{image.design_name}</h3>}
               {image.religion_id != null && <footer className="fgp-design-footer"><span className="fgp-design-religion">适用：{product.religions.find(r => r.id === String(image.religion_id))?.name}</span></footer>}

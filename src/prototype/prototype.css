@@ -491,7 +491,18 @@
   backdrop-filter: blur(5px);
 }
 .fgp-sold-badge > svg { flex-shrink: 0; }
-.fgp-design-sold-badge { position: absolute; top: 10px; right: 10px; z-index: 1; pointer-events: none; }
+.fgp-design-sold-badge { position: absolute; top: 10px; right: 10px; z-index: 2; pointer-events: none; }
+.fgp-design-grid article.is-sold-out { position: relative; isolation: isolate; }
+.fgp-design-grid article.is-sold-out::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: rgb(255 255 255 / 44%);
+  backdrop-filter: blur(.6px);
+  pointer-events: none;
+}
 .fgp-card-sold-overlay {
   position: absolute;
   inset: 0;
