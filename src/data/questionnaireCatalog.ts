@@ -20,6 +20,11 @@ export function nirvanaQuestionnaireProducts(prototypeProducts: readonly Prototy
         ...(p.atNeed === undefined ? [] : [{ label: '即用价格', price: p.atNeed, timing: 'now' as const }]),
       ] : p.category === 3 ? availableOffers.length ? [{ label: '最低起价', price: Math.min(...availableOffers.map(o => o.amount)) }] : []
         : availableOffers.map(o => ({ label: availableOffers.length > 1 ? o.name : '产品售价', price: o.amount }));
+    if (p.category !== 3) variants.forEach((variant, index) => {
+      variant.area = p.publicPrices
+        ? p.publicPrices.filter(price => price.sale_status !== 'sold_out')[index]?.area_sqft_override ?? p.area
+        : availableOffers[index]?.area ?? p.area;
+    });
     if (!variants.length && (p.publicPrices?.length || p.offers.length)) return [];
     return [{
       id: p.id, name: p.name, category, provider: '富贵山庄' as const,

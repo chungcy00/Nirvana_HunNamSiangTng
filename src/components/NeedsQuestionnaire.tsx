@@ -1,13 +1,15 @@
 import { usePublicCatalog, PublicCatalogNotice } from '../catalog/publicContext';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { nirvanaQuestionnaireProducts, questionnaireProductPath, questionnaireIncludes } from '../data/questionnaireCatalog';
-import { Link, useLocation, useNavigationType } from 'react-router-dom';
+import { nirvanaQuestionnaireProducts, questionnaireProductPath } from '../data/questionnaireCatalog';
+import { useLocation, useNavigationType } from 'react-router-dom';
 import { loadQuestionnaireSession, saveQuestionnaireSession } from '../data/questionnaireSession';
 import { questionnaireReturnKey } from '../data/questionnaireReturn';
 import { restoreQuestionnaireResult } from './restoreQuestionnaireResult';
+import { WebsiteProductCard } from '../prototype/Prototype';
+import { formatSqft } from '../../shared/areaPriceGroups';
 import { Check, Phone } from 'lucide-react';
 import { advisor, whatsappUrl } from '../data/site';
-import { categories, questionKeys, budgetOptions, referencePriceRange,  productStatus, applicableVariants, withinBudget, complete, inquirySummary, updateAnswers, supplyNotice, money, type Answers, type ServiceProduct } from '../data/questionnaire';
+import { categories, questionKeys, budgetOptions, referencePriceItems,  productStatus, applicableVariants, withinBudget, complete, inquirySummary, updateAnswers, supplyNotice, money, type Answers, type ServiceProduct } from '../data/questionnaire';
 
 const categoryNotes = ['火化后的骨灰安置空间','火化后，将骨灰安葬于福地','以棺木安葬的福地与配套','丧礼仪式、治丧流程与相关安排','宠物土葬或火化后的骨灰安葬'];
 export default function NeedsQuestionnaire() {
@@ -60,6 +62,7 @@ export default function NeedsQuestionnaire() {
   const currentProducts = (publicCatalog.status==='ready' ? questionnaireProducts : []).filter(p=>p.category===answers.category);
   const matches = currentProducts.filter(p=>productStatus(p,answers)==='match');
   const uncertain = currentProducts.filter(p=>productStatus(p,answers)==='confirm');
+  const referencePrices = referencePriceItems(answers, publicCatalog.status === 'ready' ? questionnaireProducts : []);
   function change(key: keyof Answers,value: string) {
     const next = updateAnswers(answers,key,value);
     const keep = key==='category' ? [] : key==='size' ? selected : selected.filter(id=>{
@@ -95,25 +98,23 @@ export default function NeedsQuestionnaire() {
     const detailPath = questionnaireProductPath(p);
     const returnState = { questionnaireReturn: `/contact#needs-product-${encodeURIComponent(p.id)}` };
     const status = productStatus(p,answers);
+    const product = publicCatalog.products.find(product => product.id === p.id);
+    if (!product) return null;
     const prices = applicableVariants(p,answers);
-    const priced = browsing ? prices : prices.filter(v=>withinBudget(v.price,answers));
-    return <article className="needs-product" key={p.id} id={`needs-product-${p.id}`}>
-      <div className="needs-product-heading"><div><p className="needs-meta">{p.provider} · {p.category}</p><h4><Link to={detailPath} state={returnState} onClick={()=>rememberResult(p.id)}>{p.name}</Link></h4></div>
-        <span className="needs-status">{status==='exclude'?'可能不符合当前条件':status==='confirm'?'需咨询确认':'符合所选条件'}</span></div>
-      {p.restriction.includes('仅限火化') && <p className="needs-limit">仅限火化</p>}
-      <p>{p.method || (p.capacity ? `${p.capacityLabel || p.capacity}安置空间，具体款式与位置请进一步了解。` : '了解仪式、治丧流程及相关服务安排。')}</p>
-      {p.placement && <p className="needs-meta">安放环境：{p.placement === 'indoor' ? '室内' : '室外'}</p>}
-      <div className="needs-prices">{priced.length ? priced.map((v,i)=><p key={`${v.label}-${i}`}><span>{v.label}</span><strong>{money(v.price)}{p.startingPrice ? ' 起' : ''}</strong>{!withinBudget(v.price,answers) && <small>不符合所选预算</small>}</p>):<p>参考价格需咨询确认</p>}</div>
-      {prices.length>priced.length && <p className="small muted">仅列出符合本次预算的款式及价格，其他款式价格不同。</p>}
-      {status==='confirm' && <p className="needs-confirm">{p.referencePrice ? '具体售价及服务内容请与顾问确认。' : answers.religion==='其他'?'宗教及仪式适用情况需咨询确认。':'宗教、容量或价格资料不足，尚不能确认为匹配或预算内产品。'}</p>}
-      <p><strong>包含内容：</strong>{questionnaireIncludes(p,answers)}</p>
-      <p className="needs-product-restriction"><strong>适用说明：</strong>{p.restriction}</p>
-      <Link className="needs-detail-link" to={detailPath} state={returnState} onClick={()=>rememberResult(p.id)}>查看详情</Link>
-      <p className="needs-supply">{supplyNotice}</p>
-      <button type="button" className={`button ${selected.includes(p.id)?'':'button-outline'}`} aria-pressed={selected.includes(p.id)} onClick={()=>{setSelected(selected.includes(p.id)?selected.filter(id=>id!==p.id):[...selected,p.id]);}}>
+    const pricing = <>
+      <span className="needs-status">{status==='exclude'?'可能不符合当前条件':status==='confirm'?'需咨询确认':'符合所选条件'}</span>
+      <ul className="needs-card-prices">{prices.length ? prices.map((v,index)=><li key={index}>
+        <span>{v.label}{p.category !== '骨灰位' && formatSqft(v.area) && !v.label.includes(formatSqft(v.area)!) ? `（${formatSqft(v.area)}）` : ''}</span>
+        <strong>{money(v.price)}{p.startingPrice ? ' 起' : ''}</strong>
+        {!withinBudget(v.price,answers) && <small>不符合所选预算</small>}
+      </li>) : <li>参考价格需咨询确认</li>}</ul>
+      {status==='confirm' && <p className="needs-confirm">适用情况及具体售价需与顾问确认。</p>}
+    </>;
+    return <WebsiteProductCard key={p.id} id={`needs-product-${p.id}`} className="needs-product" product={product} view="grid"
+      returnTo="/contact#needs-results" linkPath={detailPath} detailState={returnState} onDetail={()=>rememberResult(p.id)} pricing={pricing}
+      footer={<div className="needs-card-footer"><button type="button" className={`button ${selected.includes(p.id)?'':'button-outline'}`} aria-pressed={selected.includes(p.id)} onClick={()=>{setSelected(selected.includes(p.id)?selected.filter(id=>id!==p.id):[...selected,p.id]);}}>
         {selected.includes(p.id)?<><Check size={17}/>已加入咨询 · 点击取消</>:'加入咨询'}
-      </button>
-    </article>;
+      </button></div>}/>;
   }
   return <section className="container needs-questionnaire section" id="needs-questionnaire" aria-labelledby="needs-title">
     {publicCatalog.status!=="ready" && <PublicCatalogNotice/>}<header className="needs-intro"><h2 id="needs-title">了解您的需求</h2><p>简单选择，了解相关服务与参考价格，再与顾问进一步沟通。</p><p className="small muted">独立了解服务与参考价格，无需先填写上方咨询表单；选好需求后可直接带入 WhatsApp 咨询。</p></header>
@@ -127,8 +128,9 @@ export default function NeedsQuestionnaire() {
         {answers.category==='宠物纪念' && question('您希望了解哪种纪念方式？','method',['宠物土葬','火化后骨灰安葬','尚未确定，先比较'])}
         {answers.category==='宠物纪念' && answers.method==='宠物土葬' && question('您的宠物体型大约是？','size',['小型','中型','大型','不确定'],<p className="needs-help">体型仅供顾问了解，不用于自动决定墓地大小。实际适用情况请咨询确认。</p>)}
         {question('您希望考虑的预算范围？','budget',budgetOptions(answers.category),<>
-          <p className="needs-help">请选择本次所选服务的预算，不是全部丧葬费用。预算未定也可以继续了解。</p>
-          <details className="needs-reference" key={answers.category}><summary>查看参考价格</summary><strong>{referencePriceRange(answers.category,questionnaireProducts)}</strong><p>以上为现有资料中的参考区间。不同产品包含内容不同，地段与完整配套、预购与即时价格亦有区别，实际费用请咨询确认。</p><p>不代表市场全部产品或实时售价，也不保证每个预算档都有产品。</p></details>
+          <details className="needs-reference" key={answers.category}><summary><img src="/images/icons/info-gold.png" alt="" aria-hidden="true" width="16" height="16"/>查看参考价格</summary>
+            {referencePrices.length ? <ul className="needs-reference-products">{referencePrices.map(item => <li key={item.id}><strong>{item.name}</strong>{item.needsConfirmation && <span>（适用情况需咨询确认）</span>}<ul>{item.prices.map((price,index)=><li key={index}>{price}</li>)}</ul></li>)}</ul> : <p>当前所选条件下暂无公开产品参考价格，欢迎咨询顾问。</p>}
+          </details>
         </>)}
       </>}
     </div></div>
@@ -142,16 +144,15 @@ export default function NeedsQuestionnaire() {
           const confirmed = (browsing?currentProducts:matches).filter(p=>p.provider===provider);
           const pending = browsing?[]:uncertain.filter(p=>p.provider===provider);
           return <section className="needs-provider" key={provider}><h4>{provider}</h4>
-            {confirmed.length>0 && <div className="needs-products">{confirmed.map(card)}</div>}
+            {confirmed.length>0 && <div className="needs-products fgp-website needs-catalog">{confirmed.map(card)}</div>}
             {!confirmed.length && <p className="muted">当前条件下暂无已确认匹配的资料。</p>}
-            {pending.length>0 && <><h5>需咨询确认</h5><p className="needs-help">以下项目资料尚不足以确认完全匹配，不能视为预算内推荐。</p><div className="needs-products">{pending.map(card)}</div></>}
+            {pending.length>0 && <><h5>需咨询确认</h5><p className="needs-help">以下项目资料尚不足以确认完全匹配，不能视为预算内推荐。</p><div className="needs-products fgp-website needs-catalog">{pending.map(card)}</div></>}
           </section>;
         })}
       </>}
     </div>
     <div className="needs-inquiry-action">
       <a className="button" href={whatsappUrl(summary) || '/contact'} target="_blank" rel="noopener noreferrer">带上问卷需求，前往 WhatsApp 咨询</a>
-      <p className="small muted">已选需求及产品将带入对话框，无需重复填写，由您确认后发送。</p>
     </div>
   </section>;
 }
