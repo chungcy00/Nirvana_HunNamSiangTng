@@ -10,6 +10,7 @@ import { advisor, whatsappUrl } from "../data/site";
 import { callbackPhonePattern, contactInquiryMessage } from "../data/contactInquiry";
 import NeedsQuestionnaire from "../components/NeedsQuestionnaire";
 import { PageHero } from "../components/PageHero";
+import "./Contact.css";
 
 const serviceChoices = [
   "骨灰位",
@@ -36,7 +37,7 @@ export default function Contact() {
   const inquiry = contactInquiryMessage({ name, service, message, callback, phone });
   const whatsappAction = whatsappUrl("")?.split("?")[0];
   return (
-    <>
+    <div className="contact-page">
       <PageHero
         eyebrow="LET’S TALK, AT YOUR PACE"
         title="让我们，从一次对话开始"
@@ -48,19 +49,13 @@ export default function Contact() {
           <h2>欢迎与我联系</h2>
           <p className="muted">选择您觉得自在的方式，开始了解。</p>
           <div className="contact-items">
-            <div className="contact-item contact-whatsapp">
-              <MessageCircle size={20} strokeWidth={1.4} />
-              <div className="contact-whatsapp-numbers">
-                <div>
-                  <span>WhatsApp 第一联系方式</span>
-                  <a href={whatsappUrl("您好，我想咨询相关服务。") || ""}>{advisor.whatsapp}</a>
-                </div>
-                <div>
-                  <span>WhatsApp 第二联系方式</span>
-                  <a href={whatsappUrl("您好，我想咨询相关服务。", advisor.whatsappSecondary) || ""}>{advisor.whatsappSecondary}</a>
-                </div>
-              </div>
-            </div>
+            {[
+              { label: "WhatsApp 第一联系方式", number: advisor.whatsapp, recipient: advisor.whatsappRecipient },
+              { label: "WhatsApp 第二联系方式", number: advisor.whatsappSecondary, recipient: advisor.whatsappSecondary },
+            ].map(item => <div className="contact-item contact-whatsapp" key={item.label}>
+              <MessageCircle size={20} strokeWidth={1.4} aria-hidden="true"/>
+              <div><span>{item.label}</span><a href={whatsappUrl("您好，我想咨询相关服务。", item.recipient) || ""} target="_blank" rel="noopener noreferrer">{item.number}</a></div>
+            </div>)}
             {[
               {
                 icon: MapPin,
@@ -175,6 +170,6 @@ export default function Contact() {
         </div>
       </section>
       <NeedsQuestionnaire />
-    </>
+    </div>
   );
 }
