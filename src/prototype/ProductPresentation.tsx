@@ -497,8 +497,8 @@ function ProductDetailBody({
         {product.saleStatus === 'sold_out' && <p className="fgp-sold-reference">此产品已售罄，以下资料仅供参考。</p>}
         {product.subtitle && <p className="fgp-general-subtitle">{product.subtitle}</p>}
         {product.description && <p className="fgp-general-description">{product.description}</p>}
-        {generalSpecs.length > 0 && <dl className="fgp-specs">{generalSpecs.map(([label, value]) =>
-          <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+        {generalSpecs.length > 0 && <div className="fgp-specs-panel"><dl className="fgp-specs">{generalSpecs.map(([label, value]) =>
+          <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></div>}
       </header>
       <div className="fgp-general-body">
         <div className="fgp-general-media">

@@ -7,9 +7,11 @@
 .fgp-website .fgp-general-detail .fgp-tags > span { border-radius: 9999px; background: var(--p-soft); font-size: 12px; }
 .fgp-general-subtitle { margin: 0; color: var(--n-gold); font-size: 18px; font-weight: 500; }
 .fgp-general-description { max-width: 72ch; color: var(--p-muted); white-space: pre-line; }
-.fgp-website .fgp-general-heading .fgp-specs { display: flex; flex-wrap: wrap; gap: 24px 0; margin: 24px 0 0; padding: 24px; border: 1px solid var(--p-line); border-radius: 8px; background: white; box-shadow: 0 4px 20px -2px #2d43360a; }
-.fgp-website .fgp-general-heading .fgp-specs > div { display: flex; flex: 1 1 160px; flex-direction: column; gap: 6px; padding: 0 16px; border: 0; border-left: 1px solid var(--p-line); min-width: 0; }
-.fgp-website .fgp-general-heading .fgp-specs > div:first-child { padding-left: 0; border-left: 0; }
+.fgp-specs-panel { margin: 24px 0 0; padding: 24px; border: 1px solid var(--p-line); border-radius: 8px; background: white; box-shadow: 0 4px 20px -2px #2d43360a; }
+.fgp-website .fgp-general-heading .fgp-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 128px), 1fr)); gap: 20px 16px; margin: 0; padding: 0; overflow: hidden; }
+.fgp-website .fgp-general-heading .fgp-specs > div { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 0; border: 0; min-width: 0; }
+/* Clipping at the grid edge hides the rule before each row's first cell, including single-column layouts. */
+.fgp-general-heading .fgp-specs > div::before { content: ""; position: absolute; inset-block: 0; left: -8px; width: 1px; background: var(--p-line); }
 .fgp-general-heading .fgp-specs dt { font-size: 12px; }
 .fgp-general-heading .fgp-specs dd { font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
 .fgp-general-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; gap: 32px; }
@@ -78,8 +80,7 @@
   .fgp-website .fgp-general-detail { padding-top: 12px; }
   .fgp-website .fgp-general-detail h1 { font-size: 28px; }
   .fgp-general-heading { margin-bottom: 24px; }
-  .fgp-website .fgp-general-heading .fgp-specs { flex-direction: column; gap: 20px; padding: 20px; }
-  .fgp-website .fgp-general-heading .fgp-specs > div { flex: none; padding: 0; border-left: 0; }
+  .fgp-specs-panel { padding: 20px; }
   .fgp-general-body, .fgp-general-media { gap: 24px; }
   .fgp-general-purchase { padding: 20px; }
   .fgp-design-comparison { padding: 24px; }
