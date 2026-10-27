@@ -401,12 +401,12 @@ input[type='number'], .price, .offer-spec-summary { font-variant-numeric: tabula
 @media (hover: hover) {
   .sections button:hover {
     color: var(--ink);
-    background: var(--paper);
-    box-shadow: 0 2px 6px rgb(23 23 23 / 12%);
+    background: #eeeeee;
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 7%), inset 0 -1px 1px rgb(255 255 255 / 50%);
   }
   .sections button.active:hover { background: var(--secondary-container); }
 }
-.sections button:focus-visible { box-shadow: 0 2px 6px rgb(23 23 23 / 12%); }
+.sections button:focus-visible { box-shadow: inset 0 1px 3px rgb(0 0 0 / 7%); }
 .fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
