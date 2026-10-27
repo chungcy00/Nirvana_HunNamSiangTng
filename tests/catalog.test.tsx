@@ -80,6 +80,7 @@ test("legacy reusable templates retain their configured product content in isola
       );
       assert(
         imageSources.every((source) => source === "/images/brand-logo.png" ||
+          (path === "/yunnan-siantang" && source === "/images/yunnan-funeral-parlour-banner.jpg") ||
           (path === "/about" && source === "/images/advisor-zhong-yongxin.png") ||
           (path === "/nirvana" && /^\/images\/sort-(ascending|descending|default)\.png$/.test(source))),
         path,
@@ -194,12 +195,13 @@ test("new provider uses generic routes and same slugs stay isolated by provider"
   );
 });
 
-test("Yunnan can gain catalogue categories without replacing its service page", () => {
+test("Yunnan catalogue shows the confirmed empty state without category navigation or invented packages", () => {
   const data = seed();
   addCategory(data, { providerId: "provider-002" });
   const html = render("/yunnan-siantang", data);
-  assert(html.includes("可以进一步咨询的事项"));
-  assert(html.includes("/yunnan-siantang/fuxing-land"));
+  assert(html.includes("当前暂无公开配套"));
+  assert(!html.includes("可以进一步咨询的事项"));
+  assert(!html.includes('aria-label="产品类别"'));
 });
 
 test("stable IDs preserve associations after names or slugs change", () => {

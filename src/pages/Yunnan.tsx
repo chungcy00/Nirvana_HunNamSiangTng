@@ -1,100 +1,47 @@
 import { Link, useLocation } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { ArrowRight, LayoutGrid, Leaf, List } from "lucide-react";
 import { useCatalog } from "../catalog/context";
-import CatalogueSection from "../components/CatalogueSection";
-import { NotFound } from "../components/ui";
-import { assistance } from "../data/site";
-import { PageHero } from "../components/PageHero";
-import { SectionHeading, ConsultButton, ContactCTA } from "../components/ui";
+import { NotFound, ConsultButton } from "../components/ui";
+import "../prototype/prototype.css";
+import "./NirvanaProducts.css";
+import "./Yunnan.css";
+
 export default function Yunnan() {
   const catalog = useCatalog();
   const location = useLocation();
   const requestedReturn = location.state?.questionnaireReturn;
-  const questionnaireReturn = typeof requestedReturn==='string' && requestedReturn.startsWith('/contact#needs-product-') ? requestedReturn : null;
+  const questionnaireReturn = typeof requestedReturn === 'string' && requestedReturn.startsWith('/contact#needs-product-') ? requestedReturn : null;
   const provider = catalog.getProviderBySlug("yunnan-siantang");
   if (!provider) return <NotFound />;
-  return (
-    <>
-      <PageHero
-        eyebrow={provider.english}
-        title={provider.name}
-        text={provider.description}
-        imageLabel={provider.coverLabel}
-      >
-        <ConsultButton subject="云南善堂相关协助" />
-      </PageHero>
-      {questionnaireReturn && <div className="container"><Link className="questionnaire-return-link" to={questionnaireReturn}>返回问卷结果</Link></div>}
-      <section className="container section intro-split">
-        <SectionHeading
-          eyebrow="UNDERSTANDING THE SUPPORT"
-          title="从了解开始，多一份从容"
-        />
-        <div>
-          <p>
-            云南善堂与富贵山庄分属不同服务板块。您可以先说明家庭目前的情况，再了解适用的协助与办理安排。
-          </p>
-          <div className="content-slot">
-            <p>机构简介预留</p>
-            <span>正式介绍、服务范围与申请条件待确认后补充。</span>
+  // Formal Yunnan packages have not been supplied. Do not reuse Nirvana products
+  // or the old illustrative assistance framework as published packages.
+  return <div className="fgp fgp-website yunnan-page">
+    <section className="fgp-catalog-hero" aria-label="砂拉越云南善堂殡仪馆">
+      <h1 className="fgp-sr">{provider.name}</h1>
+      <img src="/images/yunnan-funeral-parlour-banner.jpg" alt="砂拉越云南善堂殡仪馆建筑外观与招牌" width={2048} height={915} fetchPriority="high" decoding="async"/>
+    </section>
+    {questionnaireReturn && <div className="fgp-wrap"><Link className="questionnaire-return-link" to={questionnaireReturn}>返回问卷结果</Link></div>}
+    <section className="fgp-catalog fgp-wrap yunnan-catalog" aria-label="云南善堂产品目录">
+      <div className="fgp-browse-toolbar">
+        <div className="fgp-filters"><div className="fgp-filter-row">
+          <span className="fgp-filter-label" id="yunnan-religion-label">适用宗教</span>
+          <div className="fgp-capacities" role="group" aria-labelledby="yunnan-religion-label"><button type="button" className="is-selected" aria-pressed="true">全部宗教</button></div>
+        </div></div>
+        <div className="fgp-display-controls">
+          <label className="fgp-sort"><span>排序方式</span><select aria-label="价格排序" disabled defaultValue="default"><option value="default">默认顺序</option></select></label>
+          <div className="fgp-view-toggle" role="group" aria-label="展示模式">
+            <button type="button" aria-label="双栏网格" aria-pressed="true" disabled><LayoutGrid size={18} aria-hidden="true"/></button>
+            <button type="button" aria-label="左图右文列表" aria-pressed="false" disabled><List size={18} aria-hidden="true"/></button>
           </div>
         </div>
-      </section>
-      <section className="soft-section">
-        <div className="container section">
-          <SectionHeading
-            eyebrow="WAYS TO HELP"
-            title="可以进一步咨询的事项"
-            text="以下为服务介绍框架；实际可协助范围以确认后的资料为准。"
-          />
-          <div className="grid-two">
-            {assistance.map((item, i) => (
-              <article className="card assistance-card" key={item.slug}>
-                <span className="service-number">0{i + 1}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <details>
-                  <summary>
-                    了解这项协助 <Plus size={16} />
-                  </summary>
-                  <p>适合对象、办理步骤、所需文件与费用说明预留。</p>
-                  <ConsultButton subject={`云南善堂 · ${item.title}`}>
-                    咨询相关事项
-                  </ConsultButton>
-                </details>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="container section">
-        <SectionHeading eyebrow="A CLEARER NEXT STEP" title="怎样开始了解？" />
-        <ol className="steps">
-          <li>
-            <span>01</span>
-            <h3>说明当前情况</h3>
-            <p>告诉顾问您想了解或需要协助的事。</p>
-          </li>
-          <li>
-            <span>02</span>
-            <h3>确认协助范围</h3>
-            <p>了解适用条件与可提供的帮助。</p>
-          </li>
-          <li>
-            <span>03</span>
-            <h3>准备相关资料</h3>
-            <p>按确认后的要求整理资料。</p>
-          </li>
-          <li>
-            <span>04</span>
-            <h3>了解后续安排</h3>
-            <p>确认联络窗口与下一步流程。</p>
-          </li>
-        </ol>
-      </section>
-      {catalog.getCatalogCategories(provider.id).length > 0 && (
-        <CatalogueSection provider={provider} />
-      )}
-      <ContactCTA />
-    </>
-  );
+      </div>
+      <div className="fgp-results-heading"><span role="status">共 0 项产品</span></div>
+      <div className="fgp-empty">
+        <Leaf size={32} strokeWidth={1} aria-hidden="true"/>
+        <h2>当前暂无公开配套</h2>
+        <p>正式配套资料确认后将在此展示，欢迎联系顾问了解相关服务。</p>
+        <ConsultButton subject="云南善堂殡仪服务" className="fgp-primary">联系顾问<ArrowRight size={16} aria-hidden="true"/></ConsultButton>
+      </div>
+    </section>
+  </div>;
 }

@@ -1,0 +1,5 @@
+/* Preserve the whole supplied photo; reuse only Nirvana's lower-edge fade. */
+.yunnan-page .fgp-catalog-hero { height: auto; }
+.yunnan-page .fgp-catalog-hero > img { height: auto; object-fit: contain; object-position: center; }
+.yunnan-page .yunnan-catalog { padding-bottom: 80px; }
+.yunnan-page .fgp-display-controls :disabled { cursor: default; opacity: .55; }
