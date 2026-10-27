@@ -81,7 +81,7 @@ test("legacy reusable templates retain their configured product content in isola
       );
       assert(
         imageSources.every((source) => source === "/images/brand-logo.png" ||
-          (path === "/yunnan-siantang" && source === "/images/yunnan-funeral-parlour-banner.jpg") ||
+          (path === "/yunnan-siantang" && source === "/images/yunnan-panorama-banner.jpg") ||
           (path === "/about" && source === "/images/advisor-zhong-yongxin.png") ||
           (path === "/nirvana" && /^\/images\/sort-(ascending|descending|default)\.png$/.test(source))),
         path,
