@@ -1,7 +1,5 @@
-import { Phone } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import "./About.css";
-
-const identity = "富贵山庄 025组织｜云南善堂蓝十组主任";
 
 export default function About() {
   return (
@@ -18,7 +16,7 @@ export default function About() {
         </div>
         <div className="advisor-biography">
           <h1 id="advisor-name">钟永新</h1>
-          <p className="advisor-identity">{identity}</p>
+          <p className="advisor-identity"><span>富贵山庄 025组织</span><span aria-hidden="true" className="advisor-identity-divider">｜</span><span>云南善堂蓝十组主任</span></p>
           <div className="advisor-story">
             <p>在富贵山庄 025组织服务26年，深耕殡葬行业，累计为约500位客户提供咨询与协助，在殡葬规划、安葬安排及殡仪服务方面积累了丰富的实务经验。</p>
             <p>同时，自2026年起，担任云南善堂蓝十组主任，参与殡仪服务的协调与安排。面对不同信仰与需求的家庭，始终以倾听为先，提供合适的建议与周到的协助，让每一个家庭在告别与后续安排中，都能感到安心与尊重。</p>
@@ -33,10 +31,10 @@ export default function About() {
       <section className="advisor-beliefs" aria-labelledby="advisor-beliefs-title">
         <div className="container advisor-beliefs-inner">
           <h2 id="advisor-beliefs-title">服务理念与个人信念</h2>
-          <div>
-            <p>深信殡葬服务不只是流程安排，更是在重要时刻给家人一份支持与陪伴。</p>
-            <p>从生前规划到身后安排，以真诚与细心陪伴每一个家庭。</p>
-          </div>
+          <ul className="advisor-beliefs-list">
+            <li>深信殡葬服务不只是流程安排，更是在重要时刻给家人一份支持与陪伴。</li>
+            <li>从生前规划到身后安排，以真诚与细心陪伴每一个家庭。</li>
+          </ul>
         </div>
       </section>
 
@@ -50,11 +48,9 @@ export default function About() {
           <p>如需了解殡葬规划、安葬安排或殡仪服务，欢迎联系咨询。</p>
         </div>
         <div className="advisor-contact-details">
-          <h3>钟永新</h3>
-          <p className="advisor-contact-identity">{identity}</p>
           <div className="advisor-telephone-links">
-            <a href="tel:+60198186134"><Phone size={20} strokeWidth={1.5} aria-hidden="true" /><span>019-818 6134</span></a>
-            <a href="tel:+60167760560"><Phone size={20} strokeWidth={1.5} aria-hidden="true" /><span>016-776 0560</span></a>
+            <a href="https://wa.me/60198186134" target="_blank" rel="noopener noreferrer"><span className="advisor-phone-icon"><MessageCircle size={20} strokeWidth={1.5} aria-hidden="true" /></span><span className="advisor-phone-copy"><span className="advisor-phone-label">WhatsApp</span><span>019-818 6134</span></span></a>
+            <a href="https://wa.me/60167760560" target="_blank" rel="noopener noreferrer"><span className="advisor-phone-icon"><MessageCircle size={20} strokeWidth={1.5} aria-hidden="true" /></span><span className="advisor-phone-copy"><span className="advisor-phone-label">WhatsApp</span><span>016-776 0560</span></span></a>
           </div>
         </div>
       </section>
