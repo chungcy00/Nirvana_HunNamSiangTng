@@ -117,7 +117,7 @@ export default function NeedsQuestionnaire() {
       </button></div>}/>;
   }
   return <section className="container needs-questionnaire section" id="needs-questionnaire" aria-labelledby="needs-title">
-    {publicCatalog.status!=="ready" && <PublicCatalogNotice/>}<header className="needs-intro"><h2 id="needs-title">了解您的需求</h2><p>简单选择，了解相关服务与参考价格，再与顾问进一步沟通。</p><p className="small muted">独立了解服务与参考价格，无需先填写上方咨询表单；选好需求后可直接带入 WhatsApp 咨询。</p></header>
+    {publicCatalog.status!=="ready" && <PublicCatalogNotice/>}<header className="needs-intro"><h2 id="needs-title">了解您的需求</h2><p>简单选择，了解相关服务与参考价格，再与顾问进一步沟通。</p></header>
     <div className="needs-layout"><div className="needs-questions">
       {question('您想了解哪一类服务？','category',categories.map((c,i)=>({value:c,label:c,note:categoryNotes[i]})))}
       {!answers.category && question('您的宗教信仰是？','religion',['佛教','基督教','其他'],<p className="needs-help">选择服务类别后，本题将显示对应问题；宠物纪念将改为询问纪念方式。</p>)}
