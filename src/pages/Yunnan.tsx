@@ -35,7 +35,7 @@ export default function Yunnan() {
   return <ProductNavigationContext.Provider value={navigation}><div className="fgp fgp-website yunnan-page">
     <section className="fgp-catalog-hero" aria-label="砂拉越云南善堂殡仪馆">
       <h1 className="fgp-sr">{provider.name}</h1>
-      <img src="/images/yunnan-funeral-parlour-banner.jpg" alt="砂拉越云南善堂殡仪馆建筑外观与招牌" width={2048} height={915} fetchPriority="high" decoding="async"/>
+      <img src="/images/yunnan-panorama-banner.jpg" alt="砂拉越云南善堂牌楼与殡仪馆外观" width={5504} height={1500} fetchPriority="high" decoding="async"/>
     </section>
     {questionnaireReturn && <div className="fgp-wrap"><Link className="questionnaire-return-link" to={questionnaireReturn}>返回问卷结果</Link></div>}
     <section className="fgp-catalog fgp-wrap yunnan-catalog" aria-label="云南善堂产品目录">
