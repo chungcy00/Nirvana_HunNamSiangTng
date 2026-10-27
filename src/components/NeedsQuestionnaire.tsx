@@ -1,6 +1,6 @@
 import { usePublicCatalog, PublicCatalogNotice } from '../catalog/publicContext';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { nirvanaQuestionnaireProducts, questionnaireProductPath } from '../data/questionnaireCatalog';
+import { institutionQuestionnaireProducts, questionnaireProductPath } from '../data/questionnaireCatalog';
 import { useLocation, useNavigationType } from 'react-router-dom';
 import { loadQuestionnaireSession, saveQuestionnaireSession } from '../data/questionnaireSession';
 import { questionnaireReturnKey } from '../data/questionnaireReturn';
@@ -29,7 +29,7 @@ export default function NeedsQuestionnaire() {
     } catch { return ''; }
   }, [location.key, location.hash, navigationType]);
   const publicCatalog=usePublicCatalog();
-  const questionnaireProducts=useMemo(()=>[...nirvanaQuestionnaireProducts(publicCatalog.products)],[publicCatalog.products]);
+  const questionnaireProducts=useMemo(()=>[...institutionQuestionnaireProducts(publicCatalog.products)],[publicCatalog.products]);
   const [initial] = useState(loadQuestionnaireSession);
   const [answers,setAnswers] = useState<Answers>(initial.answers);
   const [selected,setSelected] = useState<string[]>(initial.selected);

@@ -27,6 +27,7 @@ export type PublicPrice = {
   position_type?: string | null;
 };
 export type PublicRecord = {
+  institution?: 'nirvana' | 'yunnan';
   sale_status?: SaleStatus;
   id: string;
   slug: string;
@@ -90,7 +91,7 @@ export function publicConfig(
 }
 export async function publicRpc(
   config: PublicConfig,
-  name: "catalog_product_list" | "catalog_product_detail" | "catalog_product_snapshot",
+  name: "catalog_product_list" | "catalog_product_detail" | "catalog_product_snapshot" | "catalog_institution_snapshot",
   args: object,
   signal?: AbortSignal,
 ) {
@@ -106,11 +107,13 @@ export async function publicRpc(
     },
     body: JSON.stringify(args),
   });
-  if (!response.ok) throw new Error("产品资料暂时无法载入，请稍后重试。");
+  if (!response.ok) throw Object.assign(new Error("产品资料暂时无法载入，请稍后重试。"), { status: response.status });
   return response.json();
 }
 export function mapPublicProduct(raw: PublicRecord): PrototypeProduct {
   if (
+    (raw.institution != null && !['nirvana','yunnan'].includes(raw.institution)) ||
+    (raw.institution === 'yunnan' && raw.category_id !== 4) ||
     !raw.id ||
     !raw.slug ||
     !raw.name ||
@@ -158,6 +161,7 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
   const days = a.duration_days, nights = a.duration_nights;
 
   return {
+    institution: raw.institution || 'nirvana',
     id: raw.slug,
     databaseId: raw.id,
     name: raw.name,
@@ -237,7 +241,13 @@ export async function loadPublicProducts(
   signal?: AbortSignal,
 ): Promise<PrototypeProduct[]> {
   // One RLS-filtered snapshot replaces the list + one detail request per product.
-  const records: PublicRecord[] = await publicRpc(config,"catalog_product_snapshot",{},signal);
+  let records: PublicRecord[];
+  try { records = await publicRpc(config,"catalog_institution_snapshot",{},signal); }
+  catch (error) {
+    // During rollout an older database remains a valid Nirvana-only source.
+    if ((error as {status?: number}).status !== 404) throw error;
+    records = await publicRpc(config,"catalog_product_snapshot",{},signal);
+  }
   if (!Array.isArray(records)) throw new Error("产品资料暂时无法载入，请稍后重试。");
   return records.filter(record => record.category_id !== 4 || record.sale_status !== 'sold_out').map(mapPublicProduct);
 }

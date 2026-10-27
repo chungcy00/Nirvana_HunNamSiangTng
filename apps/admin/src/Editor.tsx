@@ -26,7 +26,8 @@ import {
   money,
 } from './types';
 
-export default function Editor() {
+export default function Editor({ institution = 'nirvana' }: { institution?: 'nirvana' | 'yunnan' }) {
+  const basePath = institution === 'yunnan' ? '/yunnan' : '/products';
   const { id } = useParams(),
     navigate = useNavigate(),
     { member } = useAuth(),
@@ -99,7 +100,7 @@ export default function Editor() {
   async function load(restoreLocal = true) {
     try {
       const data = await readProduct(id!);
-      if (!data) throw new Error('产品不存在或无法读取。');
+      if (!data || (data.product.institution || 'nirvana') !== institution) throw new Error('产品不存在或不属于当前机构。');
       let cached = null;
       if (restoreLocal && localKey) {
         try {
@@ -136,7 +137,7 @@ export default function Editor() {
     setBundle(null);
     setOriginal(null);
     void load();
-  }, [id]);
+  }, [id,institution]);
   if (!bundle || !original)
     return (
       <section>
@@ -441,7 +442,7 @@ export default function Editor() {
           </p>
         </div>
         <div className="row">
-          <button onClick={() => navigate('/products')}>返回列表</button>
+          <button onClick={() => navigate(basePath)}>返回列表</button>
           <button
             onClick={() => {
               if (
@@ -533,9 +534,9 @@ export default function Editor() {
                       if (window.confirm('切换类别将清除不适用的属性及价格，是否继续？'))
                         setBundle(reclassify(bundle, Number(v)));
                     }}
-                    options={categories.slice(1).map((n, i) => [String(i + 1), n])}
+                    options={categories.slice(1).map((n, i): [string,string] => [String(i + 1), n]).filter(([id]) => institution !== 'yunnan' || id === '4')}
                   />
-                  <div className="field">
+                  {institution !== 'yunnan' && <div className="field">
                     <label htmlFor="series">园区／产品系列</label>
                     <div className="inline-related">
                       <select
@@ -557,7 +558,7 @@ export default function Editor() {
                         <button onClick={() => setRelated('series')}>＋ 新增</button>
                       )}
                     </div>
-                  </div>
+                  </div>}
                   {field('内部产品代码', 'product_code', 'text', '仅后台可见，填写时必须唯一。')}
                   {p.category_id <= 2 &&
                     field('产品类型', 'product_form', 'text', undefined, [

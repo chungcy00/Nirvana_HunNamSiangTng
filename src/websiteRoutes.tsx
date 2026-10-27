@@ -9,6 +9,7 @@ export type WebsitePages = {
   Category: ComponentType;
   PackageDetail: ComponentType;
   Yunnan: ComponentType;
+  YunnanDetail: ComponentType;
   About: ComponentType;
   Contact: ComponentType;
   PrototypeCatalog: ComponentType<{ home?: boolean }>;
@@ -33,6 +34,7 @@ export function createWebsiteRoutes(pages: WebsitePages) {
       Category,
       PackageDetail,
       Yunnan,
+      YunnanDetail,
       About,
       Contact,
       PrototypeCatalog,
@@ -70,6 +72,7 @@ export function createWebsiteRoutes(pages: WebsitePages) {
           />
           <Route path="/:providerSlug/:categorySlug" element={<Category />} />
           <Route path="/yunnan-siantang" element={<Yunnan />} />
+          <Route path="/yunnan-siantang/products/item/:productId" element={<YunnanDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />

@@ -3,7 +3,9 @@ export type InclusionGroup = { title: string; items: string[] };
 export interface ReligionContent {
   id: string; name: string; isPublished: boolean; inclusions: string[]; inclusionGroups?: InclusionGroup[]; configurationName?: string; configurationNotes?: string; designs: string[];
 }
+export type Institution = 'nirvana' | 'yunnan';
 export interface PrototypeProduct {
+  institution?: Institution;
   databaseId?: string; primaryImage?: import("../catalog/publicRepository").PublicImage; images?: import("../catalog/publicRepository").PublicImage[]; publicPrices?: import("../catalog/publicRepository").PublicPrice[]; description?: string; subtitle?: string; petMethod?: string;
   id: string; name: string; category: number; visible: boolean;
   saleStatus?: import('../../shared/saleStatus').SaleStatus;

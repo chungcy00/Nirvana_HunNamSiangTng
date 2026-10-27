@@ -16,6 +16,7 @@ export const WebsiteRoutes = createWebsiteRoutes({
   Category: lazy(() => import("./pages/Category")),
   PackageDetail: lazy(() => import("./pages/PackageDetail")),
   Yunnan: lazy(() => import("./pages/Yunnan")),
+  YunnanDetail: lazy(() => import("./pages/Yunnan").then(page => ({default:page.YunnanDetail}))),
   About: lazy(() => import("./pages/About")),
   Contact: lazy(() => import("./pages/Contact")),
   PrototypeCatalog: lazy(() =>

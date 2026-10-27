@@ -8,7 +8,7 @@ export function safeNext(value: string | null) {
   )
     return '/products';
   if (
-    !/^\/(?:products(?:\/[a-f0-9-]{36})?|series|religions|notices|audit|settings|yunnan)$/.test(
+    !/^\/(?:products(?:\/[a-f0-9-]{36})?|series|religions|notices|audit|settings|yunnan(?:\/[a-f0-9-]{36})?)$/.test(
       value,
     )
   )
