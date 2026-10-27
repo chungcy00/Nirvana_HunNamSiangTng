@@ -6,6 +6,7 @@ export interface ReligionContent {
 export interface PrototypeProduct {
   databaseId?: string; primaryImage?: import("../catalog/publicRepository").PublicImage; images?: import("../catalog/publicRepository").PublicImage[]; publicPrices?: import("../catalog/publicRepository").PublicPrice[]; description?: string; subtitle?: string; petMethod?: string;
   id: string; name: string; category: number; visible: boolean;
+  saleStatus?: import('../../shared/saleStatus').SaleStatus;
   durationDays?: number; durationNights?: number;
   serviceVenue?: string;
   funeralMethod?: "cremation" | "burial" | "both";
@@ -57,6 +58,7 @@ export function filterProducts(products: readonly PrototypeProduct[], category: 
 }
 export const formatMoney = (value: number) => `RM ${value.toLocaleString("en-MY")}`;
 export function lowestPrice(product: PrototypeProduct): number | undefined {
+  if (product.saleStatus === 'sold_out') return undefined;
   const prices = product.category === 4
     ? product.publicPrices
       ? product.publicPrices.filter(price => price.sale_status !== 'sold_out').map(price => Number(price.amount))
@@ -65,8 +67,10 @@ export function lowestPrice(product: PrototypeProduct): number | undefined {
   return prices.length ? Math.min(...prices) : undefined;
 }
 export function sortProducts(products: PrototypeProduct[], sort: string) {
-  if (sort !== 'price-asc' && sort !== 'price-desc') return products;
   return [...products].sort((a, b) => {
+    const saleOrder = Number(a.saleStatus === 'sold_out') - Number(b.saleStatus === 'sold_out');
+    if (saleOrder) return saleOrder;
+    if (sort !== 'price-asc' && sort !== 'price-desc') return 0;
     const left = lowestPrice(a), right = lowestPrice(b);
     if (left === undefined) return right === undefined ? 0 : 1;
     if (right === undefined) return -1;

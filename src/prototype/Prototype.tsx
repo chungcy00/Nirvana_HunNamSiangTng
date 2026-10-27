@@ -5,6 +5,7 @@ import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext"
 import CatalogImage from "../catalog/PublicImage";
 import { categories, funeralDurationLabel, funeralMethodLabels, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct, type InclusionGroup } from "./model";
 import "./prototype.css";
+import { SoldOutBadge } from "./SoldOutBadge";
 import { useCategoryHover } from "./useCategoryHover";
 
 export { ProductNavigationContext } from './navigation';
@@ -33,8 +34,8 @@ function ProductCard({ product, returnTo }: { product: PrototypeProduct; returnT
 
 function WebsiteProductCard({ product, returnTo, view }: { product: PrototypeProduct; returnTo: string; view: string }) {
   const { detailPath } = useContext(ProductNavigationContext);
-  return <article className={`fgp-card fgp-catalog-card${product.category === 4 ? " fgp-card-funeral" : ""}`}>
-    <Link className="fgp-product-link" to={detailPath(product.id)} state={{ returnTo }} aria-label={`${product.name}，查看详情`}>
+  const soldOut = product.saleStatus === 'sold_out';
+  const content = <>
       {product.category !== 4 && <div className="fgp-product-visual"><ProductImage product={product}/></div>}
       <div className="fgp-card-body">
         <p className="fgp-card-category">{categories.find(c => c.id === product.category)?.name}</p>
@@ -46,9 +47,13 @@ function WebsiteProductCard({ product, returnTo, view }: { product: PrototypePro
         </div>}
         <div className="fgp-card-pricing"><PrototypePrices product={product} compact showCompactNotes/></div>
         {product.productPriceNote && <p className="fgp-catalog-product-note">{product.productPriceNote}</p>}
-        <span className="fgp-card-action">查看详情<ArrowRight size={15} aria-hidden="true"/></span>
+        <span className="fgp-card-action">{soldOut ? '已售罄' : '查看详情'}{!soldOut && <ArrowRight size={15} aria-hidden="true"/>}</span>
       </div>
-    </Link>
+  </>;
+  return <article className={`fgp-card fgp-catalog-card${product.category === 4 ? " fgp-card-funeral" : ""}${soldOut ? ' is-sold-out' : ''}`}>
+    {soldOut ? <div className="fgp-product-link" aria-disabled="true" aria-label={`${product.name}，已售罄`}>{content}</div>
+      : <Link className="fgp-product-link" to={detailPath(product.id)} state={{returnTo}} aria-label={`${product.name}，查看详情`}>{content}</Link>}
+    {soldOut && <div className="fgp-card-sold-overlay"><SoldOutBadge className="fgp-card-sold-badge"/></div>}
   </article>;
 }
 

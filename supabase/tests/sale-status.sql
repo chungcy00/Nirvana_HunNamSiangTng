@@ -21,9 +21,14 @@ BEGIN
   IF NOT EXISTS(SELECT 1 FROM jsonb_array_elements(result->'prices') pr WHERE pr->>'offer_id'=oid::text AND pr->>'sale_status'='sold_out') THEN RAISE EXCEPTION 'Plan sale flag lost'; END IF;
   SELECT updated_at INTO version FROM private.products WHERE id=pid;
   PERFORM api.save_product(pid,version,'{"sale_status":"sold_out"}','{}');
-  IF api.catalog_product_detail(slug) IS NOT NULL OR EXISTS(SELECT 1 FROM jsonb_array_elements(api.catalog_product_list()) p WHERE p->>'id'=pid::text) OR jsonb_array_length(api.catalog_product_snapshot())<>original_count-1 THEN RAISE EXCEPTION 'Whole sold-out product remains public'; END IF;
-  IF jsonb_array_length(api.catalog_product_prices(pid))<>0 THEN RAISE EXCEPTION 'Sold-out product prices remain public'; END IF;
-  IF private.public_product(pid) THEN RAISE EXCEPTION 'Media/public eligibility not revoked'; END IF;
+  IF api.catalog_product_detail(slug)->>'sale_status'<>'sold_out' OR NOT EXISTS(SELECT 1 FROM jsonb_array_elements(api.catalog_product_list()) p WHERE p->>'id'=pid::text) OR jsonb_array_length(api.catalog_product_snapshot())<>original_count THEN RAISE EXCEPTION 'Sold-out reference disappeared'; END IF;
+  IF jsonb_array_length(api.catalog_product_prices(pid))=0 THEN RAISE EXCEPTION 'Reference prices disappeared'; END IF;
+  IF NOT private.public_product(pid) THEN RAISE EXCEPTION 'Reference media eligibility lost'; END IF;
+  SELECT updated_at INTO version FROM private.products WHERE id=pid;
+  PERFORM api.save_product(pid,version,'{"publication_status":"hidden"}','{}');
+  IF api.catalog_product_detail(slug) IS NOT NULL OR private.public_product(pid) THEN RAISE EXCEPTION 'Hidden product leaked as a sold-out reference'; END IF;
+  SELECT updated_at INTO version FROM private.products WHERE id=pid;
+  PERFORM api.save_product(pid,version,'{"publication_status":"published"}','{}');
   IF NOT EXISTS(SELECT 1 FROM private.products WHERE id=pid AND sale_status='sold_out' AND publication_status='published') THEN RAISE EXCEPTION 'Sale flag incorrectly changed publication'; END IF;
   SELECT updated_at INTO version FROM private.products WHERE id=pid;
   PERFORM api.save_product(pid,version,'{"sale_status":"available"}','{}');
@@ -33,6 +38,6 @@ BEGIN
     RAISE EXCEPTION 'Invalid sale status accepted';
   EXCEPTION WHEN check_violation THEN NULL;
   END;
-  RAISE NOTICE 'PASS: partial design/plan retained, whole product hidden, republished by restocking, invalid values rejected';
+  RAISE NOTICE 'PASS: partial design/plan retained, sold-out reference retained, hidden publication excluded, restocking restored, invalid values rejected';
 END $test$;
 ROLLBACK;

@@ -521,7 +521,7 @@ export default function Editor() {
                   {field('产品名称', 'name')}
                   <Field label="产品销售状态" value={p.sale_status || 'available'} options={saleStatusOptions}
                     onChange={v => setProduct('sale_status', v)}
-                    hint="整件产品设为已售罄后不在前台展示；部分售罄请在价格方案或设计图片中设置。" />
+                    hint={p.category_id === 4 ? '殡仪服务已售罄后不在前台展示。' : '已售罄产品仍在前台展示并排到后面；部分售罄请在方案或设计中设置。'} />
                   <Field
                     label="产品类别"
                     value={p.category_id}

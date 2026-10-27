@@ -207,6 +207,9 @@ function ProductDetailBody({
   const funeral = product.category === 4;
   const general = website && !funeral;
   const pricePanelRef = useBoundedPricePanel(funeral);
+  const consultAction = product.saleStatus === 'sold_out'
+    ? <div className="fgp-service-consult fgp-sold-consult" aria-disabled="true">此产品已售罄</div>
+    : <ConsultButton subject={product.name} className="fgp-service-consult">直接咨询</ConsultButton>;
   const [religion, setReligion] = useState("");
   const [design, setDesign] = useState("共通产品图");
   const content = product.religions.filter(
@@ -300,6 +303,7 @@ function ProductDetailBody({
   const overviewContent = (<>
           <span className="fgp-category-label">{category.name}</span>
           <h1>{product.name}</h1>
+        {product.saleStatus === 'sold_out' && <p className="fgp-sold-reference">此产品已售罄，以下资料仅供参考。</p>}
           <ProductTags product={product} />
           {funeral && !website && (
             <div
@@ -476,7 +480,7 @@ function ProductDetailBody({
         {inclusions}
         {!website && pricePanel}
       </div>
-      {general && <section className="fgp-general-consult"><ConsultButton subject={product.name} className="fgp-service-consult">直接咨询</ConsultButton></section>}
+      {general && <section className="fgp-general-consult">{consultAction}</section>}
     </>
   );
   if (general) {
@@ -490,6 +494,7 @@ function ProductDetailBody({
       <header className="fgp-general-heading">
         <ProductTags product={product}/>
         <h1>{product.name}</h1>
+        {product.saleStatus === 'sold_out' && <p className="fgp-sold-reference">此产品已售罄，以下资料仅供参考。</p>}
         {product.subtitle && <p className="fgp-general-subtitle">{product.subtitle}</p>}
         {product.description && <p className="fgp-general-description">{product.description}</p>}
         {generalSpecs.length > 0 && <dl className="fgp-specs">{generalSpecs.map(([label, value]) =>
@@ -501,16 +506,15 @@ function ProductDetailBody({
           {designImages.length > 0 && <section className="fgp-design-comparison" aria-label="宗教与设计参考">
             <h2>宗教与设计参考</h2>
             <div className="fgp-design-grid">{designImages.map(image => <article key={image.id}>
-              <DesignImagePreview label={`${image.design_name?.trim() || image.alt || `${product.name}设计参考`}${image.sale_status === 'sold_out' ? '（已售罄）' : ''}`}>{imageRenderer ? imageRenderer(image) : <CatalogImage image={image}/>}</DesignImagePreview>
+              <DesignImagePreview soldOut={image.sale_status === 'sold_out'} label={`${image.design_name?.trim() || image.alt || `${product.name}设计参考`}${image.sale_status === 'sold_out' ? '（已售罄）' : ''}`}>{imageRenderer ? imageRenderer(image) : <CatalogImage image={image}/>}</DesignImagePreview>
               {image.design_name?.trim() && <h3>{image.design_name}</h3>}
-              {image.sale_status === 'sold_out' && <span className="fgp-sale-status">已售罄</span>}
               {image.religion_id != null && <footer className="fgp-design-footer"><span className="fgp-design-religion">适用：{product.religions.find(r => r.id === String(image.religion_id))?.name}</span></footer>}
             </article>)}</div>
           </section>}
         </div>
         <div className="fgp-general-purchase">
           {pricePanel}
-          <div className="fgp-general-consult"><ConsultButton subject={product.name} className="fgp-service-consult">直接咨询</ConsultButton></div>
+          <div className="fgp-general-consult">{consultAction}</div>
           {inclusions}
         </div>
       </div>
@@ -555,7 +559,7 @@ export function ProductPrices({
         )
         .map((p) => ({
           name: p.offer_name,
-          soldOut: p.sale_status === 'sold_out',
+          soldOut: product.saleStatus === 'sold_out' || p.sale_status === 'sold_out',
           kind: p.price_type,
           amount: Number(p.amount),
           note: cleanPriceNote(p.price_note),
@@ -589,7 +593,7 @@ export function ProductPrices({
         ]
       : product.offers.map((o) => ({
           name: o.name,
-          soldOut: o.saleStatus === 'sold_out',
+          soldOut: product.saleStatus === 'sold_out' || o.saleStatus === 'sold_out',
           kind: "standard",
           amount: o.amount,
           note: cleanPriceNote(product.priceNote),
@@ -655,9 +659,9 @@ export function ProductPrices({
       <div className="fgp-area-prices">
         {groupPricesByArea(displayedRows).map(group => <section key={group.area ?? 'unknown'} className="fgp-area-price-group" aria-label={formatSqft(group.area) || '面积未填写'}>
           <h3>{formatSqft(group.area) || '面积未填写'}</h3>
-          {group.items.map((row,index) => <div className="fgp-area-price-row" key={index}>
+          {group.items.map((row,index) => <div className={`fgp-area-price-row${row.soldOut ? ' is-sold-out' : ''}`} key={index}>
             <span>{pricePlanLabel(row.name)}{row.religionId && `（${product.religions.find(religion=>religion.id===row.religionId)?.name || '宗教配置'}）`}{row.soldOut && <span className="fgp-sale-status">已售罄</span>}</span>
-            <strong>{formatMoney(row.amount)}</strong>
+            <strong>{row.soldOut ? <del>{formatMoney(row.amount)}</del> : formatMoney(row.amount)}</strong>
             {row.specs?.filter(spec=>!spec.startsWith('面积：') && !spec.startsWith('位置：')).length ? <p className="fgp-price-note">{row.specs.filter(spec=>!spec.startsWith('面积：') && !spec.startsWith('位置：')).join(' · ')}</p> : null}
             {renderNote(row.note)}
           </div>)}
@@ -671,7 +675,7 @@ export function ProductPrices({
       className={`fgp-prices${funeral ? " fgp-dual-prices" : ""}${detailed ? " fgp-prices-detail" : ""}${compact ? " fgp-prices-compact" : ""}${detailed && !compact && !funeral && product.category !== 3 ? " fgp-price-table" : ""}`}
     >
       {displayedRows.map((row, index) => (
-        <div className="fgp-price-entry" key={index}>
+        <div className={`fgp-price-entry${row.soldOut ? ' is-sold-out' : ''}`} key={index}>
           {(funeral || !compact || rows.length > 1) && (
             <span>
               {funeral
@@ -684,13 +688,14 @@ export function ProductPrices({
                   : row.name && !['默认方案','产品售价'].includes(row.name)
                     ? row.name
                     : "产品售价"}
+              {row.soldOut && <span className="fgp-sale-status">已售罄</span>}
             </span>
           )}
           <strong>
-            {row.amount > 0 ? formatMoney(row.amount) : unavailable}
+            {row.amount > 0 ? row.soldOut ? <del>{formatMoney(row.amount)}</del> : formatMoney(row.amount) : unavailable}
             {startingPrice && <em>起</em>}
           </strong>
-          {row.soldOut && <span className="fgp-sale-status">已售罄</span>}
+          {row.soldOut && compact && !funeral && rows.length === 1 && <span className="fgp-sale-status">已售罄</span>}
           {detailed && !compact && row.specs?.length ? <p className="fgp-price-note fgp-offer-attributes">{row.specs.join(' · ')}</p> : null}
           {renderNote(row.note)}
         </div>

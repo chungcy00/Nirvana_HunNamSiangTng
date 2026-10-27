@@ -121,6 +121,11 @@
       "local": "20261027120000_catalog_sale_status.sql",
       "remote_version": "20261027020211",
       "remote_name": "catalog_sale_status"
+    },
+    {
+      "local": "20261027130000_catalog_sold_out_reference.sql",
+      "remote_version": "20261027023615",
+      "remote_name": "catalog_sold_out_reference"
     }
   ],
   "hosted_validation": {

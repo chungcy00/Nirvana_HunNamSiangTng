@@ -162,7 +162,8 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
     databaseId: raw.id,
     name: raw.name,
     category: raw.category_id,
-    visible: raw.sale_status !== 'sold_out',
+    visible: raw.category_id !== 4 || raw.sale_status !== 'sold_out',
+    saleStatus: raw.sale_status || 'available',
     capacity: raw.capacity_group,
     capacityCount: raw.capacity_count,
     religions: raw.religions.map((r) => ({
@@ -238,7 +239,7 @@ export async function loadPublicProducts(
   // One RLS-filtered snapshot replaces the list + one detail request per product.
   const records: PublicRecord[] = await publicRpc(config,"catalog_product_snapshot",{},signal);
   if (!Array.isArray(records)) throw new Error("产品资料暂时无法载入，请稍后重试。");
-  return records.filter(record => record.sale_status !== 'sold_out').map(mapPublicProduct);
+  return records.filter(record => record.category_id !== 4 || record.sale_status !== 'sold_out').map(mapPublicProduct);
 }
 
 export function imageEndpoint(config: PublicConfig, image: PublicImage) {

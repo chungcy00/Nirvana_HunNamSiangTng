@@ -1,7 +1,8 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { SoldOutBadge } from './SoldOutBadge';
 import { X } from 'lucide-react';
 
-export function DesignImagePreview({ label, children }: { label: string; children: ReactNode }) {
+export function DesignImagePreview({ label, children, soldOut = false }: { label: string; children: ReactNode; soldOut?: boolean }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const previousOverflow = useRef<string | undefined>(undefined);
   const restoreScroll = () => {
@@ -23,7 +24,7 @@ export function DesignImagePreview({ label, children }: { label: string; childre
       previousOverflow.current = modal.ownerDocument.body.style.overflow;
       modal.showModal();
       modal.ownerDocument.body.style.overflow = 'hidden';
-    }}>{children}</button>
+    }}>{children}{soldOut && <SoldOutBadge className="fgp-design-sold-badge"/>}</button>
     <dialog ref={dialog} className="fgp-gallery-dialog" aria-label={`${label}大图预览`} onClose={restoreScroll} onClick={event => {
       if (!(event.target as Element).closest('.fgp-gallery-dialog-image img')) dialog.current?.close();
     }}>

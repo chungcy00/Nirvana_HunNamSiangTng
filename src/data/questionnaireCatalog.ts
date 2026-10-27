@@ -9,7 +9,7 @@ const categoryNames: Partial<Record<number, ServiceCategory>> = {
   1: '火化土葬', 2: '传统土葬', 3: '骨灰位', 4: '殡仪服务', 7: '宠物纪念',
 };
 export function nirvanaQuestionnaireProducts(prototypeProducts: readonly PrototypeProduct[]): ServiceProduct[] {
-  return visibleProducts(prototypeProducts).flatMap(p => {
+  return visibleProducts(prototypeProducts).filter(p => p.saleStatus !== 'sold_out').flatMap(p => {
     const category = categoryNames[p.category];
     if (!category) return [];
     const availableOffers = p.offers.filter(offer => offer.saleStatus !== 'sold_out');
