@@ -11,7 +11,7 @@ export interface PrototypeProduct {
   funeralMethod?: "cremation" | "burial" | "both";
   capacity?: Capacity; capacityCount?: number; placement?: "indoor" | "outdoor";
   religions: ReligionContent[]; inclusions: string[]; inclusionGroups?: InclusionGroup[];
-  offers: { name: string; amount: number; area?: number; facing?: string; positionType?: string; religionId?: string }[];
+  offers: { name: string; amount: number; saleStatus?: import('../../shared/saleStatus').SaleStatus; area?: number; facing?: string; positionType?: string; religionId?: string }[];
   specifications?: {label: string; value: string}[]; attributeNotes?: {label: string; text: string}[];
   facing?: string; area?: number; preNeed?: number; atNeed?: number;
   referencePrice?: boolean; priceNote?: string; productPriceNote?: string; terms?: string;
@@ -58,8 +58,10 @@ export function filterProducts(products: readonly PrototypeProduct[], category: 
 export const formatMoney = (value: number) => `RM ${value.toLocaleString("en-MY")}`;
 export function lowestPrice(product: PrototypeProduct): number | undefined {
   const prices = product.category === 4
-    ? [product.preNeed, product.atNeed].filter((price): price is number => price !== undefined)
-    : product.offers.map(offer => offer.amount);
+    ? product.publicPrices
+      ? product.publicPrices.filter(price => price.sale_status !== 'sold_out').map(price => Number(price.amount))
+      : [product.preNeed, product.atNeed].filter((price): price is number => price !== undefined)
+    : product.offers.filter(offer => offer.saleStatus !== 'sold_out').map(offer => offer.amount);
   return prices.length ? Math.min(...prices) : undefined;
 }
 export function sortProducts(products: PrototypeProduct[], sort: string) {

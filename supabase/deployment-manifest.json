@@ -116,6 +116,11 @@
       "local": "20261026180830_catalog_preview_service_access.sql",
       "remote_version": "20261026180838",
       "remote_name": "catalog_preview_service_access"
+    },
+    {
+      "local": "20261027120000_catalog_sale_status.sql",
+      "remote_version": "20261027020211",
+      "remote_name": "catalog_sale_status"
     }
   ],
   "hosted_validation": {

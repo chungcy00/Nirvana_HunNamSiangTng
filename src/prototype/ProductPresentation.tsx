@@ -80,6 +80,7 @@ export function ProductImage({
           <CatalogImage key={image.id} image={image} />
         ))}
       {caption && <span className="fgp-image-caption">{caption}</span>}
+      {image?.sale_status === 'sold_out' && <span className="fgp-image-sale fgp-sale-status">已售罄</span>}
     </div>
   );
 }
@@ -438,6 +439,7 @@ function ProductDetailBody({
                   >
                     <ImageIcon size={16} />
                     {d}
+                    {galleryChoices(product).find(choice => choice.label === d)?.image.sale_status === 'sold_out' && <span className="fgp-sale-status">已售罄</span>}
                   </button>
                 ))}
               </div>
@@ -499,8 +501,9 @@ function ProductDetailBody({
           {designImages.length > 0 && <section className="fgp-design-comparison" aria-label="宗教与设计参考">
             <h2>宗教与设计参考</h2>
             <div className="fgp-design-grid">{designImages.map(image => <article key={image.id}>
-              <DesignImagePreview label={image.design_name?.trim() || image.alt || `${product.name}设计参考`}>{imageRenderer ? imageRenderer(image) : <CatalogImage image={image}/>}</DesignImagePreview>
+              <DesignImagePreview label={`${image.design_name?.trim() || image.alt || `${product.name}设计参考`}${image.sale_status === 'sold_out' ? '（已售罄）' : ''}`}>{imageRenderer ? imageRenderer(image) : <CatalogImage image={image}/>}</DesignImagePreview>
               {image.design_name?.trim() && <h3>{image.design_name}</h3>}
+              {image.sale_status === 'sold_out' && <span className="fgp-sale-status">已售罄</span>}
               {image.religion_id != null && <footer className="fgp-design-footer"><span className="fgp-design-religion">适用：{product.religions.find(r => r.id === String(image.religion_id))?.name}</span></footer>}
             </article>)}</div>
           </section>}
@@ -539,7 +542,7 @@ export function ProductPrices({
     ...([1,2,5,6,7].includes(product.category) && differentText(facing, product.facing) ? [`朝向：${differentText(facing, product.facing)}`] : []),
     ...([1,2].includes(product.category) && typeof position === 'string' && position.trim() ? [`位置：${position.trim()}`] : []),
   ];
-  let rows: {name: string; kind: string; amount: number; note: string; specs?: string[]; area?: number | null; position?: string | null; religionId?: string}[] = product.publicPrices
+  let rows: {name: string; kind: string; amount: number; note: string; soldOut?: boolean; specs?: string[]; area?: number | null; position?: string | null; religionId?: string}[] = product.publicPrices
     ? product.publicPrices
         .filter(
           (p) =>
@@ -552,6 +555,7 @@ export function ProductPrices({
         )
         .map((p) => ({
           name: p.offer_name,
+          soldOut: p.sale_status === 'sold_out',
           kind: p.price_type,
           amount: Number(p.amount),
           note: cleanPriceNote(p.price_note),
@@ -585,6 +589,7 @@ export function ProductPrices({
         ]
       : product.offers.map((o) => ({
           name: o.name,
+          soldOut: o.saleStatus === 'sold_out',
           kind: "standard",
           amount: o.amount,
           note: cleanPriceNote(product.priceNote),
@@ -594,6 +599,9 @@ export function ProductPrices({
           religionId: o.religionId,
         }));
   rows = rows.filter((r) => Number.isFinite(r.amount) && r.amount > 0);
+  // Cards quote a purchasable plan rather than a cheaper sold-out reference.
+  // Detail views retain every published plan, with its own sales badge.
+  if (compact && !funeral && rows.some(row => !row.soldOut)) rows = rows.filter(row => !row.soldOut);
   const startingPrice = product.category === 3 || (!funeral && compact && rows.length > 1);
   if ((product.category === 3 || (!funeral && compact)) && rows.length)
     rows = [
@@ -648,7 +656,7 @@ export function ProductPrices({
         {groupPricesByArea(displayedRows).map(group => <section key={group.area ?? 'unknown'} className="fgp-area-price-group" aria-label={formatSqft(group.area) || '面积未填写'}>
           <h3>{formatSqft(group.area) || '面积未填写'}</h3>
           {group.items.map((row,index) => <div className="fgp-area-price-row" key={index}>
-            <span>{pricePlanLabel(row.name)}{row.religionId && `（${product.religions.find(religion=>religion.id===row.religionId)?.name || '宗教配置'}）`}</span>
+            <span>{pricePlanLabel(row.name)}{row.religionId && `（${product.religions.find(religion=>religion.id===row.religionId)?.name || '宗教配置'}）`}{row.soldOut && <span className="fgp-sale-status">已售罄</span>}</span>
             <strong>{formatMoney(row.amount)}</strong>
             {row.specs?.filter(spec=>!spec.startsWith('面积：') && !spec.startsWith('位置：')).length ? <p className="fgp-price-note">{row.specs.filter(spec=>!spec.startsWith('面积：') && !spec.startsWith('位置：')).join(' · ')}</p> : null}
             {renderNote(row.note)}
@@ -682,6 +690,7 @@ export function ProductPrices({
             {row.amount > 0 ? formatMoney(row.amount) : unavailable}
             {startingPrice && <em>起</em>}
           </strong>
+          {row.soldOut && <span className="fgp-sale-status">已售罄</span>}
           {detailed && !compact && row.specs?.length ? <p className="fgp-price-note fgp-offer-attributes">{row.specs.join(' · ')}</p> : null}
           {renderNote(row.note)}
         </div>

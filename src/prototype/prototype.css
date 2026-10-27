@@ -453,3 +453,22 @@
   .fgp-service-price-summary .fgp-prices span { color: #4c5e50; }
   .fgp-service-price-summary .fgp-prices strong { font-size: 22px; }
 }
+
+/* Availability stays readable without recoloring or hiding reference photos. */
+.fgp-sale-status {
+  display: inline-block;
+  width: fit-content;
+  margin: 4px 0;
+  padding: 2px 8px;
+  border: 1px solid #d5d8d2;
+  border-radius: 4px;
+  background: #efefeb;
+  color: #46534b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+}
+.fgp-area-price-row > span .fgp-sale-status { margin-inline-start: 8px; }
+.fgp-image-sale { position: absolute; inset: 12px 12px auto auto; z-index: 1; }
+.fgp-design-grid article > .fgp-sale-status { margin-top: 12px; }

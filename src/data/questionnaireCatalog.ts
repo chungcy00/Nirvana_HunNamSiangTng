@@ -12,13 +12,15 @@ export function nirvanaQuestionnaireProducts(prototypeProducts: readonly Prototy
   return visibleProducts(prototypeProducts).flatMap(p => {
     const category = categoryNames[p.category];
     if (!category) return [];
+    const availableOffers = p.offers.filter(offer => offer.saleStatus !== 'sold_out');
     const variants: Variant[] = p.publicPrices
-      ? p.publicPrices.map(price=>({ label: price.price_type==='pre_need' ? '预购价格' : price.price_type==='at_need' ? '即用价格' : price.offer_name, price:Number(price.amount), timing:price.price_type==='pre_need' ? 'pre' as const : price.price_type==='at_need' ? 'now' as const : undefined, religion:price.religion_id == null ? undefined:p.religions.find(r=>r.id===String(price.religion_id))?.name }))
+      ? p.publicPrices.filter(price=>price.sale_status !== 'sold_out').map(price=>({ label: price.price_type==='pre_need' ? '预购价格' : price.price_type==='at_need' ? '即用价格' : price.offer_name, price:Number(price.amount), timing:price.price_type==='pre_need' ? 'pre' as const : price.price_type==='at_need' ? 'now' as const : undefined, religion:price.religion_id == null ? undefined:p.religions.find(r=>r.id===String(price.religion_id))?.name }))
       : p.category === 4 ? [
         ...(p.preNeed === undefined ? [] : [{ label: '预购价格', price: p.preNeed, timing: 'pre' as const }]),
         ...(p.atNeed === undefined ? [] : [{ label: '即用价格', price: p.atNeed, timing: 'now' as const }]),
-      ] : p.category === 3 ? p.offers.length ? [{ label: '最低起价', price: Math.min(...p.offers.map(o => o.amount)) }] : []
-        : p.offers.map(o => ({ label: p.offers.length > 1 ? o.name : '产品售价', price: o.amount }));
+      ] : p.category === 3 ? availableOffers.length ? [{ label: '最低起价', price: Math.min(...availableOffers.map(o => o.amount)) }] : []
+        : availableOffers.map(o => ({ label: availableOffers.length > 1 ? o.name : '产品售价', price: o.amount }));
+    if (!variants.length && (p.publicPrices?.length || p.offers.length)) return [];
     return [{
       id: p.id, name: p.name, category, provider: '富贵山庄' as const,
       religions: p.religions.length ? p.religions.map(r => r.name) : undefined,
@@ -29,7 +31,7 @@ export function nirvanaQuestionnaireProducts(prototypeProducts: readonly Prototy
       description: p.name, variants,
       includes: p.inclusions.join('；') || '包含项目尚待核实。',
       religiousInclusions: Object.fromEntries(p.religions.map(r => [r.name, r.inclusions])),
-      restriction: [p.referencePrice ? '具体售价及服务内容请与顾问确认。' : p.terms, p.publicPrices ? p.productPriceNote : p.priceNote, ...(p.publicPrices || []).filter(price=>cleanPriceNote(price.price_note)).map(price=>`${price.price_type==='pre_need'?'预购价格':price.price_type==='at_need'?'即用价格':price.offer_name}：${cleanPriceNote(price.price_note)}`)].filter(Boolean).join(' '),
+      restriction: [p.referencePrice ? '具体售价及服务内容请与顾问确认。' : p.terms, p.publicPrices ? p.productPriceNote : p.priceNote, ...(p.publicPrices || []).filter(price=>price.sale_status !== 'sold_out' && cleanPriceNote(price.price_note)).map(price=>`${price.price_type==='pre_need'?'预购价格':price.price_type==='at_need'?'即用价格':price.offer_name}：${cleanPriceNote(price.price_note)}`)].filter(Boolean).join(' '),
       referencePrice: p.referencePrice, startingPrice: p.category === 3,
       source: '富贵山庄产品目录',
     }];

@@ -1,4 +1,5 @@
 import { prepareUploadPreviews } from './imagePreviews';
+import { saleStatusOptions, sameDesign } from '../../../shared/saleStatus';
 import { uploadWithProgress } from './storageUpload';
 import { OfferAttributes } from './OfferAttributes';
 import { draftKey, readDraft, writeDraft } from './draftStorage';
@@ -323,6 +324,7 @@ export default function Editor() {
           alt_text: previous?.alt_text || file.name,
           religion_id: previous?.religion_id || null,
           design_name: previous?.design_name || null,
+          sale_status: previous?.sale_status || 'available',
           image_type: previous?.image_type || uploadImageType,
           sort_order: previous?.sort_order ?? bundle!.product_images.length + jobs.indexOf(job),
           is_primary: previous?.is_primary || false,
@@ -517,6 +519,9 @@ export default function Editor() {
                 <h2>基本资料</h2>
                 <div className="fields">
                   {field('产品名称', 'name')}
+                  <Field label="产品销售状态" value={p.sale_status || 'available'} options={saleStatusOptions}
+                    onChange={v => setProduct('sale_status', v)}
+                    hint="整件产品设为已售罄后不在前台展示；部分售罄请在价格方案或设计图片中设置。" />
                   <Field
                     label="产品类别"
                     value={p.category_id}
@@ -850,6 +855,9 @@ export default function Editor() {
                         </div>
                       </>
                     )}
+                    <Field label="方案销售状态" value={o.sale_status || 'available'} options={saleStatusOptions}
+                      onChange={v => update('product_offers', o.id, 'sale_status', v)}
+                      hint="已售罄方案保留在前台并标注状态；启用与公开价格设置仍独立生效。" />
                     {(p.category_id === 4 ? ['pre_need', 'at_need'] : ['standard']).map((t) =>
                       priceInput(o, t),
                     )}
@@ -960,6 +968,9 @@ export default function Editor() {
                           )
                         }
                       />
+                      {r.image_type === 'design' && <Field label="设计销售状态" value={r.sale_status || 'available'} options={saleStatusOptions}
+                        onChange={v => setRows('product_images', bundle.product_images.map((x: Row) => sameDesign(r, x) ? {...x, sale_status: v} : x))}
+                        hint="已售罄设计仍在前台展示并标注状态；同宗教、同名设计的图片同步修改。" />}
                       {r.image_type === 'design' && r.religion_id && (
                         <p className="help">设计名称可留空；填写后会显示在前台设计图下方。</p>
                       )}

@@ -246,3 +246,15 @@ test('retired length and width never enter save payloads, including recovered ol
     assert.equal(row.facing,'朝北');
   }
 });
+
+test('sales flags serialize independently at product, plan and design levels', () => {
+  const before=structuredClone(base);
+  before.product_images=[{id:'design',image_type:'design',is_published:true,sale_status:'available'}];
+  before.product.sale_status='available';before.product_offers[0].sale_status='available';
+  const after=structuredClone(before);
+  after.product.sale_status='sold_out';after.product_offers[0].sale_status='sold_out';after.product_images[0].sale_status='sold_out';
+  const payload=changesFor(before,after,'published');
+  assert.equal(payload.p_product.sale_status,'sold_out');
+  assert.equal((payload.p_changes.product_offers.upsert![0] as any).sale_status,'sold_out');
+  assert.equal((payload.p_changes.product_images.upsert![0] as any).sale_status,'sold_out');
+});

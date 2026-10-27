@@ -421,6 +421,7 @@ export default function Products() {
                     <span className={`badge ${row.product.publication_status}`}>
                       {statuses[row.product.publication_status]}
                     </span>
+                    <small>{row.product.sale_status === 'sold_out' ? '已售罄 · 前台不展示' : '在售'}</small>
                   </td>
                   <td>
                     <small>

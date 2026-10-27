@@ -40,12 +40,14 @@ export function mapAdminPreviewProduct(
       religion_id: i.religion_id,
       image_type: i.image_type,
       design_name: i.design_name,
+      sale_status: i.sale_status,
       preview_placeholder: i.preview_placeholder,
     }));
   const raw: PublicRecord = {
     id: p.id,
     slug: p.slug || p.id,
     name: p.name || '未命名草稿',
+    sale_status: p.sale_status,
     category_id: p.category_id,
     capacity_group: p.capacity_group as PublicRecord['capacity_group'],
     capacity_count: p.capacity_count,
@@ -81,6 +83,7 @@ export function mapAdminPreviewProduct(
       .map((price: Row) => ({
         offer_id: price.offer_id,
         offer_name: offers.find((o: Row) => o.id === price.offer_id)?.name || '默认方案',
+        sale_status: offers.find((o: Row) => o.id === price.offer_id)?.sale_status,
         religion_id: offers.find((o: Row) => o.id === price.offer_id)?.religion_id,
         facing_override: offers.find((o: Row) => o.id === price.offer_id)?.facing_override,
         area_sqft_override: offers.find((o: Row) => o.id === price.offer_id)?.area_sqft_override,

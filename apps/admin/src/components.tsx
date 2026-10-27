@@ -268,7 +268,7 @@ export function Preview({
           ]}
         />
       </div>
-      <DetailPreviewFrame
+      {mode === 'public' && !product.visible ? <p className="notice" role="status">整件产品已售罄，不在前台展示。可切换「后台全部配置」查看设计与方案。</p> : <DetailPreviewFrame
         key={`${mode}:${religion}:${offer}`}
         product={product}
         mobile={width === 'mobile'}
@@ -286,7 +286,7 @@ export function Preview({
             }}
           />
         )}
-      />
+      />}
     </Modal>
   );
 }

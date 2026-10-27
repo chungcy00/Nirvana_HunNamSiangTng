@@ -6,6 +6,7 @@ export type Product = Row & {
   name: string | null;
   slug: string;
   publication_status: 'draft' | 'published' | 'hidden';
+  sale_status?: 'available' | 'sold_out';
   updated_at: string;
   sort_order: number;
   series_id: string | null;

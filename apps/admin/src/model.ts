@@ -14,6 +14,7 @@ const productFields = [
   'internal_notes',
   'source_reference',
   'publication_status',
+  'sale_status',
 ];
 const childFields: Record<string, string[]> = {
   burial_details: [
@@ -52,6 +53,7 @@ const childFields: Record<string, string[]> = {
     'is_published',
   ],
   product_offers: [
+    'sale_status',
     'id',
     'product_id',
     'offer_code',
@@ -85,6 +87,7 @@ const childFields: Record<string, string[]> = {
     'sort_order',
   ],
   product_images: [
+    'sale_status',
     'id',
     'product_id',
     'religion_id',

@@ -1,8 +1,10 @@
 import { cleanPriceNote } from "../../shared/priceNotes";
+import type { SaleStatus } from "../../shared/saleStatus";
 import { groupInclusions } from "../../shared/inclusionGroups";
 import type { PrototypeProduct, Capacity } from "../prototype/model";
 
 export type PublicImage = {
+  sale_status?: SaleStatus;
   id: string;
   bucket: string;
   path: string;
@@ -13,6 +15,7 @@ export type PublicImage = {
   preview_placeholder?: string | null;
 };
 export type PublicPrice = {
+  sale_status?: SaleStatus;
   offer_id: string;
   offer_name: string;
   religion_id?: number;
@@ -24,6 +27,7 @@ export type PublicPrice = {
   position_type?: string | null;
 };
 export type PublicRecord = {
+  sale_status?: SaleStatus;
   id: string;
   slug: string;
   name: string;
@@ -143,7 +147,7 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
     return `${offer ? offer + "：" : ""}${i.name}${i.quantity != null ? ` × ${i.quantity}${i.unit || ""}` : ""}${i.description ? `（${i.description}）` : ""}`;
   };
   const min = (type: string) => {
-    const rows = prices.filter((p) => p.price_type === type);
+    const rows = prices.filter((p) => p.price_type === type && p.sale_status !== 'sold_out');
     return rows.length
       ? Math.min(...rows.map((p) => Number(p.amount)))
       : undefined;
@@ -158,7 +162,7 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
     databaseId: raw.id,
     name: raw.name,
     category: raw.category_id,
-    visible: true,
+    visible: raw.sale_status !== 'sold_out',
     capacity: raw.capacity_group,
     capacityCount: raw.capacity_count,
     religions: raw.religions.map((r) => ({
@@ -179,6 +183,7 @@ export function projectProductRecord(raw: PublicRecord): PrototypeProduct {
       .filter((p) => !["pre_need", "at_need"].includes(p.price_type))
       .map((p) => ({
         name: p.offer_name || "产品售价",
+        saleStatus: p.sale_status,
         amount: Number(p.amount),
         area: p.area_sqft_override == null ? undefined : Number(p.area_sqft_override),
         facing: p.facing_override?.trim() || undefined,
@@ -233,7 +238,7 @@ export async function loadPublicProducts(
   // One RLS-filtered snapshot replaces the list + one detail request per product.
   const records: PublicRecord[] = await publicRpc(config,"catalog_product_snapshot",{},signal);
   if (!Array.isArray(records)) throw new Error("产品资料暂时无法载入，请稍后重试。");
-  return records.map(mapPublicProduct);
+  return records.filter(record => record.sale_status !== 'sold_out').map(mapPublicProduct);
 }
 
 export function imageEndpoint(config: PublicConfig, image: PublicImage) {
