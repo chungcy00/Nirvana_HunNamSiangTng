@@ -138,7 +138,7 @@ export default function NeedsQuestionnaire() {
       {!ready ? <p className="needs-empty">完成以上选择，即可查看相关服务</p> : <>
         {!matches.length && !browsing && <div className="needs-empty"><p>目前没有找到符合全部条件的资料，您可以放宽预算、查看其他选择，或直接与顾问沟通。</p><div className="button-row"><button className="button button-outline" type="button" onClick={()=>change('budget','any')}>放宽预算</button><button className="button button-outline" type="button" onClick={()=>{setBrowsing(true);}}>查看其他选择</button><a className="button" href={whatsappUrl(summary) || '/contact'} target="_blank" rel="noopener noreferrer">联系顾问</a></div></div>}
         {browsing && <p className="needs-confirm">以下为当前类别全部相关产品，可能不符合当前条件。修改答案后恢复筛选。</p>}
-        {(answers.category==='殡仪服务'?['富贵山庄','云南善堂']:['富贵山庄']).map(provider=>{
+        {(['富贵山庄', ...(answers.category==='殡仪服务' && currentProducts.some(p=>p.provider==='云南善堂') ? ['云南善堂'] : [])]).map(provider=>{
           const confirmed = (browsing?currentProducts:matches).filter(p=>p.provider===provider);
           const pending = browsing?[]:uncertain.filter(p=>p.provider===provider);
           return <section className="needs-provider" key={provider}><h4>{provider}</h4>

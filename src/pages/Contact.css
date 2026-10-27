@@ -1,0 +1,67 @@
+/* Contact-only styles preserve the site shell and questionnaire business rules. */
+.contact-page { --green: #2d4336; --green-hover: #23352a; --muted: #5a655d; color: #1a201c; background: #faf9f6; }
+.contact-page .page-hero { padding-block: 48px 24px; background: transparent; border: 0; }
+.contact-page .page-hero-inner { padding-block: 0; }
+.contact-page .page-hero h1 { font-size: clamp(30px, 3.4vw, 44px); line-height: 1.5; }
+.contact-page .page-hero .hero-description { max-width: 65ch; margin-top: 12px; font-size: 16px; }
+.contact-page .contact-layout { grid-template-columns: minmax(0, 3fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 80px); padding-block: 40px 64px; }
+.contact-page .contact-information { padding-top: 8px; min-width: 0; }
+.contact-page .contact-information > h2 { font-size: 26px; }
+.contact-page .contact-items { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 32px; }
+.contact-page .contact-item { gap: 16px; align-items: center; min-width: 0; }
+.contact-page .contact-item > svg { flex-shrink: 0; padding: 10px; border-color: var(--line); color: var(--green); background: white; }
+.contact-page .contact-item span { font-size: 12px; margin-bottom: 4px; }
+.contact-page .contact-item a, .contact-page .contact-item p { font-size: 16px; }
+.contact-page .contact-item a { color: #1a201c; transition: color 150ms; }
+.contact-page .contact-item a:hover { color: var(--green); }
+.contact-page .contact-form { min-width: 0; padding: 32px; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 4px 20px -2px #2d43360a; }
+.contact-page .contact-form h2 { font-size: 24px; }
+.contact-page .contact-form form { display: grid; gap: 20px; margin-top: 28px; }
+.contact-page .contact-form label { margin: 0; font-size: 14px; }
+.contact-page .contact-form label small { font-size: 12px; color: var(--muted); }
+.contact-page .contact-form .form-row { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.contact-page .contact-form input:not([type="checkbox"]):not([type="hidden"]), .contact-page .contact-form select, .contact-page .contact-form textarea { min-width: 0; border-color: var(--line); border-radius: 6px; background: white; font-size: 14px; }
+.contact-page .contact-form input[aria-invalid="true"] { border-color: #a32d2d; }
+.contact-page .contact-form input:not([type="checkbox"]):focus-visible, .contact-page .contact-form select:focus-visible, .contact-page .contact-form textarea:focus-visible { outline: 1px solid var(--green); outline-offset: 0; border-color: var(--green); }
+.contact-page .contact-form input::placeholder, .contact-page .contact-form textarea::placeholder { color: var(--muted); }
+.contact-page .contact-form .callback-choice { gap: 10px; min-height: 44px; }
+.contact-page .contact-form .button { min-height: 48px; margin-top: 4px; border-radius: 6px; }
+.contact-page .contact-form form > p:last-child { text-align: center; font-size: 12px; }
+.contact-page .button:hover { transform: none; }
+.contact-page .needs-questionnaire { padding-block: 56px 80px; }
+.contact-page .needs-intro { max-width: 760px; margin-bottom: 40px; }
+.contact-page .needs-intro h2 { font-size: 28px; }
+.contact-page .needs-intro p { margin-top: 10px; }
+.contact-page .needs-question { margin-bottom: 36px; }
+.contact-page .needs-question legend { font-size: 18px; margin-bottom: 16px; }
+.contact-page .needs-option { border-radius: 10px; border-color: var(--line); padding: 16px; min-height: 60px; transition: background-color 150ms, border-color 150ms; }
+.contact-page .needs-question.is-enabled .needs-option { border-color: var(--line); }
+.contact-page .needs-question.is-enabled .needs-option:hover { border-color: var(--green); }
+.contact-page .needs-question.is-enabled .needs-option:not(.is-selected):hover { background: #f4f2ed66; border-color: #2d433699; }
+.contact-page .needs-question .needs-option.is-selected { background: #f2f4ef; border-color: var(--green); }
+.contact-page .needs-reference { padding: 0 16px; border: 1px solid var(--line); border-radius: 8px; background: white; }
+.contact-page .needs-reference[open] { padding-bottom: 16px; }
+.contact-page .needs-results { margin-top: 32px; padding-top: 32px; }
+.contact-page .needs-product { border-radius: 12px; padding: 24px; }
+.contact-page .needs-product-heading { flex-wrap: wrap; gap: 8px 16px; }
+.contact-page .needs-product .button { width: 100%; border-radius: 6px; }
+.contact-page .needs-inquiry-action { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--line); }
+.contact-page .needs-inquiry-action .button { border-radius: 6px; }
+.contact-page .needs-inquiry-action > p { margin-top: 12px; }
+@media (max-width: 900px) {
+  .contact-page .contact-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .contact-page .contact-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .contact-page .page-hero { padding-block: 28px 12px; }
+  .contact-page .contact-layout { padding-block: 24px 40px; }
+  .contact-page .contact-items { grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 24px; }
+  .contact-page .contact-form { padding: 24px; }
+  .contact-page .contact-form h2 { font-size: 22px; }
+  .contact-page .needs-questionnaire { padding-block: 40px 56px; }
+  .contact-page .needs-intro h2 { font-size: 26px; }
+  .contact-page .needs-question legend { font-size: 17px; }
+  .contact-page .needs-option { padding: 14px; }
+  .contact-page .needs-product { padding: 20px; }
+  .contact-page .needs-inquiry-action .button { width: 100%; }
+}
