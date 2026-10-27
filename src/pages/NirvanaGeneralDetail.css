@@ -15,7 +15,7 @@
 .fgp-general-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; gap: 32px; }
 .fgp-general-media, .fgp-general-purchase { min-width: 0; }
 .fgp-general-media { display: grid; gap: 32px; }
-.fgp-general-purchase { padding: 28px; border: 1px solid var(--p-line); border-top: 3px solid #c5b69f; border-radius: 8px; background: white; box-shadow: 0 6px 24px -4px #2d43360d; }
+.fgp-general-purchase { grid-column: 2; grid-row: 1; padding: 28px; border: 1px solid var(--p-line); border-top: 3px solid #c5b69f; border-radius: 8px; background: white; box-shadow: 0 6px 24px -4px #2d43360d; }
 .fgp-website .fgp-general-purchase .fgp-price-panel { position: static; padding: 0; margin: 0; border: 0; background: transparent; border-radius: 0; }
 .fgp-website .fgp-general-purchase .fgp-price-panel h2 { font-size: 20px; margin: 0 0 20px; padding-bottom: 16px; border-bottom: 1px solid var(--p-line); color: var(--p-green); }
 .fgp-website .fgp-general-purchase .fgp-price-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: baseline; padding: 18px; border: 1px solid #e7e4dc; background: #f8f7f4; border-radius: 4px; }
@@ -71,6 +71,7 @@
 
 @media (max-width: 1100px) {
   .fgp-general-body { grid-template-columns: minmax(0, 1fr); }
+  .fgp-general-purchase { grid-column: auto; grid-row: auto; }
   .fgp-design-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 767px) {
