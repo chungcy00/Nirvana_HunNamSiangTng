@@ -61,7 +61,9 @@ export function WebsiteProductCard({ product, returnTo, view, pricing, footer, d
 }
 
 export function PrototypeCatalog({ home = false }: { home?: boolean }) {
-  const {products:prototypeProducts,status:publicStatus,refreshingEmpty}=usePublicCatalog();
+  const {products:allProducts,status:publicStatus,refreshingEmpty}=usePublicCatalog();
+  const { institution = 'nirvana' } = useContext(ProductNavigationContext);
+  const prototypeProducts = allProducts.filter(p => (p.institution || 'nirvana') === institution);
   // Preserve a previously validated empty view, never a previous product list.
   const status = publicStatus === "loading" && refreshingEmpty && prototypeProducts.length === 0 ? "ready" : publicStatus;
   const { homePath, listPath, website } = useContext(ProductNavigationContext);
@@ -153,10 +155,10 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
 
 export function PrototypeDetail() {
   const {products:prototypeProducts,status}=usePublicCatalog();
-  const { homePath, listPath, website } = useContext(ProductNavigationContext);
+  const { homePath, listPath, website, institution = 'nirvana' } = useContext(ProductNavigationContext);
   const { productId } = useParams();
   const location = useLocation();
-  const product = visibleProducts(prototypeProducts).find(p=>p.id===productId);
+  const product = visibleProducts(prototypeProducts).find(p=>p.id===productId && (p.institution || 'nirvana') === institution);
   useEffect(()=>{if(website && product)document.title=`${product.name}｜身后事 · 皆可托`;},[product?.name,website]);
   if(status!=="ready")return <PublicCatalogNotice/>;
   if (!product) return <PrototypeNotFound/>;

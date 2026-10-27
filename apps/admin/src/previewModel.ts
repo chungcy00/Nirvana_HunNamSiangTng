@@ -49,6 +49,7 @@ export function mapAdminPreviewProduct(
     name: p.name || '未命名草稿',
     sale_status: p.sale_status,
     category_id: p.category_id,
+    institution: p.institution,
     capacity_group: p.capacity_group as PublicRecord['capacity_group'],
     capacity_count: p.capacity_count,
     subtitle: p.subtitle,

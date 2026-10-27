@@ -8,7 +8,7 @@ import { visibleProducts } from '../prototype/model';
 const categoryNames: Partial<Record<number, ServiceCategory>> = {
   1: '火化土葬', 2: '传统土葬', 3: '骨灰位', 4: '殡仪服务', 7: '宠物纪念',
 };
-export function nirvanaQuestionnaireProducts(prototypeProducts: readonly PrototypeProduct[]): ServiceProduct[] {
+function projectQuestionnaireProducts(prototypeProducts: readonly PrototypeProduct[]): ServiceProduct[] {
   return visibleProducts(prototypeProducts).filter(p => p.saleStatus !== 'sold_out').flatMap(p => {
     const category = categoryNames[p.category];
     if (!category) return [];
@@ -27,7 +27,7 @@ export function nirvanaQuestionnaireProducts(prototypeProducts: readonly Prototy
     });
     if (!variants.length && (p.publicPrices?.length || p.offers.length)) return [];
     return [{
-      id: p.id, name: p.name, category, provider: '富贵山庄' as const,
+      id: p.id, name: p.name, category, provider: p.institution === 'yunnan' ? '云南善堂' as const : '富贵山庄' as const,
       religions: p.religions.length ? p.religions.map(r => r.name) : undefined,
       capacity: p.capacity ? ({ single: '单人', double: '双人', triple: '或以上', four_plus: '或以上', family: '或以上' }[p.capacity]) : undefined,
       capacityLabel: p.capacity ? ({ single: '单人', double: '双人', triple: '三人', four_plus: p.capacityCount ? `${p.capacityCount}人` : '四人及以上', family: '家庭' }[p.capacity]) : undefined,
@@ -38,12 +38,18 @@ export function nirvanaQuestionnaireProducts(prototypeProducts: readonly Prototy
       religiousInclusions: Object.fromEntries(p.religions.map(r => [r.name, r.inclusions])),
       restriction: [p.referencePrice ? '具体售价及服务内容请与顾问确认。' : p.terms, p.publicPrices ? p.productPriceNote : p.priceNote, ...(p.publicPrices || []).filter(price=>price.sale_status !== 'sold_out' && cleanPriceNote(price.price_note)).map(price=>`${price.price_type==='pre_need'?'预购价格':price.price_type==='at_need'?'即用价格':price.offer_name}：${cleanPriceNote(price.price_note)}`)].filter(Boolean).join(' '),
       referencePrice: p.referencePrice, startingPrice: p.category === 3,
-      source: '富贵山庄产品目录',
+      source: p.institution === 'yunnan' ? '云南善堂产品目录' : '富贵山庄产品目录',
     }];
   });
 }
+export function nirvanaQuestionnaireProducts(products: readonly PrototypeProduct[]): ServiceProduct[] {
+  return projectQuestionnaireProducts(products.filter(p => (p.institution || 'nirvana') === 'nirvana'));
+}
+export function institutionQuestionnaireProducts(products: readonly PrototypeProduct[]): ServiceProduct[] {
+  return projectQuestionnaireProducts(products.filter(p => p.institution !== 'yunnan' || p.category === 4));
+}
 export function questionnaireProductPath(p: ServiceProduct) {
-  return p.provider === '云南善堂' ? '/yunnan-siantang' : `/nirvana/products/item/${encodeURIComponent(p.id)}`;
+  return p.provider === '云南善堂' ? `/yunnan-siantang/products/item/${encodeURIComponent(p.id)}` : `/nirvana/products/item/${encodeURIComponent(p.id)}`;
 }
 export function questionnaireIncludes(p: ServiceProduct, answers: Answers) {
   const religious = Object.entries(p.religiousInclusions || {})

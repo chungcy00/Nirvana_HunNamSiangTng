@@ -6,7 +6,7 @@ import Nirvana from "../src/pages/Nirvana";
 import NirvanaProducts from "../src/pages/NirvanaProducts";
 import Category from "../src/pages/Category";
 import PackageDetail from "../src/pages/PackageDetail";
-import Yunnan from "../src/pages/Yunnan";
+import Yunnan, { YunnanDetail } from "../src/pages/Yunnan";
 import About from "../src/pages/About";
 import Contact from "../src/pages/Contact";
 import {
@@ -21,6 +21,7 @@ export const WebsiteRoutes = createWebsiteRoutes({
   Category,
   PackageDetail,
   Yunnan,
+  YunnanDetail,
   About,
   Contact,
   PrototypeCatalog,

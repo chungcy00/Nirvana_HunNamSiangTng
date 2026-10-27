@@ -38,7 +38,7 @@ export function DetailPreviewFrame({
           <ProductNavigationContext.Provider
             value={{
               website: true,
-              homePath: '/nirvana',
+              homePath: product.institution === 'yunnan' ? '/yunnan-siantang' : '/nirvana',
               listPath: () => '/nirvana',
               detailPath: () => '',
             }}

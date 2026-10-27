@@ -12,6 +12,7 @@ import {
 } from "../src/catalog/repository";
 import { CatalogProvider } from "../src/catalog/context";
 import { WebsiteRoutes } from "./eagerWebsiteRoutes";
+import { PublicCatalogContext } from '../src/catalog/publicContext';
 import LegacyProvider from "../src/pages/Nirvana";
 import CategoryPage from "../src/pages/Category";
 import PackageDetail from "../src/pages/PackageDetail";
@@ -21,11 +22,11 @@ import type { CatalogSnapshot, Category } from "../src/types";
 const seed = () => structuredClone(catalogData);
 function render(path: string, data = seed()) {
   return renderToStaticMarkup(
-    <CatalogProvider data={data}>
+    <PublicCatalogContext.Provider value={{products:[],status:"ready",retry:()=>{}}}><CatalogProvider data={data}>
       <MemoryRouter initialEntries={[path]}>
         <Routes>{path==="/nirvana" && <Route path="/:providerSlug" element={<LegacyProvider/>}/>}<Route path="/:providerSlug/packages/:slug" element={<PackageDetail/>}/><Route path="/:providerSlug/:categorySlug" element={<CategoryPage/>}/><Route path="*" element={<WebsiteRoutes/>}/></Routes>
       </MemoryRouter>
-    </CatalogProvider>,
+    </CatalogProvider></PublicCatalogContext.Provider>,
   );
 }
 function addCategory(data: CatalogSnapshot, overrides: Partial<Category> = {}) {
@@ -412,11 +413,11 @@ test("zero and As-Need-only prices render, and partial installment fields do not
   assert(html.includes("RM 0"));
   assert(!html.includes("undefined"));
   const card = renderToStaticMarkup(
-    <CatalogProvider data={data}>
+    <PublicCatalogContext.Provider value={{products:[],status:"ready",retry:()=>{}}}><CatalogProvider data={data}>
       <MemoryRouter>
         <ProductCard product={product} />
       </MemoryRouter>
-    </CatalogProvider>,
+    </CatalogProvider></PublicCatalogContext.Provider>,
   );
   assert(card.includes("即时需求价（As-Need）"));
   assert(card.includes("RM 0"));

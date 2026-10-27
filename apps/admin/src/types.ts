@@ -2,6 +2,7 @@
 // restricted by the serializer and database column allowlists, never arbitrary SQL.
 export type Row = { id: string; [key: string]: any };
 export type Product = Row & {
+  institution?: 'nirvana' | 'yunnan';
   category_id: number;
   name: string | null;
   slug: string;

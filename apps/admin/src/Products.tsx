@@ -9,10 +9,12 @@ import { priceLines } from './model';
 import { type Bundle, type Row, categories, capacities, statuses, money } from './types';
 export function ProductSort({
   category,
+  institution = 'nirvana',
   onClose,
   onSaved,
 }: {
   category: number;
+  institution?: 'nirvana' | 'yunnan';
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -27,7 +29,7 @@ export function ProductSort({
     let active = true;
     setLoading(true);
     setError('');
-    rpc<Row[]>('admin_category_order', { p_category: cat })
+    rpc<Row[]>('admin_institution_category_order', { p_institution: institution, p_category: cat })
       .then((data) => {
         if (active) {
           setRows(data);
@@ -43,7 +45,7 @@ export function ProductSort({
     return () => {
       active = false;
     };
-  }, [cat]);
+  }, [cat,institution]);
   const close = () => {
     if (!busy && (!changed || window.confirm('排序尚未保存，是否放弃本次调整？'))) onClose();
   };
@@ -64,7 +66,7 @@ export function ProductSort({
         onChange={(v) => {
           if (!changed || window.confirm('当前类别排序未保存，是否放弃并切换？')) setCat(Number(v));
         }}
-        options={categories.slice(1).map((n, i) => [String(i + 1), n])}
+        options={categories.slice(1).map((n, i): [string,string] => [String(i + 1), n]).filter(([id]) => institution !== 'yunnan' || id === '4')}
         disabled={busy}
       />
       {error && (
@@ -129,7 +131,8 @@ export function ProductSort({
               setBusy(true);
               setError('');
               try {
-                await rpc('admin_reorder_products', {
+                await rpc('admin_institution_reorder_products', {
+                  p_institution: institution,
                   p_category: cat,
                   p_order: rows.map(({ id, updated_at }) => ({ id, updated_at })),
                 });
@@ -148,11 +151,12 @@ export function ProductSort({
     </Modal>
   );
 }
-export default function Products() {
+export default function Products({ institution = 'nirvana' }: { institution?: 'nirvana' | 'yunnan' }) {
+  const basePath = institution === 'yunnan' ? '/yunnan' : '/products';
   const { refs, notify } = useAdmin(),
     { member } = useAuth(),
     navigate = useNavigate();
-  const [category, setCategory] = useState(0),
+  const [category, setCategory] = useState(institution === 'yunnan' ? 4 : 0),
     [query, setQuery] = useState(''),
     [series, setSeries] = useState(''),
     [status, setStatus] = useState(''),
@@ -164,7 +168,7 @@ export default function Products() {
     [revision, setRevision] = useState(0),
     [newProduct, setNewProduct] = useState(false),
     [guide, setGuide] = useState(false),
-    [newCategory, setNewCategory] = useState(1),
+    [newCategory, setNewCategory] = useState(institution === 'yunnan' ? 4 : 1),
     [sort, setSort] = useState(false),
     [preview, setPreview] = useState<Bundle | null>(null);
   const lastQuery = useRef(query);
@@ -175,7 +179,8 @@ export default function Products() {
     lastQuery.current = query;
     setLoading(true);
     const timer = setTimeout(() => {
-      rpc('admin_product_list', {
+      rpc('admin_institution_product_list', {
+        p_institution: institution,
         p_query: query,
         p_category: category || null,
         p_series: series || null,
@@ -200,7 +205,7 @@ export default function Products() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [query, category, series, status, page, revision]);
+  }, [query, category, series, status, page, revision,institution]);
   function filter(fn: () => void) {
     fn();
     setPage(1);
@@ -229,7 +234,7 @@ export default function Products() {
       if (type === 'copy') {
         const result = await copyProduct(row.product.id, row.product.updated_at);
         notify('产品已复制为新草稿，所有公开开关已关闭。');
-        navigate(`/products/${result.product.id}`);
+        navigate(`${basePath}/${result.product.id}`);
         return;
       }
       if (type === 'delete') {
@@ -296,7 +301,7 @@ export default function Products() {
         </Modal>
       )}
       <nav className="tabs" aria-label="产品类别">
-        {categories.map((name, i) => (
+        {categories.map((name, i) => ({name,i})).filter(({i}) => institution !== 'yunnan' || i === 4).map(({name,i}) => (
           <button
             key={name}
             className={category === i ? 'active' : ''}
@@ -317,7 +322,7 @@ export default function Products() {
           onChange={(e) => filter(() => setQuery(e.target.value))}
           placeholder="搜索名称或内部编号"
         />
-        <select
+        {institution !== 'yunnan' && <select
           aria-label="按园区系列筛选"
           value={series}
           onChange={(e) => filter(() => setSeries(e.target.value))}
@@ -328,7 +333,7 @@ export default function Products() {
               {s.name}
             </option>
           ))}
-        </select>
+        </select>}
         <select
           aria-label="按发布状态筛选"
           value={status}
@@ -431,7 +436,7 @@ export default function Products() {
                     </small>
                   </td>
                   <td className="actions">
-                    <button onClick={() => navigate(`/products/${row.product.id}`)}>
+                    <button onClick={() => navigate(`${basePath}/${row.product.id}`)}>
                       {member?.role === 'admin' || row.product.publication_status === 'draft'
                         ? '编辑'
                         : '查看'}
@@ -501,7 +506,7 @@ export default function Products() {
             label="产品类别"
             value={newCategory}
             onChange={(v) => setNewCategory(Number(v))}
-            options={categories.slice(1).map((n, i) => [String(i + 1), n])}
+            options={categories.slice(1).map((n, i): [string,string] => [String(i + 1), n]).filter(([id]) => institution !== 'yunnan' || id === '4')}
           />
           <div className="row">
             <button disabled={busy} onClick={() => setNewProduct(false)}>
@@ -514,10 +519,10 @@ export default function Products() {
                 setBusy(true);
                 try {
                   const result = await rpc('save_product', {
-                    p_product: { category_id: newCategory },
+                    p_product: { category_id: newCategory, institution },
                   });
                   setNewProduct(false);
-                  navigate(`/products/${result.id}`);
+                  navigate(`${basePath}/${result.id}`);
                 } catch (e) {
                   setError(errorText(e));
                   setNewProduct(false);
@@ -532,7 +537,7 @@ export default function Products() {
         </Modal>
       )}
       {sort && (
-        <ProductSort
+        <ProductSort institution={institution}
           category={category}
           onClose={() => setSort(false)}
           onSaved={() => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Building2 } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { AuthProvider, Login, useAuth } from './auth';
 import AuthReturn from './AuthReturn';
 import AuthVerification from './AuthVerification';
@@ -234,7 +234,7 @@ function Shell() {
           </label>
           <nav className="nav">
             {yunnan ? (
-              <NavLink to="/yunnan">后台管理</NavLink>
+              <NavLink to="/yunnan">殡仪服务管理</NavLink>
             ) : (
               links
                 .filter(([path]) => member?.role === 'admin' || path !== '/audit')
@@ -317,23 +317,8 @@ function Shell() {
                     </>
                   }
                 />
-                <Route
-                  path="/yunnan"
-                  element={
-                    <section className="institution-placeholder">
-                      <div>
-                        <Building2 size={64} strokeWidth={1.5} />
-                        <h1>云南善堂｜后台管理</h1>
-                        <span className="badge">功能规划中</span>
-                        <p>云南善堂后台管理功能尚在规划阶段。</p>
-                        <p>
-                          未来将根据云南善堂的实际服务项目、产品资料及管理需求，逐步建立相应的后台管理功能。
-                        </p>
-                        <p>目前仅预留后台入口，暂不提供产品新增、编辑或发布功能。</p>
-                      </div>
-                    </section>
-                  }
-                />
+                <Route path="/yunnan" element={<Products key="yunnan" institution="yunnan" />} />
+                <Route path="/yunnan/:id" element={<Editor institution="yunnan" />} />
                 <Route path="/" element={<Navigate to="/products" replace />} />
                 <Route
                   path="*"

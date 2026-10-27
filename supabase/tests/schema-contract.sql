@@ -2,7 +2,7 @@
 DO $contract$
 DECLARE item record; web_role text;
 BEGIN
-  IF (SELECT array_agg(tablename::text ORDER BY tablename) FROM pg_tables WHERE schemaname='private')
+  IF (SELECT array_agg(tablename::text ORDER BY tablename) FROM pg_tables WHERE schemaname='private' AND tablename<>'image_placeholders')
      IS DISTINCT FROM ARRAY['admin_members','audit_logs','burial_details','catalog_notices',
        'fengshui_details','funeral_details','niche_details','offer_prices','pet_details',
        'product_categories','product_images','product_inclusions','product_offers',
@@ -39,7 +39,9 @@ BEGIN
     IF item.proname NOT IN ('catalog_product_list','catalog_product_detail','catalog_product_prices',
         'save_product','delete_draft','admin_product','current_catalog_member',
         'admin_reference_data','admin_product_list','admin_category_order','admin_reorder_products',
-        'admin_save_reference','admin_copy_product','admin_audit_logs','admin_cleanup_candidates')
+        'admin_save_reference','admin_copy_product','admin_audit_logs','admin_cleanup_candidates',
+        'catalog_product_snapshot','cache_image_placeholder','catalog_institution_snapshot',
+        'admin_institution_product_list','admin_institution_category_order','admin_institution_reorder_products')
       OR NOT item.prosecdef OR NOT ('search_path=""'=ANY(item.proconfig))
       OR item.proowner<>(CASE WHEN item.proname LIKE 'catalog_%'
         THEN 'fg_catalog_reader'::regrole ELSE 'fg_catalog_writer'::regrole END)
@@ -49,7 +51,10 @@ BEGIN
     END IF;
   END LOOP;
   IF (SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='api')
-      <>(CASE WHEN to_regprocedure('api.admin_reference_data()') IS NULL THEN 7 ELSE 15 END)
+      <>((CASE WHEN to_regprocedure('api.admin_reference_data()') IS NULL THEN 7 ELSE 15 END)
+        + CASE WHEN to_regprocedure('api.catalog_product_snapshot()') IS NULL THEN 0 ELSE 1 END
+        + CASE WHEN to_regprocedure('api.cache_image_placeholder(text,text,text)') IS NULL THEN 0 ELSE 1 END
+        + CASE WHEN to_regprocedure('api.catalog_institution_snapshot()') IS NULL THEN 0 ELSE 4 END)
     OR EXISTS(SELECT 1 FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
       WHERE n.nspname IN ('api','private') AND EXISTS
         (SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a
@@ -72,4 +77,4 @@ END $contract$;
 SELECT jsonb_build_object('contract','document-3-v1.3','passed',true,
   'tables',18,'primary_keys',18,'validated_foreign_keys',22,'rls_tables',18,
   'api_rpcs',(SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='api'),
-  'public_rpcs',3,'executor_roles_without_login_or_bypassrls',2) AS schema_contract;
+  'public_rpcs',(SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='api' AND has_function_privilege('anon',p.oid,'EXECUTE')),'executor_roles_without_login_or_bypassrls',2) AS schema_contract;

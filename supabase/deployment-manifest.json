@@ -126,6 +126,11 @@
       "local": "20261027130000_catalog_sold_out_reference.sql",
       "remote_version": "20261027023615",
       "remote_name": "catalog_sold_out_reference"
+    },
+    {
+      "local": "20261027140000_catalog_institutions.sql",
+      "remote_version": "20261027060229",
+      "remote_name": "catalog_institutions"
     }
   ],
   "hosted_validation": {
@@ -150,5 +155,16 @@
     "date": "2026-10-25",
     "scope": "Existing note RPCs only; no business data edits; no GitHub push",
     "business_table_checksums_unchanged": 18
+  },
+  "institution_integration": {
+    "date": "2026-10-27",
+    "institutions": [
+      "nirvana",
+      "yunnan"
+    ],
+    "yunnan_category": 4,
+    "existing_product_count": 20,
+    "existing_products_checksum_unchanged": true,
+    "seeded_products": 0
   }
 }

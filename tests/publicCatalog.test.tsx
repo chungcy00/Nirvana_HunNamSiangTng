@@ -327,6 +327,6 @@ test("complete catalogue loads in one authorization-filtered snapshot request",a
  try {
   globalThis.fetch=(async(url,options)=>{requests.push(String(url));assert.equal(options?.cache,'no-store');return new Response(JSON.stringify([raw]));}) as typeof fetch;
   const records=await loadPublicProducts({url:'https://example.supabase.co',key:'sb_publishable_test'});
-  assert.equal(records.length,1);assert.equal(requests.length,1);assert.match(requests[0],/catalog_product_snapshot$/);
+  assert.equal(records.length,1);assert.equal(requests.length,1);assert.match(requests[0],/catalog_institution_snapshot$/);
  } finally {globalThis.fetch=saved;}
 });
