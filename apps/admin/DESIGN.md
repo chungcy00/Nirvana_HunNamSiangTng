@@ -1,19 +1,19 @@
 # 后台界面依据
 
-模式：Operate。布局沿用用户提供的黑白 HTML。2026-10-27 按用户补充的 Luminous Monochrome 色板与视觉参考统一主题。
+模式：Operate。布局沿用用户提供的黑白 HTML。2026-10-27 以用户最新提供的 stitch_minimalist_admin_redesign/code.html 与 screen.png 为准，采用原型的 Tailwind Neutral 中性灰阶，覆盖此前偏暖色板。
 
 | Token | 值 | 用途 |
 | --- | --- | --- |
-| ink | #1b1c1c | 正文 |
-| muted | #5e5e5e | 次级文字 |
-| canvas | #fbf9f9 | 页面背景 |
+| ink | #262626 | 正文 |
+| muted | #737373 | 次级文字 |
+| canvas | #fafafa | 页面背景 |
 | paper | #ffffff | 表单、表格、弹窗 |
-| line | #c4c7c7 | 边界与分隔线 |
-| surface-container-low | #f5f3f3 | 内层表单背景 |
-| surface-container | #efeded | 轻量分区 |
-| surface-container-high | #e9e8e7 | 标题区 |
-| surface-container-highest | #e3e2e2 | 选中导航 |
-| sidebar | #242424 | 左侧导航 |
+| line | #e5e5e5 | 边界与分隔线 |
+| surface-container-low | #fafafa | 内层表单背景 |
+| surface-container | #f5f5f5 | 轻量分区 |
+| surface-container-high | #f5f5f5 | 标题区 |
+| surface-container-highest | #e5e5e5 | 选中导航 |
+| sidebar | #171717 | 左侧导航 |
 | radius | 6px | 用户指定 HTML 的圆角 |
 | space | 8px | 基础间距 |
 | sidebar-width | 224px | 桌面侧栏；中屏 190px |
@@ -24,7 +24,7 @@
 
 桌面产品编辑为 140px 分区导航，导航与表单间隔 12px；741–1100px 使用 124px 分区导航并将编辑字段收为单列，以保证选择框宽度；≤740px 为抽屉侧栏、横向分区导航及单列表单。此处保留用户先前明确要求的窄导航与紧凑上传工具栏，不用通用 20px gutter 覆盖它们。导航文字左对齐，在支持悬停的设备上使用小幅向下投影，键盘焦点也提供同样反馈；触屏不保留悬停阴影。选中项以填色、字重和圆点区分。
 
-“方案规格”按用户文字要求采用直线下划线、透明底色、零圆角，而不是冲突标注中的 116px 圆角。此规则在全部断点生效；小屏摘要仍允许换行。宗教配置、包含项目分组与明细保留各自的边界和标题层级。
+“方案规格”按最新原型采用独立白色规格框、8px 圆角、浅灰标题栏及下方分隔线，内容区内边距 16px；保留原有折叠及共通值继承逻辑。价格方案外框为 12px 圆角、#fdfdfd 浅底，标题在内部以细线分隔。全部断点采用同一结构，小屏摘要允许换行。宗教配置、包含项目分组与明细保留各自的边界和标题层级。提示文字使用 #737373 保持阅读对比度；没有复制原型虚构的方案编号、同步状态或产品资料。
 
 Inter 变量字体的 Latin 子集随后台本地提供，采用 font-display: swap，不请求外部字体服务。字体 OFL 授权保存在 public/fonts/Inter-OFL.txt。中文使用系统字体；数字使用等宽数字特性。状态通过单色填充、边框和文字表达。
 
