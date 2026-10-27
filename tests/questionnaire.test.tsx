@@ -4,7 +4,7 @@ import { prototypeProducts } from '../src/prototype/products';
 import { questionnaireIncludes } from '../src/data/questionnaireCatalog';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { emptyAnswers, productStatus, complete, updateAnswers, inquirySummary as summary, withinBudget, applicableVariants, type Answers } from '../src/data/questionnaire';
+import { emptyAnswers, referencePriceItems, productStatus, complete, updateAnswers, inquirySummary as summary, withinBudget, applicableVariants, type Answers } from '../src/data/questionnaire';
 const inquirySummary=(a:Answers,ids:string[],browsing:boolean)=>summary(a,ids,browsing,products);
 const funeral: Answers = {...emptyAnswers, category:'殡仪服务',religion:'基督教',situation:'提前规划',budget:'0'};
 const freedom = products.find(p=>p.id==='funeral-2-1')!;
@@ -114,4 +114,34 @@ test('real paragraphs survive WhatsApp redirect parameter encoding on desktop an
  assert.ok(redirect.toString().includes('%0A%0A'));
  assert.equal(new URL(redirect.toString()).searchParams.get('text')!.split('\n').length,text.split('\n').length);
  assert.match(text,/2\. 云南善堂殡仪配套/);
+});
+
+test('reference prices follow preceding answers and ignore the chosen budget',()=>{
+ const a: Answers = {...emptyAnswers,category:'传统土葬',religion:'佛教',capacity:'双人',budget:'0'};
+ const base = {...freedom, id:'double-buddhist',name:'双人佛教福地',category:'传统土葬' as const,religions:['佛教'],capacity:'双人',referencePrice:false,startingPrice:false,variants:[{label:'产品售价',price:123888}]};
+ const records = [base,{...base,id:'single',capacity:'单人'},{...base,id:'christian',religions:['基督教']},{...base,id:'other-category',category:'骨灰位' as const}];
+ assert.deepEqual(referencePriceItems(a,records),[{id:base.id,name:base.name,prices:['RM123,888'],needsConfirmation:false}]);
+ assert.deepEqual(referencePriceItems({...a,budget:'any'},records),referencePriceItems(a,records));
+ assert.deepEqual(referencePriceItems({...a,capacity:''},records),[]);
+ assert.deepEqual(referencePriceItems({...a,capacity:'或以上'},records),[]);
+});
+test('reference prices retain applicable timing, religion and confirmation for missing data',()=>{
+ const product = {...freedom,id:'timed',variants:[
+ {label:'预购价格',price:10000,timing:'pre' as const,religion:'基督教'},
+ {label:'即用价格',price:15000,timing:'now' as const,religion:'基督教'},
+ {label:'预购价格',price:12000,timing:'pre' as const,religion:'佛教'}]};
+ assert.equal(referencePriceItems(funeral,[product])[0].prices[0],'预购价格：RM10,000');
+ assert.equal(referencePriceItems({...funeral,situation:'目前需要安排'},[product])[0].prices[0],'即用价格：RM15,000');
+ const missing = {...product,id:'missing',variants:[]};
+ assert.equal(referencePriceItems(funeral,[missing])[0].prices[0],'价格需咨询确认');
+ assert.equal(referencePriceItems(funeral,[missing])[0].needsConfirmation,true);
+});
+
+test('reference price lines preserve offer areas and never expose niche areas',()=>{
+ const a: Answers = {...emptyAnswers,category:'传统土葬',religion:'佛教',capacity:'双人'};
+ const base = {...freedom,category:'传统土葬' as const,religions:['佛教'],capacity:'双人',startingPrice:false,variants:[{label:'普通地段',price:113888,area:216},{label:'普通地段',price:120888,area:252},{label:'角头地段',price:123888,area:216}]};
+ assert.deepEqual(referencePriceItems(a,[base])[0].prices,['普通地段（216 sqft）：RM113,888','普通地段（252 sqft）：RM120,888','角头地段（216 sqft）：RM123,888']);
+ assert(!referencePriceItems({...a,category:'骨灰位'},[{...base,category:'骨灰位'}])[0].prices.some(line=>line.includes('sqft')));
+ const noArea = {...base,variants:[{label:'普通地段',price:113888}]};
+ assert.deepEqual(referencePriceItems(a,[noArea])[0].prices,['RM113,888']);
 });

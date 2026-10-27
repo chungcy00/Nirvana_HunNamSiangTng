@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, type ComponentPropsWithoutRef } from "react";
+import { useContext, useEffect, useRef, type ReactNode, type ComponentPropsWithoutRef } from "react";
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, X, LayoutGrid, List } from "lucide-react";
 import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext";
@@ -32,7 +32,10 @@ function ProductCard({ product, returnTo }: { product: PrototypeProduct; returnT
   </article>;
 }
 
-function WebsiteProductCard({ product, returnTo, view }: { product: PrototypeProduct; returnTo: string; view: string }) {
+export function WebsiteProductCard({ product, returnTo, view, pricing, footer, detailState, onDetail, linkPath, className = '', id }: {
+  product: PrototypeProduct; returnTo: string; view: string; pricing?: ReactNode; footer?: ReactNode;
+  detailState?: unknown; onDetail?: () => void; linkPath?: string; className?: string; id?: string;
+}) {
   const { detailPath } = useContext(ProductNavigationContext);
   const soldOut = product.saleStatus === 'sold_out';
   const content = <>
@@ -44,14 +47,15 @@ function WebsiteProductCard({ product, returnTo, view }: { product: PrototypePro
           {funeralDurationLabel(product) && <span>{product.durationDays}天{product.durationNights}夜</span>}
           {product.serviceVenue && <span>{product.serviceVenue}</span>}
         </div>}
-        <div className="fgp-card-pricing"><PrototypePrices product={product} compact showCompactNotes/></div>
+        <div className="fgp-card-pricing">{pricing ?? <PrototypePrices product={product} compact showCompactNotes/>}</div>
         {product.productPriceNote && <p className="fgp-catalog-product-note">{product.productPriceNote}</p>}
         <span className="fgp-card-action">{soldOut ? '已售罄' : '查看详情'}{!soldOut && <ArrowRight size={15} aria-hidden="true"/>}</span>
       </div>
   </>;
-  return <article className={`fgp-card fgp-catalog-card${product.category === 4 ? " fgp-card-funeral" : ""}${soldOut ? ' is-sold-out' : ''}`}>
+  return <article id={id} className={`fgp-card fgp-catalog-card${product.category === 4 ? " fgp-card-funeral" : ""}${soldOut ? ' is-sold-out' : ''}${className ? ` ${className}` : ''}`}>
     {soldOut ? <div className="fgp-product-link" aria-disabled="true" aria-label={`${product.name}，已售罄`}>{content}</div>
-      : <Link className="fgp-product-link" to={detailPath(product.id)} state={{returnTo}} aria-label={`${product.name}，查看详情`}>{content}</Link>}
+      : <Link className="fgp-product-link" to={linkPath || detailPath(product.id)} state={detailState ?? {returnTo}} onClick={onDetail} aria-label={`${product.name}，查看详情`}>{content}</Link>}
+    {footer}
     {soldOut && <div className="fgp-card-sold-overlay"><SoldOutBadge className="fgp-card-sold-badge"/></div>}
   </article>;
 }

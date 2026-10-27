@@ -9,7 +9,6 @@ import {
 import { advisor, whatsappUrl } from "../data/site";
 import { callbackPhonePattern, contactInquiryMessage } from "../data/contactInquiry";
 import NeedsQuestionnaire from "../components/NeedsQuestionnaire";
-import { PageHero } from "../components/PageHero";
 import "./Contact.css";
 
 const serviceChoices = [
@@ -38,15 +37,10 @@ export default function Contact() {
   const whatsappAction = whatsappUrl("")?.split("?")[0];
   return (
     <div className="contact-page">
-      <PageHero
-        eyebrow="LET’S TALK, AT YOUR PACE"
-        title="让我们，从一次对话开始"
-        text="无论是提前了解，还是眼前的需要，都可以先说说您的情况。"
-      />
       <section className="container contact-layout section">
         <div className="contact-information">
           <p className="eyebrow">GET IN TOUCH</p>
-          <h2>欢迎与我联系</h2>
+          <h1>欢迎与我联系</h1>
           <p className="muted">选择您觉得自在的方式，开始了解。</p>
           <div className="contact-items">
             {[

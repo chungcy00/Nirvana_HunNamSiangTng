@@ -1,4 +1,5 @@
 import { questionnaireIncludes } from './questionnaireCatalog';
+import { formatSqft } from '../../shared/areaPriceGroups';
 // Question flow is local; Nirvana products and prices are supplied by the public catalogue.
 export const categories = ['骨灰位', '火化土葬', '传统土葬', '殡仪服务', '宠物纪念'] as const;
 export type ServiceCategory = typeof categories[number];
@@ -13,9 +14,23 @@ export const budgetBounds: Record<ServiceCategory, number[]> = {
   骨灰位: [0, 10000, 20000, 50000, 100000], 火化土葬: [0, 20000, 50000],
   传统土葬: [0, 30000, 60000, 100000, 200000], 殡仪服务: [0, 10000, 20000, 30000, 40000], 宠物纪念: [0, 5000, 9000],
 };
-export function referencePriceRange(category: ServiceCategory, products: readonly ServiceProduct[]) {
-  const prices=products.filter(p=>p.category===category).flatMap(p=>p.variants.map(v=>v.price));
-  return prices.length ? `当前公开参考价格：${money(Math.min(...prices))}–${money(Math.max(...prices))}` : '当前暂无公开产品价格，欢迎咨询顾问。';
+export function referencePriceItems(answers: Answers, products: readonly ServiceProduct[]) {
+  // Help choose a budget using preceding answers, independently of that budget.
+  const conditions = { ...answers, budget: 'any' };
+  if (!complete(conditions)) return [];
+  return products.flatMap(product => {
+    const status = productStatus(product, conditions);
+    if (status === 'exclude') return [];
+    const variants = applicableVariants(product, conditions);
+    const prices = variants.map(v => {
+      const religion = v.religion && answers.religion === '其他' ? `（${v.religion}）` : '';
+      const area = product.category !== '骨灰位' ? formatSqft(v.area) : undefined;
+      const areaLabel = area && !v.label.includes(area) ? `（${area}）` : '';
+      const label = variants.length > 1 || v.timing || area ? `${v.label}${areaLabel}${religion}：` : '';
+      return `${label}${money(v.price)}${product.startingPrice ? ' 起' : ''}`;
+    });
+    return [{ id: product.id, name: product.name, prices: prices.length ? prices : ['价格需咨询确认'], needsConfirmation: status === 'confirm' }];
+  });
 }
 export const money = (n: number) => `RM${n.toLocaleString('en-US')}`;
 export function budgetOptions(category: ServiceCategory) {
@@ -27,7 +42,7 @@ export function withinBudget(price: number, a: Answers) {
   const b = budgetBounds[a.category], index = Number(a.budget);
   return price >= b[index] && price < (b[index + 1] ?? Infinity);
 }
-export type Variant = { label: string; price: number; timing?: 'pre' | 'now'; religion?: string };
+export type Variant = { label: string; price: number; timing?: 'pre' | 'now'; religion?: string; area?: number };
 export type ServiceProduct = {
   id: string; name: string; category: ServiceCategory; provider: '富贵山庄' | '云南善堂';
   religions?: string[]; capacity?: string; method?: string; description: string;
