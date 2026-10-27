@@ -27,7 +27,9 @@ export default function CatalogImage({ image }: { image: PublicImage }) {
     },
     [config?.url, config?.key, image.bucket, image.path],
   );
-  const { target, url } = useVisibleImage(identity, load);
+  // Match the short tab snapshot window so returning to the catalogue also
+  // reuses clear thumbnails. The shared resource pool bounds idle image memory.
+  const { target, url } = useVisibleImage(identity, load, 30000);
   const src = url || (identity && inlinePreview(image.preview_placeholder));
   return src ? (
     <img

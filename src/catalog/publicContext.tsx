@@ -9,6 +9,7 @@ import {
 import { LoaderCircle, RotateCcw } from "lucide-react";
 import { createPublicRefresh, type PublicSnapshot } from "./publicRefresh";
 import { useLocation } from "react-router-dom";
+import { readPublicSnapshot, writePublicSnapshot, clearPublicSnapshot } from "./publicSnapshotCache";
 import {
   loadPublicProducts,
   publicConfig,
@@ -26,7 +27,13 @@ export const usePublicCatalog = () => useContext(PublicCatalogContext);
 export function PublicCatalogProvider({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const refreshRef = useRef<ReturnType<typeof createPublicRefresh> | null>(null);
-  const [state, setState] = useState<PublicSnapshot>({ products: [], status: "loading" });
+  const [state, setState] = useState<PublicSnapshot>(() => {
+    try {
+      const config = publicConfig(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, import.meta.env.DEV);
+      const products = readPublicSnapshot(config);
+      return { products: products || [], status: products ? "ready" : "loading", config };
+    } catch { return { products: [], status: "loading" }; }
+  });
   useEffect(() => {
     let config: PublicConfig;
     try {
@@ -41,8 +48,22 @@ export function PublicCatalogProvider({ children }: { children: ReactNode }) {
     }
     const refresh = createPublicRefresh({
       config,
-      load: signal => loadPublicProducts(config, signal),
-      publish: setState,
+      initialProducts: state.status === "ready" ? state.products : undefined,
+      cooldownMs: 15000,
+      load: async signal => {
+        try {
+          const products = await loadPublicProducts(config, signal);
+          if (!signal.aborted) writePublicSnapshot(config, products);
+          return products;
+        } catch (error) {
+          if (!signal.aborted) clearPublicSnapshot();
+          throw error;
+        }
+      },
+      publish: next => {
+        if (next.status === "error") clearPublicSnapshot();
+        setState(next);
+      },
     });
     refreshRef.current = refresh;
     void refresh.refresh();
@@ -65,7 +86,9 @@ export function PublicCatalogProvider({ children }: { children: ReactNode }) {
       clearInterval(interval);
     };
   }, []);
-  useEffect(() => { void refreshRef.current?.refresh({ force: true, foreground: true }); }, [pathname]);
+  // The provider survives list/detail navigation. Keep its validated records on
+  // screen, coalesce nearby navigations and replace them after background reads.
+  useEffect(() => { void refreshRef.current?.refresh(); }, [pathname]);
   return (
     <PublicCatalogContext.Provider
       value={{ ...state, retry: () => { void refreshRef.current?.refresh({ force: true }); } }}

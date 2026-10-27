@@ -158,3 +158,17 @@ test("failed empty-list revalidation removes the empty-view hint and permits ret
   assert.equal(states.at(-1)?.status, "ready");
   refresh.dispose();
 });
+
+test("warm snapshots stay visible during revalidation and navigation events respect the reuse window", async () => {
+  const states: PublicSnapshot[] = [];
+  let clock=0, calls=0;
+  const pending=deferred<readonly typeof product[]>();
+  const refresh=createPublicRefresh({initialProducts:[product],cooldownMs:15000,now:()=>clock,load:()=>{calls++;return pending.promise;},publish:s=>states.push(s)});
+  const check=refresh.refresh();
+  assert.equal(states.length,0,'warm catalogue is not cleared before background validation');
+  assert.strictEqual(refresh.refresh(),check);
+  pending.resolve([product]);await check;
+  clock=14999;await refresh.refresh();assert.equal(calls,1);
+  clock=15000;await refresh.refresh();assert.equal(calls,2);
+  refresh.dispose();
+});

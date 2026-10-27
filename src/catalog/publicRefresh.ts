@@ -11,14 +11,16 @@ export type PublicSnapshot = {
 };
 
 /** Coalesce refresh events without persisting or serving failed/stale results. */
-export function createPublicRefresh({ load, publish, config, now = Date.now, timeoutMs = 20000 }: {
+export function createPublicRefresh({ load, publish, config, initialProducts, cooldownMs = 1000, now = Date.now, timeoutMs = 20000 }: {
   load: (signal: AbortSignal) => Promise<readonly PrototypeProduct[]>;
   publish: (snapshot: PublicSnapshot) => void;
   config?: PublicConfig;
+  initialProducts?: readonly PrototypeProduct[];
+  cooldownMs?: number;
   now?: () => number;
   timeoutMs?: number;
 }) {
-  let snapshot: PublicSnapshot = { products: [], status: "loading", config };
+  let snapshot: PublicSnapshot = { products: initialProducts || [], status: initialProducts ? "ready" : "loading", config };
   let pending: Promise<void> | undefined;
   let controller: AbortController | undefined;
   let disposed = false;
@@ -34,7 +36,7 @@ export function createPublicRefresh({ load, publish, config, now = Date.now, tim
     if (foreground && snapshot.status === "ready") update({ products: [], status: "loading", config, refreshingEmpty: refreshingEmpty || undefined });
     if (pending) return pending;
     // Focus, visibility and pageshow often describe the same return to a tab.
-    if (!force && now() - lastStarted < 1000) return Promise.resolve();
+    if (!force && now() - lastStarted < cooldownMs) return Promise.resolve();
     lastStarted = now();
     const active = new AbortController();
     controller = active;
