@@ -33,6 +33,8 @@
 
 前台使用根目录 `bun.lock`；后台使用独立 `apps/admin/package-lock.json`。
 
+Cloudflare Pages 使用 Bun 1.4.4 和冻结锁文件安装；Vercel 也保留根目录的 npm 锁文件。修改前台依赖后，须同步提交 `package-lock.json` 和 `bun.lock`（可执行 `bun install --lockfile-only`），并验证 `bun install --frozen-lockfile`，否则 Pages 构建失败后会继续提供旧版本。
+
 ```sh
 bun install --frozen-lockfile
 cp .env.example .env.local
