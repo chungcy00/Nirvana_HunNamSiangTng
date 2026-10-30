@@ -1,3 +1,4 @@
+import { CatalogSortSelect } from "../prototype/CatalogSortSelect";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { ArrowRight, LayoutGrid, Leaf, List, RotateCcw } from "lucide-react";
 import { usePublicCatalog, PublicCatalogNotice } from '../catalog/publicContext';
@@ -45,7 +46,7 @@ export default function Yunnan() {
           <div className="fgp-capacities" role="group" aria-labelledby="yunnan-religion-label">{[{id:'',name:'全部宗教'},...religions].map(r=><button key={r.id} type="button" className={religion===r.id?'is-selected':''} aria-pressed={religion===r.id} onClick={()=>change('religion',r.id)}>{r.name}</button>)}</div>
         </div></div>
         <div className="fgp-display-controls">
-          <label className="fgp-sort"><span>排序方式</span><select aria-label="价格排序" disabled={status!=='ready'||!published.length} value={sort} onChange={e=>change('sort',e.target.value==='default'?'':e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
+          <label className="fgp-sort"><span>排序方式</span><CatalogSortSelect aria-label="价格排序" disabled={status!=='ready'||!published.length} value={sort} onChange={e=>change('sort',e.target.value==='default'?'':e.target.value)}><option value="default">默认顺序</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></CatalogSortSelect></label>
           <div className="fgp-view-toggle" role="group" aria-label="展示模式">
             <button type="button" aria-label="双栏网格" aria-pressed={view==='grid'} disabled={status!=='ready'||!published.length} onClick={()=>change('view','')}><LayoutGrid size={18} aria-hidden="true"/></button>
             <button type="button" aria-label="左图右文列表" aria-pressed={view==='list'} disabled={status!=='ready'||!published.length} onClick={()=>change('view','list')}><List size={18} aria-hidden="true"/></button>
