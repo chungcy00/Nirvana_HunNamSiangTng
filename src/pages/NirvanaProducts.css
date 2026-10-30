@@ -34,14 +34,13 @@
 .fgp-website .fgp-sort { display: flex; position: static; width: auto; height: auto; gap: 12px; border: 0; border-radius: 0; color: var(--p-muted); font-size: 13px; }
 .fgp-website .fgp-sort:hover { background: transparent; }
 .fgp-website .fgp-sort select { position: static; opacity: 1; inset: auto; min-height: 44px; width: auto; max-width: 180px; border: 0; border-radius: 4px; padding: 8px 28px 8px 12px; background: var(--p-soft); cursor: pointer; font-size: 13px; }
-.fgp-website .fgp-sort:focus-within { outline: none; }
+.fgp-website .fgp-sort:has(:focus-visible) { outline: none; }
 .fgp-website .fgp-view-toggle { display: flex; padding: 3px; gap: 2px; background: var(--p-soft); border-radius: 4px; }
 .fgp-website .fgp-view-toggle button { width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--p-muted); border-radius: 3px; }
 .fgp-website .fgp-view-toggle button[aria-pressed="true"] { background: white; color: var(--p-green); box-shadow: 0 2px 6px #2d43360a; }
 .fgp-website .fgp-results-heading { padding: 24px 0 18px; }
 .fgp-website .fgp-results-heading h2 { font-size: 18px; font-weight: 500; }
 .fgp-website .fgp-results-heading span { color: var(--p-muted); }
-.fgp-website .fgp-applied button { background: #ebdcc8; border: 0; border-radius: 4px; min-height: 44px; color: #584323; }
 .fgp-website .fgp-view-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .fgp-website .fgp-catalog-card { background: white; border: 0; border-radius: 8px; box-shadow: 0 4px 20px -2px #2d43360a; transition: box-shadow 180ms ease; }
 .fgp-website .fgp-catalog-card:hover { box-shadow: 0 8px 30px -4px #2d433614; }
@@ -209,9 +208,9 @@
 .fgp-website .fgp-catalog-card { position: relative; transition: box-shadow 180ms ease, transform 180ms ease; }
 .fgp-website .fgp-catalog-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 8px; border-top: 2px solid transparent; border-radius: 8px 8px 0 0; pointer-events: none; }
 .fgp-website .fgp-catalog-card:hover,
-.fgp-website .fgp-catalog-card:focus-within { transform: translateY(-2px); box-shadow: 0 10px 28px -6px #2d433626; }
+.fgp-website .fgp-catalog-card:has(:focus-visible) { transform: translateY(-2px); box-shadow: 0 10px 28px -6px #2d433626; }
 .fgp-website .fgp-catalog-card:hover::before,
-.fgp-website .fgp-catalog-card:focus-within::before { border-top-color: #c5a880; }
+.fgp-website .fgp-catalog-card:has(:focus-visible)::before { border-top-color: #c5a880; }
 @media (min-width: 768px) {
   .fgp-website .fgp-catalog-card .fgp-tags > .fgp-desktop-service-venue { display: inline-flex; }
   .fgp-website .fgp-catalog-card .fgp-card-service-meta { display: none; }
@@ -270,7 +269,7 @@
 @media (prefers-reduced-motion: reduce) {
   .fgp-website .fgp-catalog-card { transition: none; }
   .fgp-website .fgp-catalog-card:hover,
-  .fgp-website .fgp-catalog-card:focus-within { transform: none; }
+  .fgp-website .fgp-catalog-card:has(:focus-visible) { transform: none; }
 }
 
 /* Mobile catalog only: keep controls inline and prices readable in two columns. */
