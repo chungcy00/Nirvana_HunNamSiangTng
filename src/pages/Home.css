@@ -15,22 +15,7 @@
 }
 .home-page .home-hero-shell.container { width: 100%; max-width: none; }
 .home-page .button,
-.home-page .portal-link { border-radius: 9999px; }
-.site-header-home .header-consult .button {
-  min-height: 44px;
-  border-radius: 9999px;
-  background: transparent;
-  border: 1px solid #2d433640;
-  color: #2d4336;
-}
-.site-header-home.is-transparent .header-consult .button {
-  border-color: #ffffff80;
-  color: #fffbed;
-}
-.site-header-home .header-consult .button:hover {
-  background: #2d4336;
-  color: #fff;
-}
+.home-page .portal-link { border-radius: var(--button-radius); }
 .home-page .service-portals { padding-block: 80px; }
 .home-page .service-portals .section-heading { margin-bottom: 32px; }
 .home-page .portal-grid { gap: 32px; }
