@@ -57,7 +57,7 @@
 .fgp-website .fgp-prices-compact { margin: 0; gap: 12px; }
 .fgp-website .fgp-prices-compact strong { font-size: 23px; font-weight: 500; white-space: normal; overflow-wrap: anywhere; }
 .fgp-website .fgp-prices-compact:not(.fgp-dual-prices) .fgp-price-entry { flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
-.fgp-website .fgp-card-action { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 22px; min-height: 44px; padding: 8px 12px; background: var(--p-soft); color: var(--p-green); font-size: 13px; border-radius: 4px; }
+.fgp-website .fgp-card-action { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 22px; min-height: 44px; padding: 8px 12px; background: var(--p-soft); color: var(--p-green); font-size: 13px; border-radius: var(--button-radius, 9999px); }
 .fgp-website .fgp-product-link:hover .fgp-card-action { background: #e7e4dc; }
 .fgp-website .fgp-card-funeral .fgp-card-body { padding-top: 0; }
 .fgp-website .fgp-card-funeral .fgp-card-pricing { border: 0; padding: 0; }
@@ -96,7 +96,7 @@
 .fgp-website .fgp-prices-detail strong { font-size: 26px; font-weight: 600; white-space: normal; overflow-wrap: anywhere; }
 .fgp-website .fgp-prices-detail > div + div { border: 0; padding-top: 20px; }
 .fgp-website .fgp-price-note, .fgp-website .fgp-price-terms { color: var(--p-muted); border: 0; padding-top: 0; margin-top: 8px; font-size: 12px; line-height: 1.8; }
-.fgp-website .fgp-service-consult { display: flex; justify-content: center; min-height: 48px; margin-top: 20px; width: 100%; border: 0; border-radius: 4px; background: var(--p-green); color: white; font-size: 14px; }
+.fgp-website .fgp-service-consult { display: flex; justify-content: center; min-height: 48px; margin-top: 20px; width: 100%; border: 0; border-radius: var(--button-radius, 9999px); background: var(--p-green); color: white; font-size: 14px; }
 .fgp-website .fgp-service-consult:hover { background: #23352a; }
 .fgp-website .fgp-detail-bottom { display: block; margin-top: 40px; }
 .fgp-website .fgp-inclusions > h2 { color: var(--p-green); font-size: 26px; font-weight: 600; margin: 0 0 24px; }
@@ -246,7 +246,7 @@
   .fgp-website .fgp-catalog-card .fgp-price-note { display: block; flex-basis: 100%; padding: 0; margin: 4px 0 0; border: 0; color: var(--p-muted); font-size: 12px; line-height: 1.6; }
   .fgp-website .fgp-catalog-product-note { display: block; margin: 16px 0 0; color: var(--p-muted); font-size: 12px; line-height: 1.6; text-align: right; white-space: pre-line; overflow-wrap: anywhere; }
   .fgp-website .fgp-catalog-card .fgp-prices-compact:not(.fgp-dual-prices) .fgp-price-note { text-align: right; }
-  .fgp-website .fgp-catalog-card .fgp-card-action { margin-top: 18px; border-radius: 4px; }
+  .fgp-website .fgp-catalog-card .fgp-card-action { margin-top: 18px; border-radius: var(--button-radius, 9999px); }
   .fgp-website .fgp-card-funeral .fgp-card-body { padding-top: 0; }
   .fgp-website .fgp-card-funeral .fgp-card-pricing { margin-top: 0; padding-top: 0; }
   .fgp-website .fgp-catalog-card .fgp-dual-prices { grid-template-columns: minmax(0, 1fr); gap: 16px; border-radius: 6px; }
