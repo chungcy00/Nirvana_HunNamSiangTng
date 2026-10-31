@@ -1,7 +1,7 @@
 import { CatalogSortSelect } from "./CatalogSortSelect";
 import { useContext, useEffect, useRef, type ReactNode, type ComponentPropsWithoutRef } from "react";
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, RotateCcw, LayoutGrid, List } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronRight, Image as ImageIcon, Leaf, LayoutGrid, List } from "lucide-react";
 import { usePublicCatalog, PublicCatalogNotice } from "../catalog/publicContext";
 import CatalogImage from "../catalog/PublicImage";
 import { categories, funeralDurationLabel, funeralMethodLabels, capacitiesFor, capacityLabels, detailPath as prototypeDetailPath, filterProducts, formatMoney, hasCapacity, hasReligion, listPath as prototypeListPath, religionsFor, lowestPrice, sortProducts, visibleProducts, type PrototypeProduct, type InclusionGroup } from "./model";
@@ -145,7 +145,7 @@ export function PrototypeCatalog({ home = false }: { home?: boolean }) {
       </div>}
       </div>
       <div className="fgp-results-heading"><div>{!website && <h2>{category.name}</h2>}<span role={status === "ready" ? "status" : undefined} aria-live={status === "ready" ? "polite" : undefined}>{status === "loading" ? "正在读取…" : status === "error" ? "暂时无法读取" : `共 ${products.length} 项产品`}</span></div>
-        {filtered ? <button className="fgp-reset" onClick={reset}><RotateCcw size={14}/>清除筛选</button> : home && !website && <Link className="fgp-text-link" to={listPath(category.id)+(listParams.size ? '?'+listParams : '')}>查看完整列表<ArrowRight size={16}/></Link>}
+        {!filtered && home && !website && <Link className="fgp-text-link" to={listPath(category.id)+(listParams.size ? '?'+listParams : '')}>查看完整列表<ArrowRight size={16}/></Link>}
       </div>
       {status!=="ready" ? <PublicCatalogNotice/> : products.length ? <div className={website ? `fgp-grid fgp-view-${view}` : "fgp-grid"}>{products.map(p=>website ? <WebsiteProductCard key={p.id} product={p} returnTo={returnTo} view={view}/> : <ProductCard key={p.id} product={p} returnTo={returnTo}/>)}</div> : <div className="fgp-empty"><Leaf size={32} strokeWidth={1}/><h3>{website && !filtered ? "当前分类暂无产品" : "暂时没有符合条件的产品"}</h3><p>{website && !filtered ? "目前暂无可供浏览的产品资料，欢迎联系顾问了解。" : "您可以调整人数或宗教，继续浏览其他选择。"}</p>{website && !filtered ? <Link className="fgp-primary" to="/contact">联系代理<ArrowRight size={16}/></Link> : <button className="fgp-primary" onClick={reset}>清除筛选<ArrowRight size={16}/></button>}</div>}
       {!website && <p className="fgp-source-note">价格按已提供产品资料展示；聚仙楼为待核实宣传参考起价。产品实拍将在资料确认后补充。</p>}
