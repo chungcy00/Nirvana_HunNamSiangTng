@@ -7,6 +7,7 @@
   -webkit-font-smoothing: antialiased;
   --foreground: #1a1f2e;
   --green: #455c4e;
+  --button-radius: 9999px;
   --green-hover: #5f7567;
   --sage: #7c9082;
   --sage-ink: #596c60;
@@ -159,7 +160,7 @@ textarea:focus-visible,
   background: var(--green);
   color: #fff;
   border: 1px solid var(--green);
-  border-radius: 6px;
+  border-radius: var(--button-radius);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;
@@ -2037,7 +2038,7 @@ blockquote {
 .button {
   background: var(--green);
   border-color: var(--green);
-  border-radius: 8px;
+  border-radius: var(--button-radius);
 }
 
 .button:hover {
@@ -2375,7 +2376,7 @@ tbody th {
 
 .hero-image-actions .button {
   min-width: 150px;
-  border-radius: 999px;
+  border-radius: var(--button-radius);
   white-space: nowrap;
   box-shadow: 0 10px 30px #11160730;
 }
@@ -2601,7 +2602,7 @@ html { scroll-behavior: smooth; }
 .needs-guide h2 { font-size: clamp(19px, 2vw, 24px); font-weight: 500; }
 .needs-guide p { margin-top: 8px; color: var(--muted); font-size: 14px; line-height: 1.8; }
 .needs-guide-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.needs-guide-actions .button { min-height: 44px; font-size: 14px; border-radius: 999px; }
+.needs-guide-actions .button { min-height: 44px; font-size: 14px; border-radius: var(--button-radius); }
 .needs-guide-actions .guide-consult { background: transparent; color: var(--green); border-color: transparent; box-shadow: none; }
 .needs-guide-actions .guide-consult:hover { text-decoration: underline; text-underline-offset: 5px; }
 .consultation-timeline { max-width: 760px; }
@@ -2614,7 +2615,7 @@ html { scroll-behavior: smooth; }
   height: 56px;
   min-width: 0;
   padding: 0;
-  border-radius: 50%;
+  border-radius: var(--button-radius);
   box-shadow: 0 6px 20px #263b2d30;
 }
 .floating-consult-container {
@@ -2796,7 +2797,7 @@ body:has(.mobile-nav:not([hidden])) .floating-consult { visibility: hidden; }
 .site-header .button {
   background: #2d4336;
   border-color: transparent;
-  border-radius: 4px;
+  border-radius: var(--button-radius);
 }
 .site-header .button:hover { background: #23352a; }
 .site-header .desktop-nav a.active { color: #2d4336; }

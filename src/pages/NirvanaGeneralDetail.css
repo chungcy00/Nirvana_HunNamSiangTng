@@ -30,7 +30,7 @@
 .fgp-website .fgp-general-purchase .fgp-price-note { white-space: pre-line; overflow-wrap: anywhere; margin: 0; padding: 0; border: 0; font-size: 12px; line-height: 1.8; }
 .fgp-general-purchase .fgp-price-entry .fgp-price-note { grid-column: 1 / -1; text-align: right; }
 .fgp-general-purchase .fgp-general-consult { margin: 24px 0; }
-.fgp-website .fgp-general-purchase .fgp-service-consult { margin: 0; width: 100%; min-height: 48px; border-radius: 4px; }
+.fgp-website .fgp-general-purchase .fgp-service-consult { margin: 0; width: 100%; min-height: 48px; border-radius: var(--button-radius, 9999px); }
 .fgp-website .fgp-general-purchase .fgp-inclusions { padding: 24px 0 0; border-top: 1px solid var(--p-line); background: transparent; border-radius: 0; box-shadow: none; }
 .fgp-website .fgp-general-purchase .fgp-inclusions > h2 { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; font-size: 18px; }
 .fgp-general-inclusion-count { padding: 3px 8px; border-radius: 3px; background: var(--p-soft); color: var(--p-muted); font-size: 12px; font-weight: 400; white-space: nowrap; }

@@ -44,7 +44,7 @@
 .needs-details dt { font-weight: 600; margin-top: 12px; color: var(--green); }
 .needs-details dd { margin: 4px 0 14px; color: var(--muted); }
 .needs-product .needs-supply { margin: 16px 0; font-size: 12px; }
-.needs-product .button { border-radius: 999px; }
+.needs-product .button { border-radius: var(--button-radius, 9999px); }
 .needs-selection-notice { margin-top: 10px; color: var(--green); }
 .needs-selection-notice:empty { display: none; }
 @media (max-width: 900px) { .needs-layout { grid-template-columns: 1fr; gap: 12px; } }
